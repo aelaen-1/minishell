@@ -1,24 +1,32 @@
 NAME = minishell
 
 CC = cc
-FLAGS = -Wall -Wextra -Werror -fsanitize=address
+FLAGS = -Wall -Wextra -Werror #-fsanitize=address
 
-SRC = builtins/
+LIBFT = ./include/libft
+SRC = $(wildcard *.c) \
+      $(wildcard builtins/*.c) \
+      $(LIBFT)/libft.a
 
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(OBJ): %.c
-    $(CC) $(FLAGS) -o $@ -c $<
-$(NAME): %.o
-    $(CC) $(FLAGS) $(OBJ) -o $(NAME)
+%.o: %.c
+	$(CC) $(FLAGS) -c $< -o $@
 
-clean: $(OBJ)
-    $(RM) $(OBJ)
 
-fclean: clean
-    $(RM) $(NAME)
+$(NAME) :
+	make all -C $(LIBFT)
+	$(CC) $(FLAGS) $(SRC) -o $(NAME)
+
+clean:
+	$(RM) $(NAME)
+	make clean -C $(LIBFT)
+	
+fclean: clean	
+	$(RM) $(NAME)
+	make fclean -C $(LIBFT)
 
 re: fclean all
 
