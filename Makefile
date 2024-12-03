@@ -18,7 +18,7 @@ all: $(NAME)
 
 $(NAME) :
 	make all -C $(LIBFT)
-	$(CC) $(FLAGS) $(SRC) -o $(NAME)
+	$(CC) $(FLAGS) $(SRC) -o $(NAME) -lreadline
 
 clean:
 	$(RM) $(NAME)

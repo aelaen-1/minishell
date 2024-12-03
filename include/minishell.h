@@ -21,5 +21,14 @@
 # include <curses.h>
 # include <term.h>
 
+/*      envp.c      */
+char    *get_path(char *cmd);
+
+/*      exec.c      */
+void    exec_cmd(char *cmd);
+
+/*      utils.c     */
+void    free_split(char **s);
+int     ft_strcmp(char *s1, char *s2);
 
 #endif
