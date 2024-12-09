@@ -5,6 +5,7 @@ FLAGS = -Wall -Wextra -Werror #-fsanitize=address
 
 LIBFT = ./include/libft
 SRC = $(wildcard *.c) \
+	$(wildcard tokenizer/*.c) \
       $(wildcard builtins/*.c) \
       $(LIBFT)/libft.a
 

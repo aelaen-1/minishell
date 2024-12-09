@@ -1,6 +1,13 @@
 #include "include/minishell.h"
 
-int     ft_strcmp(char *s1, char *s2)
+int is_space(char c)
+{
+    if (c == 32 || (c >= 9 && c <= 13))
+        return (1);
+    return (0);
+}
+
+int ft_strcmp(char *s1, char *s2)
 {
     int i = 0;
     while (s1[i] == s2[i])
@@ -17,5 +24,5 @@ void free_split(char **s)
         i++;
     }
     free(s);
-    s = NULL; // obligatoire ? 
+    s = NULL;
 }
