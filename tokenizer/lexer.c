@@ -7,24 +7,17 @@ int     handle_squote(char *s, int *i, t_parse_context *context, char **err_msg)
     int     start;
 
     j = 0;
-    start = *i;
-    start++;
+    start = *i + 1;
     while (s[start] && (s[start] != SIMPLE_QUOTE))
     {
         context->last_token[j] = s[start];
         j++;
         start++;
+        if (s[start] && (s[start] == SIMPLE_QUOTE))
+            return((context->last_token[j] = 0), start);
     }
-    if (s[start] && (s[start] == SIMPLE_QUOTE))
-    {
-        context->last_token[j] = 0;
-        return (start);
-    }
-    else
-    {
-        *err_msg = "quote>\n";
-        return (0);
-    }
+    *err_msg = "quote>\n";
+    return (0);
 }
 
 int handle_dquote(char *s, int *i, t_parse_context *context, char **err_msg)
@@ -33,24 +26,17 @@ int handle_dquote(char *s, int *i, t_parse_context *context, char **err_msg)
     int     start;
 
     j = 0;
-    start = *i;
-    start++;
+    start = *i + 1;
     while (s[start] && (s[start] != DOUBLE_QUOTE))
     {
         context->last_token[j] = s[start];
         j++;
         start++;
+        if (s[start] && (s[start] == DOUBLE_QUOTE))
+            return((context->last_token[j] = 0), start);
     }
-    if (s[start] && (s[start] == DOUBLE_QUOTE))
-    {
-        context->last_token[j] = 0;
-        return (start);
-    }
-    else
-    {
-        *err_msg = "dquote>\n";
-        return (0);
-    }
+    *err_msg = "dquote>\n";
+    return (0);
 }
 
 int		get_next_token(char *s, struct parse_context *context, char **err_msg)
@@ -64,20 +50,19 @@ int		get_next_token(char *s, struct parse_context *context, char **err_msg)
     {
         if (s[i] == SIMPLE_QUOTE)
         {
-            i = handle_squote(s, &i, context, err_msg);
-            return (i);
+            context->last_token[j] = 0;
+            printf("%s\n", context->last_token);
+            return (handle_squote(s, &i, context, err_msg));
         }
         else if (s[i] == DOUBLE_QUOTE)
-        {
-            i = handle_dquote(s, &i, context, err_msg);
-            return (i);
-        }
-        else
-        {
-            context->last_token[j] = s[i];
-            i++;
-            j++;
-        }
+            return (handle_dquote(s, &i, context, err_msg));
+        // else if (!ft_strncmp(s + i, "\", 1) // \
+        // {
+
+        // }
+        context->last_token[j] = s[i];
+        i++;
+        j++;
     }
     context->last_token[j] = 0;
     return (i);

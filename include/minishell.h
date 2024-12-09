@@ -26,66 +26,66 @@
 # define UNCLOSED_QUOTE "quote>"
 # define UNCLOSED_DOUBLE_QUOTE "dquote>"
 
-typedef enum e_type
-{
-	CMD,
-	IN_REDIRECT,
-	OU_REDIRECT,
-	PIPE,
-	DONT_EXIST
-}	t_type;
+// typedef enum e_type
+// {
+// 	CMD,
+// 	IN_REDIRECT,
+// 	OU_REDIRECT,
+// 	PIPE,
+// 	DONT_EXIST
+// }	t_type;
 
-typedef enum e_builtins
-{
-	CD,
-	// ECHO,
-	PWD,
-	EXPORT,
-	UNSET,
-	ENV,
-	EXIT
-}	t_builtins;
+// typedef enum e_builtins
+// {
+// 	CD,
+// 	// ECHO,
+// 	PWD,
+// 	EXPORT,
+// 	UNSET,
+// 	ENV,
+// 	EXIT
+// }	t_builtins;
 
-typedef struct s_exec
-{
-	char			**cmd;
-	char			**in;
-	int				fdin;
-	int				is_fdin;
-	char			**out;
-	int				fdout;
-	int				is_fdout;
-	int				builtin;
-	struct s_exec	*next;
-}	t_exec;
+// typedef struct s_exec
+// {
+// 	char			**cmd;
+// 	char			**in;
+// 	int				fdin;
+// 	int				is_fdin;
+// 	char			**out;
+// 	int				fdout;
+// 	int				is_fdout;
+// 	int				builtin;
+// 	struct s_exec	*next;
+// }	t_exec;
 
-typedef struct s_token
-{
-	char			**global;
-	t_type			data_type;
-	struct s_token	*next;
-}	t_token;
+// typedef struct s_token
+// {
+// 	char			**global;
+// 	t_type			data_type;
+// 	struct s_token	*next;
+// }	t_token;
 
-typedef struct s_mini
-{
-	char		*currentpath;
-	struct stat	dossier;
-	char		*userstr;
-	char		*user;
-	char		*input;
-	t_list		*env;
-	uint8_t		exitstatus;
-	char		**tabenv;
-	char		**tabcmd;
-	int			exe_n;
-	int			exe_size;
-	pid_t		*pid;
-	int			*pipe;
-	int			pipe_n;
-	int			clear_fd[2];
-	t_token		*lst;
-	t_exec		*exe;
-}	t_mini;
+// typedef struct s_mini
+// {
+// 	char		*currentpath;
+// 	struct stat	dossier;
+// 	char		*userstr;
+// 	char		*user;
+// 	char		*input;
+// 	t_list		*env;
+// 	uint8_t		exitstatus;
+// 	char		**tabenv;
+// 	char		**tabcmd;
+// 	int			exe_n;
+// 	int			exe_size;
+// 	pid_t		*pid;
+// 	int			*pipe;
+// 	int			pipe_n;
+// 	int			clear_fd[2];
+// 	t_token		*lst;
+// 	t_exec		*exe;
+// }	t_mini;
 
 typedef struct parse_context
 {

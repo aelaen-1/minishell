@@ -5,7 +5,7 @@ void	print_tokens(char *input)
     t_parse_context context;
     int     i;
     int     len;
-    char    *err_msg;
+    char    *err_msg = NULL;
 
     i = 0;
     len = ft_strlen(input);

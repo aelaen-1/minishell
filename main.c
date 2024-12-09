@@ -5,7 +5,7 @@ int main (int ac, char **av)
     (void)ac;
     (void)av;
 
-    while(true)
+    while(1)
     {
         char *cmd = readline("minishell % ");
         print_tokens(cmd);
