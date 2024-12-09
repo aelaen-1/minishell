@@ -104,8 +104,12 @@ int     ft_strcmp(char *s1, char *s2);
 int		is_space(char c);
 
 
+/*		tokenizer/	*/
 void	print_tokens(char *input);
 int		get_next_token(char *s, struct parse_context *context, char **err_msg);
+int     count_quotes(char *s, int start, char s_or_d);
+int     handle_squote(char *s, int *i, t_parse_context *context, char **err_msg);
+int 	handle_dquote(char *s, int *i, t_parse_context *context, char **err_msg);
 
 
 #endif
