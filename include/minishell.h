@@ -23,73 +23,42 @@
 
 # define SIMPLE_QUOTE 39
 # define DOUBLE_QUOTE 34
+# define PIPE 124
 # define UNCLOSED_QUOTE "quote>"
 # define UNCLOSED_DOUBLE_QUOTE "dquote>"
 
-// typedef enum e_type
-// {
-// 	CMD,
-// 	IN_REDIRECT,
-// 	OU_REDIRECT,
-// 	PIPE,
-// 	DONT_EXIST
-// }	t_type;
+typedef enum	e_quoting_status
+{
+	NONE,
+	SINGLE,
+	DOUBLE
+}	t_quoting_status;
 
-// typedef enum e_builtins
-// {
-// 	CD,
-// 	// ECHO,
-// 	PWD,
-// 	EXPORT,
-// 	UNSET,
-// 	ENV,
-// 	EXIT
-// }	t_builtins;
+typedef enum e_token_type
+{
+	WORD,
+	BUILTIN,
+	STRING,
+	DOLLAR,
+	LESS, // <
+	GREAT, // >
+	DLESS, // << 
+	DGREAT // >>
+}	t_token_type;
 
-// typedef struct s_exec
-// {
-// 	char			**cmd;
-// 	char			**in;
-// 	int				fdin;
-// 	int				is_fdin;
-// 	char			**out;
-// 	int				fdout;
-// 	int				is_fdout;
-// 	int				builtin;
-// 	struct s_exec	*next;
-// }	t_exec;
+typedef struct	s_token
+{
+	t_token_type type;
+	char *value;
+}	t_token;
 
-// typedef struct s_token
-// {
-// 	char			**global;
-// 	t_type			data_type;
-// 	struct s_token	*next;
-// }	t_token;
 
-// typedef struct s_mini
-// {
-// 	char		*currentpath;
-// 	struct stat	dossier;
-// 	char		*userstr;
-// 	char		*user;
-// 	char		*input;
-// 	t_list		*env;
-// 	uint8_t		exitstatus;
-// 	char		**tabenv;
-// 	char		**tabcmd;
-// 	int			exe_n;
-// 	int			exe_size;
-// 	pid_t		*pid;
-// 	int			*pipe;
-// 	int			pipe_n;
-// 	int			clear_fd[2];
-// 	t_token		*lst;
-// 	t_exec		*exe;
-// }	t_mini;
 
-typedef struct parse_context
+typedef struct s_parse_context
 {
 	char *last_token;
+	enum e_quoting_status quotes;
+	// t_token **tokens;
 }	t_parse_context;
 
 /*      envp.c      */
@@ -106,7 +75,7 @@ int		is_space(char c);
 
 /*		tokenizer/	*/
 void	print_tokens(char *input);
-int		get_next_token(char *s, struct parse_context *context, char **err_msg);
+int		get_next_token(char *s, t_parse_context *context, char **err_msg);
 int     count_quotes(char *s, int start, char s_or_d);
 int     handle_squote(char *s, int *i, t_parse_context *context, char **err_msg);
 int 	handle_dquote(char *s, int *i, t_parse_context *context, char **err_msg);
