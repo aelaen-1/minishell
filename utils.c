@@ -27,9 +27,9 @@ void free_split(char **s)
     s = NULL;
 }
 
-void    free_token_array(t_token_array *array)
+void    free_token_array(t_token_array *array) // destroy_array
 {
-    int     i; 
+    size_t     i; 
 
     i = 0;
     while (i < array->count)

@@ -1,0 +1,24 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     minishell
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x0, symBinAddr: 0x100003520, symSize: 0x38 }
+  - { offsetInCU: 0x41, offset: 0x41, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x0, symBinAddr: 0x100003520, symSize: 0x38 }
+  - { offsetInCU: 0x26, offset: 0xCA, size: 0x8, addend: 0x0, symName: _is_space, symObjAddr: 0x0, symBinAddr: 0x100003558, symSize: 0x64 }
+  - { offsetInCU: 0x7D, offset: 0x121, size: 0x8, addend: 0x0, symName: _is_space, symObjAddr: 0x0, symBinAddr: 0x100003558, symSize: 0x64 }
+  - { offsetInCU: 0xA5, offset: 0x149, size: 0x8, addend: 0x0, symName: _ft_strcmp, symObjAddr: 0x64, symBinAddr: 0x1000035BC, symSize: 0x70 }
+  - { offsetInCU: 0xE9, offset: 0x18D, size: 0x8, addend: 0x0, symName: _free_split, symObjAddr: 0xD4, symBinAddr: 0x10000362C, symSize: 0x6C }
+  - { offsetInCU: 0x11B, offset: 0x1BF, size: 0x8, addend: 0x0, symName: _free_token_array, symObjAddr: 0x140, symBinAddr: 0x100003698, symSize: 0x78 }
+  - { offsetInCU: 0x26, offset: 0x2D6, size: 0x8, addend: 0x0, symName: _init_token_array, symObjAddr: 0x0, symBinAddr: 0x100003710, symSize: 0x5C }
+  - { offsetInCU: 0x7D, offset: 0x32D, size: 0x8, addend: 0x0, symName: _init_token_array, symObjAddr: 0x0, symBinAddr: 0x100003710, symSize: 0x5C }
+  - { offsetInCU: 0xA5, offset: 0x355, size: 0x8, addend: 0x0, symName: _init_context, symObjAddr: 0x5C, symBinAddr: 0x10000376C, symSize: 0x4C }
+  - { offsetInCU: 0x26, offset: 0x4BC, size: 0x8, addend: 0x0, symName: _get_next_token, symObjAddr: 0x0, symBinAddr: 0x1000037B8, symSize: 0x2B0 }
+  - { offsetInCU: 0x8B, offset: 0x521, size: 0x8, addend: 0x0, symName: _get_next_token, symObjAddr: 0x0, symBinAddr: 0x1000037B8, symSize: 0x2B0 }
+  - { offsetInCU: 0x115, offset: 0x5AB, size: 0x8, addend: 0x0, symName: _append_to_token, symObjAddr: 0x2B0, symBinAddr: 0x100003A68, symSize: 0x4C }
+  - { offsetInCU: 0x26, offset: 0x714, size: 0x8, addend: 0x0, symName: _print_tokens, symObjAddr: 0x0, symBinAddr: 0x100003AB4, symSize: 0x84 }
+  - { offsetInCU: 0x8B, offset: 0x779, size: 0x8, addend: 0x0, symName: _print_tokens, symObjAddr: 0x0, symBinAddr: 0x100003AB4, symSize: 0x84 }
+  - { offsetInCU: 0x26, offset: 0x8E4, size: 0x8, addend: 0x0, symName: _count_quotes, symObjAddr: 0x0, symBinAddr: 0x100003B38, symSize: 0xFC }
+  - { offsetInCU: 0x33, offset: 0x8F1, size: 0x8, addend: 0x0, symName: _count_quotes, symObjAddr: 0x0, symBinAddr: 0x100003B38, symSize: 0xFC }
+  - { offsetInCU: 0x26, offset: 0x97C, size: 0x8, addend: 0x0, symName: _add_new_token, symObjAddr: 0x0, symBinAddr: 0x100003C34, symSize: 0x178 }
+  - { offsetInCU: 0x7D, offset: 0x9D3, size: 0x8, addend: 0x0, symName: _add_new_token, symObjAddr: 0x0, symBinAddr: 0x100003C34, symSize: 0x178 }
+...

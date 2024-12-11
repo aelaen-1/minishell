@@ -11,7 +11,7 @@ t_token    *add_new_token(t_token_array *array, size_t max_size)
     if (!token)
         return (NULL);
     token->type = NONE;
-    token->last_token_length = 0;
+    token->length = 0;
     token->value = malloc(max_size);
     if (!token->value)
         return (free(token), NULL);
@@ -25,6 +25,7 @@ t_token    *add_new_token(t_token_array *array, size_t max_size)
             return (NULL);
         }
         ft_memcpy(new_tokens, array->tokens, array->count * sizeof(t_token *)); // size of à vérifier (man memcpy)
+        free(array->tokens);
         array->tokens = new_tokens;
         array->capacity *= 2; 
     }

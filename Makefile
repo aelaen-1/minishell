@@ -11,6 +11,9 @@ SRC = $(wildcard *.c) \
 
 OBJ = $(SRC:.c=.o)
 
+debug: FLAGS += -g
+debug: all
+
 all: $(NAME)
 
 %.o: %.c

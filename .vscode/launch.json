@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/aelaen/Desktop/minishell",
-      "program": "/Users/aelaen/Desktop/minishell/build/Debug/outDebug"
+      "cwd": "/Users/aelaen/Desktop/token",
+      "program": "/Users/aelaen/Desktop/token/minishell"
     }
   ]
 }
