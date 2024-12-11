@@ -61,7 +61,7 @@ int get_next_token(t_parse_context *context, char **err_msg)
             return (handle_dquote(s, &i, context, err_msg));
         context->last_token[j] = s[context->position]; // faire add to token (s + i, 1)
         i++;
-        j++;
+        j++
     }
     context->last_token[j] = 0;
     return (i);

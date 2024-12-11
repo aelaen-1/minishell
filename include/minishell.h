@@ -36,6 +36,7 @@ typedef enum	e_quoting_status
 
 typedef enum e_token_type
 {
+	NONE,
 	WORD,
 	BUILTIN,
 	STRING,
@@ -49,17 +50,26 @@ typedef enum e_token_type
 typedef struct	s_token
 {
 	t_token_type type;
+	size_t	last_token_length;
 	char *value;
 }	t_token;
 
-
-
 typedef struct s_parse_context
 {
-	char *last_token;
-	enum e_quoting_status quotes;
-	// t_token **tokens;
+	t_token_array   *array;
+	t_token	*last_token;
+	char	*input;
+	int		input_len; 
+	size_t		position;
 }	t_parse_context;
+
+// growing array
+typedef struct s_token_array
+{
+	t_token **tokens;
+	size_t	count; // nb of tokens
+	size_t	capacity; // taille obtenue en malloc
+}	t_token_array;
 
 /*      envp.c      */
 char    *get_path(char *cmd);
@@ -75,10 +85,15 @@ int		is_space(char c);
 
 /*		tokenizer/	*/
 void	print_tokens(char *input);
-int		get_next_token(char *s, t_parse_context *context, char **err_msg);
+int		get_next_token(t_parse_context *context, char **err_msg);
 int     count_quotes(char *s, int start, char s_or_d);
 int     handle_squote(char *s, int *i, t_parse_context *context, char **err_msg);
 int 	handle_dquote(char *s, int *i, t_parse_context *context, char **err_msg);
+
+void	init_context(t_parse_context *context, char *input);
+int		init_token_array(t_token_array *array);
+void	free_token_array(t_token_array *array);
+t_token	*add_new_token(t_token_array *array, size_t max_size);
 
 
 #endif

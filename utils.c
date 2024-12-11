@@ -26,3 +26,17 @@ void free_split(char **s)
     free(s);
     s = NULL;
 }
+
+void    free_token_array(t_token_array *array)
+{
+    int     i; 
+
+    i = 0;
+    while (i < array->count)
+    {
+        free(array->tokens[i]);
+        i++;
+    }
+    free(array->tokens);
+    array->tokens = NULL;
+}
