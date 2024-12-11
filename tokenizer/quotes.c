@@ -3,7 +3,6 @@
 // QUOTING RULES 
 
 
-
 int     count_quotes(char *s, int start, char s_or_d)
 {
     int     count;
