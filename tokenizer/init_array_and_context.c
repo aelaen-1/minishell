@@ -8,7 +8,6 @@ int    init_token_array(t_token_array *array)
     return(array->tokens != NULL);
 }
 
-
 void    init_context(t_parse_context *context, char *input)
 {
     context->input = input;

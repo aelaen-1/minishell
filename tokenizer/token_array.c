@@ -2,7 +2,6 @@
 
 // growing array function
 // fill struct token and realloc if array exceeds initial capacity
-
 t_token    *add_new_token(t_token_array *array, size_t max_size)
 {
     t_token     *token;

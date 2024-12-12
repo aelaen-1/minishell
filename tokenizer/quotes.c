@@ -29,34 +29,18 @@ int     count_quotes(char *s, int start, char s_or_d)
     return (count);
 }
 
-// int     handle_squote(char *s, int *i, t_parse_context *context, char **err_msg)
-// {
-//     int     j;
-//     int     start;
-//     int     count_squote;
-
-//     j = 0;
-//     start = *i;
-//     count_squote = count_quotes(s, start, SIMPLE_QUOTE);
-//     if (count_squote % 2 == 0)
-//     {
-//         start = *i + 1;
-//         while(s[start])
-//         {
-//             if (s[start] == SIMPLE_QUOTE)
-//                 start++;
-//             else
-//             {
-//                 context->last_token[j] = s[start];
-//                 j++;
-//                 start++;
-//             }
-//         }
-//         return((context->last_token[j] = 0), start + 1);
-//     }
-//     *err_msg = "squote>\n";
-//     return (0);
-// }
+int     handle_squote(char *start_quote, t_parse_context *context)
+{
+    char *next_quote = ft_strchr(start_quote, SIMPLE_QUOTE);
+    if (next_quote != NULL)
+    {
+        size_t  quote_len = next_quote - start_quote;
+        append_to_token(context->last_token, start_quote, quote_len);
+        context->position += quote_len + 2;
+        return (1);
+    }
+    return (0);
+}
 
 // int handle_dquote(char *s, int *i, t_parse_context *context, char **err_msg)
 // {
