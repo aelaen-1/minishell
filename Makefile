@@ -8,6 +8,7 @@ SRC = $(wildcard *.c) \
 	$(wildcard tokenizer/*.c) \
       $(wildcard builtins/*.c) \
       $(LIBFT)/libft.a
+#$(wildcard tokenizer_lv/*.c) 
 
 OBJ = $(SRC:.c=.o)
 

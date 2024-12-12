@@ -37,7 +37,8 @@ typedef enum e_token_type
 	LESS, // <
 	GREAT, // >
 	DLESS, // << 
-	DGREAT // >>
+	DGREAT, // >>
+	PIPENUM
 }	t_token_type;
 
 typedef struct	s_token
