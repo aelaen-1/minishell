@@ -42,6 +42,16 @@ int     handle_squote(char *start_quote, t_parse_context *context)
     return (0);
 }
 
+int     handle_dquote(char *start_quote, t_parse_context *context, int *is_dquoting)
+{
+    if (*is_dquoting || ft_strchr(start_quote, DOUBLE_QUOTE))
+    {
+        *is_dquoting = !(*is_dquoting);
+        context->position++;
+        return (1);
+    }
+    return (0);
+}
 // int handle_dquote(char *s, int *i, t_parse_context *context, char **err_msg)
 // {
 //     int     j;

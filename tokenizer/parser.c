@@ -6,10 +6,7 @@ void	print_tokens(char *input)
     t_token         *last_token;
     
     if(!init_token_array(&context.array))
-    {
-        printf("array allocation failed\n");
         return ;
-    }
     init_context(&context, input);
     while (context.position < context.input_len)
     {

@@ -87,7 +87,7 @@ void	print_tokens(char *input);
 t_token		*get_next_token(t_parse_context *context);
 int     count_quotes(char *s, int start, char s_or_d);
 int     handle_squote(char *start_quote, t_parse_context *context);
-int 	handle_dquote(char *s, int *i, t_parse_context *context, char **err_msg);
+int     handle_dquote(char *start_quote, t_parse_context *context, int *is_dquoting);
 
 void	init_context(t_parse_context *context, char *input);
 int		init_token_array(t_token_array *array);
@@ -95,5 +95,6 @@ void	destroy_tokens_array(t_token_array *array);
 t_token	*add_new_token(t_token_array *array, size_t max_size);
 void    append_to_token(t_token *dest, char *src, size_t length);
 
+size_t  eat_spaces(t_parse_context *context);
 
 #endif
