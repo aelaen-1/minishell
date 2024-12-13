@@ -18,7 +18,6 @@ void    append_to_token(t_token *dest, char *src, size_t length)
     }
     dest->length += length;
 }
-
 // saving chars in context->last_token until end of word
 t_token *get_next_token(t_parse_context *context)
 {
@@ -37,14 +36,8 @@ t_token *get_next_token(t_parse_context *context)
             if (handle_squote(s + context->position + 1, context))
                 continue ;
         if (s[context->position] == DOUBLE_QUOTE) // gestion differente pour le $expand
-        {
-            if (is_dquoting || ft_strchr(s + context->position + 1, DOUBLE_QUOTE))
-            {
-                is_dquoting = !is_dquoting;
-                context->position++;
+            if (handle_dquote(s + context->position + 1, context, &is_dquoting))
                 continue ;
-            }
-        }
         if (!is_dquoting && (s[context->position] == PIPE || s[context->position] == LESS || s[context->position] == GREAT))
         { 
             if (context->last_token->length > 0)
