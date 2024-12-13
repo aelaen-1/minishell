@@ -10,7 +10,6 @@ SRC = $(wildcard *.c) \
 	  $(wildcard tokenizer_lv/*.c) \
       $(LIBFT)/libft.a
 
-
 OBJ = $(SRC:.c=.o)
 
 debug: FLAGS += -g
