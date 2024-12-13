@@ -33,3 +33,18 @@ t_token    *add_new_token(t_token_array *array, size_t max_size)
     array->count++;
     return (token);
 }
+
+
+void    destroy_tokens_array(t_token_array *array)
+{
+    size_t     i; 
+
+    i = 0;
+    while (i < array->count)
+    {
+        free(array->tokens[i]);
+        i++;
+    }
+    free(array->tokens);
+    array->tokens = NULL;
+}

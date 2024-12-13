@@ -31,9 +31,8 @@ t_token *get_next_token(t_parse_context *context)
     eat_spaces(context);
     while(s[context->position])
     {
-        if(!is_dquoting)
-            if(eat_spaces(context))
-                break;
+        if(!is_dquoting && eat_spaces(context))
+            break;
         if (!is_dquoting && s[context->position] == SIMPLE_QUOTE) // retrait du !is_dquoting && 
             if (handle_squote(s + context->position + 1, context))
                 continue ;

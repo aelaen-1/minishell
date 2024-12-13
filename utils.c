@@ -7,6 +7,19 @@ int is_space(char c)
     return (0);
 }
 
+size_t  eat_spaces(t_parse_context *context)
+{
+    size_t  spaces;
+
+    spaces = 0;
+    while(is_space(context->input[context->position]))
+    {
+        context->position++;
+        spaces++;
+    }
+    return (spaces);
+}
+
 int ft_strcmp(char *s1, char *s2)
 {
     int i = 0;
@@ -25,28 +38,4 @@ void free_split(char **s)
     }
     free(s);
     s = NULL;
-}
-
-void    destroy_tokens_array(t_token_array *array)
-{
-    size_t     i; 
-
-    i = 0;
-    while (i < array->count)
-    {
-        free(array->tokens[i]);
-        i++;
-    }
-    free(array->tokens);
-    array->tokens = NULL;
-}
-
-size_t  eat_spaces(t_parse_context *context)
-{
-    size_t  spaces;
-
-    spaces = 0;
-    while(is_space(context->input[context->position]))
-        context->position++;
-    return (spaces);
 }
