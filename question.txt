@@ -1,3 +1,31 @@
+Lexer avec cas de "", '', |, <, >, >>, <<
+|
+v
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Quel de cas a gerer pour la tokenisation pipe
 
 pas d'espace avant pipe
