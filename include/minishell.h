@@ -26,21 +26,26 @@
 # define PIPE 124
 # define UNCLOSED_QUOTE "quote>"
 # define UNCLOSED_DOUBLE_QUOTE "dquote>"
+# define DOLLAR 36
+# define LESS 60
+# define GREAT 62
+# define DLESS "<<" //strcmp(s, DLESS)
+# define DGREAT ">>"
+
 
 typedef enum e_token_type
 {
 	NONE,
 	WORD,
 	BUILTIN,
-	STRING,
-	DOLLAR,
-	LESS, // <
-	GREAT, // >
-	DLESS, // << 
-	DGREAT, // >>
-	PIPENUM
+	STRING
+	// DOLLAR,
+	// LESS, // <
+	// GREAT, // >
+	// DLESS, // << 
+	// DGREAT // >>
 }	t_token_type;
-
+ 
 typedef struct	s_token
 {
 	t_token_type type;

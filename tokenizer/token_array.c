@@ -14,7 +14,6 @@ t_token    *add_new_token(t_token_array *array, size_t max_size)
     token->value = malloc(max_size);
     if (!token->value)
         return (free(token), NULL);
-    ft_bzero(token->value, max_size);
     if (array->count >= array->capacity)
     {
         t_token **new_tokens = malloc((array->capacity * 2) * sizeof(t_token *));
@@ -22,7 +21,6 @@ t_token    *add_new_token(t_token_array *array, size_t max_size)
         {
             free(token->value);
             free(token);
-            free(array->tokens);
             return (NULL);
         }
         ft_memcpy(new_tokens, array->tokens, array->count * sizeof(t_token *)); // size of à vérifier (man memcpy)
@@ -30,7 +28,7 @@ t_token    *add_new_token(t_token_array *array, size_t max_size)
         array->tokens = new_tokens;
         array->capacity *= 2; 
     }
-    array->tokens[array->count] = token; 
-    array->count++; 
+    array->tokens[array->count] = token;
+    array->count++;
     return (token);
 }
