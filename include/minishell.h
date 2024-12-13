@@ -95,5 +95,6 @@ void	destroy_tokens_array(t_token_array *array);
 t_token	*add_new_token(t_token_array *array, size_t max_size);
 void    append_to_token(t_token *dest, char *src, size_t length);
 
+size_t  eat_spaces(t_parse_context *context);
 
 #endif

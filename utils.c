@@ -40,3 +40,13 @@ void    destroy_tokens_array(t_token_array *array)
     free(array->tokens);
     array->tokens = NULL;
 }
+
+size_t  eat_spaces(t_parse_context *context)
+{
+    size_t  spaces;
+
+    spaces = 0;
+    while(is_space(context->input[context->position]))
+        context->position++;
+    return (spaces);
+}

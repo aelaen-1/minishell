@@ -28,13 +28,13 @@ t_token *get_next_token(t_parse_context *context)
     is_dquoting = 0;
     s = context->input;
     context->last_token = add_new_token(&context->array, context->input_len + 1);
-    while (s[context->position] && is_space(s[context->position]))
-        context->position++;
+    eat_spaces(context);
     while(s[context->position])
     {
-        if (is_space(s[context->position])) // retrait du !is_dquoting && 
-            break ;
-        if (s[context->position] == SIMPLE_QUOTE) // retrait du !is_dquoting && 
+        if(!is_dquoting)
+            if(eat_spaces(context))
+                break;
+        if (!is_dquoting && s[context->position] == SIMPLE_QUOTE) // retrait du !is_dquoting && 
             if (handle_squote(s + context->position + 1, context))
                 continue ;
         if (s[context->position] == DOUBLE_QUOTE) // gestion differente pour le $expand
@@ -46,7 +46,7 @@ t_token *get_next_token(t_parse_context *context)
                 continue ;
             }
         }
-        if (s[context->position] == PIPE || s[context->position] == LESS || s[context->position] == GREAT)
+        if (!is_dquoting && (s[context->position] == PIPE || s[context->position] == LESS || s[context->position] == GREAT))
         { 
             if (context->last_token->length > 0)
                 break;
