@@ -35,10 +35,15 @@ t_token *get_next_token(t_parse_context *context)
     {
         if (is_space(s[context->position])) // retrait du !is_dquoting && 
             break ;
-        if (s[context->position] == PIPE)
+        if (s[context->position] == PIPE || s[context->position] == '<' || s[context->position] == '>')
         {
             if (context->last_token->length > 0)
                 break;
+            if ((s[context->position] == '<' && s[context->position + 1] == '<') || (s[context->position] == '>' && s[context->position + 1] == '>'))
+            {
+                append_to_token(context->last_token, s + context->position, 1);
+                context->position++;
+            }
             append_to_token(context->last_token, s + context->position, 1);
             context->position++;
             return (context->last_token);

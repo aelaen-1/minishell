@@ -7,8 +7,9 @@ LIBFT = ./include/libft
 SRC = $(wildcard *.c) \
 	$(wildcard tokenizer/*.c) \
       $(wildcard builtins/*.c) \
+	  $(wildcard tokenizer_lv/*.c) \
       $(LIBFT)/libft.a
-#$(wildcard tokenizer_lv/*.c) 
+
 
 OBJ = $(SRC:.c=.o)
 
