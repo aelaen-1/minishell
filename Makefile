@@ -5,10 +5,17 @@ FLAGS = -Wall -Wextra -Werror #-fsanitize=address
 
 LIBFT = ./include/libft
 SRC = $(wildcard *.c) \
-	$(wildcard tokenizer/*.c) \
-      $(wildcard builtins/*.c) \
-	  $(wildcard tokenizer_lv/*.c) \
-      $(LIBFT)/libft.a
+	$(wildcard lexing/*.c) \
+		$(wildcard parsing/*.c) \
+		$(wildcard exec/*.c) \
+		$(wildcard env_variables/*.c) \
+		$(wildcard history/*.c) \
+		$(wildcard init/*.c) \
+		$(wildcard pipes/*.c) \
+		$(wildcard redirections/*.c) \
+		$(wildcard signals/*.c) \
+    	$(wildcard builtins/*.c) \
+    	$(LIBFT)/libft.a
 
 OBJ = $(SRC:.c=.o)
 
