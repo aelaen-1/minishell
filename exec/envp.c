@@ -1,4 +1,4 @@
-#include "include/minishell.h"
+#include "../include/minishell.h"
 
 // Fonction qui renvoie le path d'une commande en cherchant dans la variable d'environnement PATH (voir env dans le terminal)
 
