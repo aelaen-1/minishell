@@ -53,14 +53,6 @@ typedef struct	s_token
 	char *value;
 }	t_token;
 
-typedef struct s_command
-{
-	char **cmd_with_args;
-	size_t	*count;
-	struct s_command	*prev;
-	struct s_command	*next;
-}	t_command;
-
 // growing array
 typedef struct s_token_array
 {
@@ -91,7 +83,7 @@ int		is_space(char c);
 
 
 /*		tokenizer/	*/
-void	tokenizer(char *input);
+void	print_tokens(char *input);
 t_token		*get_next_token(t_parse_context *context);
 int     count_quotes(char *s, int start, char s_or_d);
 int     handle_squote(char *start_quote, t_parse_context *context);
@@ -104,5 +96,5 @@ t_token	*add_new_token(t_token_array *array, size_t max_size);
 void    append_to_token(t_token *dest, char *src, size_t length);
 
 size_t  eat_spaces(t_parse_context *context);
-t_command   *get_next_command(t_token_array *array);
+
 #endif
