@@ -3,40 +3,8 @@ Lexer avec cas de "", '', |, <, >, >>, <<
 v
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Quel de cas a gerer pour la tokenisation pipe
-
-pas d'espace avant pipe
-**espace avant pipe
-espace apres pipe
-sans espace autour de pipe
-
 main.c|
-main.c\0|\0
+==>   main.c\0|\0
 
 main.c\0  program
-|\0 PIPENUM
-
-creer nouveau last_token == | on passe a la 
+|\0 PIPENUM 
