@@ -61,13 +61,16 @@ typedef struct s_token_array
 	size_t	capacity; // taille obtenue en malloc
 }	t_token_array;
 
-typedef struct s_parse_context
+typedef struct	s_lex_context
 {
-	t_token_array   array;
-	t_token	*last_token;
 	char	*input;
 	size_t		input_len; 
 	size_t		position;
+}	t_lex_context;
+
+typedef struct s_parse_context
+{
+	t_token_array   tokens;
 }	t_parse_context;
 
 /*      envp.c      */
@@ -83,18 +86,21 @@ int		is_space(char c);
 
 
 /*		tokenizer/	*/
-void	print_tokens(char *input);
-t_token		*get_next_token(t_parse_context *context);
+void	print_tokens(t_token_array *tokens);
+t_token		*get_next_token(t_lex_context *context);
 int     count_quotes(char *s, int start, char s_or_d);
-int     handle_squote(char *start_quote, t_parse_context *context);
-int     handle_dquote(char *start_quote, t_parse_context *context, int *is_dquoting);
+int     handle_quote(char *start_quote, t_token *token, t_lex_context *context);
 
-void	init_context(t_parse_context *context, char *input);
+void	init_lex_context(t_lex_context *context, char *input);
 int		init_token_array(t_token_array *array);
 void	destroy_tokens_array(t_token_array *array);
-t_token	*add_new_token(t_token_array *array, size_t max_size);
 void    append_to_token(t_token *dest, char *src, size_t length);
 
-size_t  eat_spaces(t_parse_context *context);
+size_t  eat_spaces(t_lex_context *context);
+t_token     *create_token(size_t max_size);
+
+t_token    *add_token(t_token_array *array, t_token *token);
+t_token_array   tokenize_input(char *input);
+
 
 #endif

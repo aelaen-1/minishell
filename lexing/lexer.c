@@ -19,41 +19,51 @@ void    append_to_token(t_token *dest, char *src, size_t length)
     dest->length += length;
 }
 // saving chars in context->last_token until end of word
-t_token *get_next_token(t_parse_context *context)
+t_token *get_next_token(t_lex_context *context)
 {
     char    *s;
-    int is_dquoting;
+    t_token *last_token;
 
-    is_dquoting = 0;
     s = context->input;
-    context->last_token = add_new_token(&context->array, context->input_len + 1);
+    last_token = create_token(context->input_len + 1);
     eat_spaces(context);
     while(s[context->position])
     {
-        if(!is_dquoting && eat_spaces(context))
+        if(eat_spaces(context))
             break;
-        if (!is_dquoting && s[context->position] == SIMPLE_QUOTE) // retrait du !is_dquoting && 
-            if (handle_squote(s + context->position + 1, context))
+        if (s[context->position] == SIMPLE_QUOTE || s[context->position] == DOUBLE_QUOTE)
+            if (handle_quote(s + context->position, last_token, context))
                 continue ;
-        if (s[context->position] == DOUBLE_QUOTE) // gestion differente pour le $expand
-            if (handle_dquote(s + context->position + 1, context, &is_dquoting))
-                continue ;
-        if (!is_dquoting && (s[context->position] == PIPE || s[context->position] == LESS || s[context->position] == GREAT))
+        if ((s[context->position] == PIPE || s[context->position] == LESS || s[context->position] == GREAT))
         { 
-            if (context->last_token->length > 0)
+            if (last_token->length > 0)
                 break;
             if ((s[context->position] == LESS && s[context->position + 1] == LESS) || (s[context->position] == GREAT && s[context->position + 1] == GREAT))
             {
-                append_to_token(context->last_token, s + context->position, 1);
+                append_to_token(last_token, s + context->position, 1);
                 context->position++;
             }
-            append_to_token(context->last_token, s + context->position, 1);
+            append_to_token(last_token, s + context->position, 1);
             context->position++;
-            return (context->last_token);
+            return (last_token);
         }
-        append_to_token(context->last_token, s + context->position, 1);
+        append_to_token(last_token, s + context->position, 1);
         context->position++;
     }
-    append_to_token(context->last_token, "\0", 1);
-    return (context->last_token);
+    append_to_token(last_token, "\0", 1);
+    return (last_token);
+}
+
+
+t_token_array   tokenize_input(char *input)
+{
+    t_token_array   tokens;
+    t_lex_context   context;
+
+    if(!init_token_array(&tokens))
+        return (tokens);
+    init_lex_context(&context, input);
+    while(context.position < context.input_len)
+        add_token(&tokens, get_next_token(&context));
+    return (tokens);
 }

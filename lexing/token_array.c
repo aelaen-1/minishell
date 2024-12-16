@@ -2,7 +2,8 @@
 
 // growing array function
 // fill struct token and realloc if array exceeds initial capacity
-t_token    *add_new_token(t_token_array *array, size_t max_size)
+
+t_token     *create_token(size_t max_size)
 {
     t_token     *token;
 
@@ -15,6 +16,11 @@ t_token    *add_new_token(t_token_array *array, size_t max_size)
     if (!token->value)
         return (free(token), NULL);
     ft_bzero(token->value, max_size);
+    return (token);
+}
+
+t_token    *add_token(t_token_array *array, t_token *token)
+{
     if (array->count >= array->capacity)
     {
         t_token **new_tokens = malloc((array->capacity * 2) * sizeof(t_token *));
@@ -47,4 +53,17 @@ void    destroy_tokens_array(t_token_array *array)
     }
     free(array->tokens);
     array->tokens = NULL;
+}
+
+void	print_tokens(t_token_array *array)
+{
+    size_t  i;
+
+    i = 0;
+    while (i < array->count)
+    {
+        printf("%s\n", array->tokens[i]->value);
+        i++;
+    }
+    // destroy_tokens_array(array);
 }
