@@ -127,8 +127,8 @@ int     handle_quote(char *start_quote, t_token *token, t_lex_context *context);
 
 void	print_tokens(t_token_array *tokens);
 void	destroy_tokens_array(t_token_array *array);
-
-/*		parsing/	*/
+t_token	*add_new_token(t_token_array *array, size_t max_size);
+void    append_to_token(t_token *dest, char *src, size_t length);
 
 t_program   *parse_program(t_token_array array);
 
