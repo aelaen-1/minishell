@@ -18,7 +18,7 @@ void    append_to_token(t_token *dest, char *src, size_t length)
     }
     dest->length += length;
 }
-// saving chars in context->last_token until end of word
+// returns a token when end of word
 t_token *get_next_token(t_lex_context *context)
 {
     char    *s;
@@ -51,6 +51,7 @@ t_token *get_next_token(t_lex_context *context)
         context->position++;
     }
     append_to_token(last_token, "\0", 1);
+    find_token_type(last_token);
     return (last_token);
 }
 

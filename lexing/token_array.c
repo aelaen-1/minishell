@@ -1,8 +1,5 @@
 #include "../include/minishell.h"
 
-// growing array function
-// fill struct token and realloc if array exceeds initial capacity
-
 t_token     *create_token(size_t max_size)
 {
     t_token     *token;
@@ -12,13 +9,14 @@ t_token     *create_token(size_t max_size)
         return (NULL);
     token->type = NONE;
     token->length = 0;
+    token->is_builtin = 0;
     token->value = malloc(max_size);
     if (!token->value)
         return (free(token), NULL);
     ft_bzero(token->value, max_size);
     return (token);
 }
-
+// growing array function
 t_token    *add_token(t_token_array *array, t_token *token)
 {
     if (array->count >= array->capacity)
@@ -65,5 +63,48 @@ void	print_tokens(t_token_array *array)
         printf("%s\n", array->tokens[i]->value);
         i++;
     }
-    // destroy_tokens_array(array);
 }
+
+void    find_token_type(t_token *token)
+{
+    if (!ft_strcmp(token->value, "|"))
+        token->type = PIPEX;
+    else if (!ft_strcmp(token->value, "<"))
+        token->type = REDIR_IN;
+    else if (!ft_strcmp(token->value, ">"))
+        token->type = REDIR_OUT;
+    else if (!ft_strcmp(token->value, "<<"))
+        token->type = HEREDOC;
+    else if (!ft_strcmp(token->value, ">>"))
+        token->type = APPEND;
+    else if (token->value[0] == SIMPLE_QUOTE)
+        token->type = SQUOTE;
+    else if (token->value[0] == DOUBLE_QUOTE)
+        token->type = DQUOTE;
+    else if (token->value[0] == DOLLAR)
+        token->type = VARIABLE;
+    else
+        token->type = WORD; 
+}
+
+// int     is_builtin(t_token  *token)
+// {
+//     if (!ft_strcmp(token->value, "echo"))
+//         token->builtin = ECHO;
+//     else if (!ft_strcmp(token->value, "cd"))
+//         token->builtin = CD;
+//     else if (!ft_strcmp(token->value, "pwd"))
+//         token->builtin = PWD;
+//     else if (!ft_strcmp(token->value, "export"))
+//         token->builtin = EXPORT;
+//     else if (!ft_strcmp(token->value, "unset"))
+//         token->builtin = UNSET;  
+//     else if (!ft_strcmp(token->value, "env"))
+//         token->builtin = ENV;
+//     else if (!ft_strcmp(token->value, "exit"))
+//         token->builtin = EXIT;
+//     else
+//         return (0);
+//     token->is_builtin = 1;
+//     return (1);
+// }

@@ -17,9 +17,7 @@
 # include <sys/ioctl.h>
 # include <signal.h>
 # include <dirent.h>
-# include <termios.h>
 # include <curses.h>
-# include <term.h>
 
 # define SIMPLE_QUOTE 39
 # define DOUBLE_QUOTE 34
@@ -29,26 +27,40 @@
 # define DOLLAR 36
 # define LESS 60
 # define GREAT 62
-# define DLESS "<<" //strcmp(s, DLESS)
+# define DLESS "<<"
 # define DGREAT ">>"
 
+typedef enum e_builtins
+{
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT
+}	t_builtin;
 
 typedef enum e_token_type
 {
 	NONE,
 	WORD,
 	BUILTIN,
-	STRING
-	// DOLLAR,
-	// LESS, // <
-	// GREAT, // >
-	// DLESS, // << 
-	// DGREAT // >>
+	SQUOTE,
+	DQUOTE,
+	VARIABLE,
+	PIPEX,
+	REDIR_IN,
+	REDIR_OUT,
+	HEREDOC,
+	APPEND
 }	t_token_type;
  
 typedef struct	s_token
 {
 	t_token_type type;
+	t_builtin	builtin;
+	int		is_builtin;
 	size_t	length;
 	char *value;
 }	t_token;
@@ -57,8 +69,8 @@ typedef struct	s_token
 typedef struct s_token_array
 {
 	t_token **tokens;
-	size_t	count; // nb of tokens
-	size_t	capacity; // taille obtenue en malloc
+	size_t	count;
+	size_t	capacity;
 }	t_token_array;
 
 typedef struct	s_lex_context
@@ -68,10 +80,10 @@ typedef struct	s_lex_context
 	size_t		position;
 }	t_lex_context;
 
-typedef struct s_parse_context
-{
-	t_token_array   tokens;
-}	t_parse_context;
+// typedef struct s_parse_context
+// {
+// 	t_token_array   tokens;
+// }	t_parse_context;
 
 /*      envp.c      */
 char    *get_path(char *cmd);
@@ -83,24 +95,28 @@ void    exec_cmd(char *cmd);
 void    free_split(char **s);
 int     ft_strcmp(char *s1, char *s2);
 int		is_space(char c);
+size_t  eat_spaces(t_lex_context *context);
 
 
-/*		tokenizer/	*/
-void	print_tokens(t_token_array *tokens);
+/*		lexing/	*/
+void	init_lex_context(t_lex_context *context, char *input);
+int		init_token_array(t_token_array *array);
+t_token_array   tokenize_input(char *input);
+t_token     *create_token(size_t max_size);
+void    append_to_token(t_token *dest, char *src, size_t length);
 t_token		*get_next_token(t_lex_context *context);
+t_token    *add_token(t_token_array *array, t_token *token);
+
+int     is_builtin(t_token  *token);
+void    find_token_type(t_token *token);
+
 int     count_quotes(char *s, int start, char s_or_d);
 int     handle_quote(char *start_quote, t_token *token, t_lex_context *context);
 
-void	init_lex_context(t_lex_context *context, char *input);
-int		init_token_array(t_token_array *array);
+void	print_tokens(t_token_array *tokens);
 void	destroy_tokens_array(t_token_array *array);
-void    append_to_token(t_token *dest, char *src, size_t length);
 
-size_t  eat_spaces(t_lex_context *context);
-t_token     *create_token(size_t max_size);
-
-t_token    *add_token(t_token_array *array, t_token *token);
-t_token_array   tokenize_input(char *input);
+/*		parsing/	*/
 
 
 #endif
