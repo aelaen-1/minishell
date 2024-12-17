@@ -77,12 +77,6 @@ void    find_token_type(t_token *token)
         token->type = HEREDOC;
     else if (!ft_strcmp(token->value, ">>"))
         token->type = APPEND;
-    else if (token->value[0] == SIMPLE_QUOTE)
-        token->type = SQUOTE;
-    else if (token->value[0] == DOUBLE_QUOTE)
-        token->type = DQUOTE;
-    else if (token->value[0] == DOLLAR)
-        token->type = VARIABLE;
     else
         token->type = WORD; 
 }
