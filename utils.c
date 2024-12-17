@@ -7,7 +7,7 @@ int is_space(char c)
     return (0);
 }
 
-size_t  eat_spaces(t_parse_context *context)
+size_t  eat_spaces(t_lex_context *context)
 {
     size_t  spaces;
 
