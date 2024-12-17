@@ -43,17 +43,12 @@ typedef enum e_builtins
 
 typedef enum e_token_type
 {
-	NONE,
-	WORD,
-	BUILTIN,
-	SQUOTE,
-	DQUOTE,
-	VARIABLE,
-	PIPEX,
-	REDIR_IN,
-	REDIR_OUT,
-	HEREDOC,
-	APPEND
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIR_IN,
+	TOKEN_REDIR_OUT,
+	TOKEN_HEREDOC,
+	TOKEN_APPEND
 }	t_token_type;
  
 typedef struct	s_token
@@ -79,6 +74,23 @@ typedef struct	s_lex_context
 	size_t		input_len; 
 	size_t		position;
 }	t_lex_context;
+
+typedef struct	s_command
+{
+	size_t		argc;
+	char **argv;
+}	t_command;
+
+typedef struct	s_pipeline
+{
+	size_t		cmd_count;
+	t_command	*commands;
+}	t_pipeline;
+
+typedef struct	s_program
+{
+	t_pipeline	*pipeline;
+}	t_program;
 
 // typedef struct s_parse_context
 // {
@@ -118,5 +130,6 @@ void	destroy_tokens_array(t_token_array *array);
 
 /*		parsing/	*/
 
+t_program   *parse_program(t_token_array array);
 
 #endif

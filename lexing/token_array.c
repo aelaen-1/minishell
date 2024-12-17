@@ -7,7 +7,7 @@ t_token     *create_token(size_t max_size)
     token = malloc(sizeof(t_token));
     if (!token)
         return (NULL);
-    token->type = NONE;
+    token->type = TOKEN_WORD;
     token->length = 0;
     token->is_builtin = 0;
     token->value = malloc(max_size);
@@ -68,23 +68,15 @@ void	print_tokens(t_token_array *array)
 void    find_token_type(t_token *token)
 {
     if (!ft_strcmp(token->value, "|"))
-        token->type = PIPEX;
+        token->type = TOKEN_PIPE;
     else if (!ft_strcmp(token->value, "<"))
-        token->type = REDIR_IN;
+        token->type = TOKEN_REDIR_IN;
     else if (!ft_strcmp(token->value, ">"))
-        token->type = REDIR_OUT;
+        token->type = TOKEN_REDIR_OUT;
     else if (!ft_strcmp(token->value, "<<"))
-        token->type = HEREDOC;
+        token->type = TOKEN_HEREDOC;
     else if (!ft_strcmp(token->value, ">>"))
-        token->type = APPEND;
-    else if (token->value[0] == SIMPLE_QUOTE)
-        token->type = SQUOTE;
-    else if (token->value[0] == DOUBLE_QUOTE)
-        token->type = DQUOTE;
-    else if (token->value[0] == DOLLAR)
-        token->type = VARIABLE;
-    else
-        token->type = WORD; 
+        token->type = TOKEN_APPEND;
 }
 
 // int     is_builtin(t_token  *token)
