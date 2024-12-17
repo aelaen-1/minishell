@@ -51,6 +51,15 @@ t_token *get_next_token(t_parse_context *context)
             context->position++;
             return (context->last_token);
         }
+        if (s[context->position] == EXPAND)
+        {
+            context->position++;
+            while(!is_dquoting && s[context->position])
+            {
+                ft_expand(context->last_token);
+            }
+            break;
+        }
         append_to_token(context->last_token, s + context->position, 1);
         context->position++;
     }

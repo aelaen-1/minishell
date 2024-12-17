@@ -31,6 +31,7 @@
 # define GREAT 62
 # define DLESS "<<" //strcmp(s, DLESS)
 # define DGREAT ">>"
+# define EXPAND 36
 
 
 typedef enum e_token_type
@@ -38,7 +39,8 @@ typedef enum e_token_type
 	NONE,
 	WORD,
 	BUILTIN,
-	STRING
+	STRING,
+	ENV_VAR
 	// DOLLAR,
 	// LESS, // <
 	// GREAT, // >
@@ -96,5 +98,7 @@ t_token	*add_new_token(t_token_array *array, size_t max_size);
 void    append_to_token(t_token *dest, char *src, size_t length);
 
 size_t  eat_spaces(t_parse_context *context);
+
+int	ft_expand(t_token *token);
 
 #endif
