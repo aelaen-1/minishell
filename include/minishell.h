@@ -77,14 +77,14 @@ typedef struct	s_lex_context
 
 typedef struct	s_command
 {
-	size_t		argc;
+	// size_t		argc;
 	char **argv;
 }	t_command;
 
 typedef struct	s_pipeline
 {
 	size_t		cmd_count;
-	t_command	*commands;
+	t_command	**commands;
 }	t_pipeline;
 
 typedef struct	s_program
@@ -92,10 +92,6 @@ typedef struct	s_program
 	t_pipeline	*pipeline;
 }	t_program;
 
-// typedef struct s_parse_context
-// {
-// 	t_token_array   tokens;
-// }	t_parse_context;
 
 /*      envp.c      */
 char    *get_path(char *cmd);
@@ -117,7 +113,7 @@ t_token_array   tokenize_input(char *input);
 t_token     *create_token(size_t max_size);
 void    append_to_token(t_token *dest, char *src, size_t length);
 t_token		*get_next_token(t_lex_context *context);
-t_token    *add_token(t_token_array *array, t_token *token);
+t_token    *add_token_to_array(t_token_array *array, t_token *token);
 
 int     is_builtin(t_token  *token);
 void    find_token_type(t_token *token);
@@ -130,6 +126,9 @@ void	destroy_tokens_array(t_token_array *array);
 
 /*		parsing/	*/
 
+t_token    **find_token(t_token **start, t_token **end, t_token_type token_type);
+t_command  *parse_command(t_token **start, t_token **end);
+t_pipeline  *parse_pipeline(t_token **start, t_token **end);
 t_program   *parse_program(t_token_array array);
 
 #endif
