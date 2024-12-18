@@ -8,45 +8,73 @@ static  size_t  count_pipes(t_token **start, t_token **end)
     i = 0;
     while (start < end)
     {
-        if ((*start)->type == TOKEN_PIPE)
-        {
-            printf("pipe found\n");
+        if ((*start)->value[0] ==  '|')
             i++;
-        }
         start++;
     }
+    // while (start < end) // ne reconnait pas les pipes (problème de type probablement)
+    // {
+    //     if ((*start)->type == TOKEN_PIPE)
+    //     {
+    //         printf("pipe found\n");
+    //         i++;
+    //     }
+    //     start++;
+    // }
+    printf("pipes count: %zu\n", i);
     return (i);
 }
 
 // cherche le prochain token de type token_type
-t_token    **find_token(t_token **start, t_token **end, t_token_type token_type)
+// t_token    **find_token(t_token **start, t_token **end, t_token_type token_type)
+// {   
+//     while (start < end)
+//    {
+//         if ((*start)->type == token_type)
+//             return (start);
+//         start++;
+//    }
+//    return (end);
+// }
+
+t_token    **find_token(t_token **start, t_token **end, char c)
 {   
     while (start < end)
    {
-        if ((*start)->type == token_type)
+        if ((*start)->value[0] == c)
             return (start);
         start++;
    }
    return (end);
 }
+// {   
+//     while (start < end)
+//    {
+//         if ((*start)->type == token_type)
+//             return (start);
+//         start++;
+//    }
+//    return (end);
+// }
 
 // renvoie une structure pipeline composee de chaques commandes entre les pipes
 // tant qu'on a pas atteint la fin du pipeline (A | B | C par ex => la fin est apres C, find_token renvoie NULL(char apres C))
 t_pipeline  *parse_pipeline(t_token **start, t_token **end)
 {
     t_pipeline *pipeline;
-    
+    size_t  i;
+
+    i = 0;
     pipeline = malloc(sizeof(t_pipeline));
     if (!pipeline)
         return (NULL);
     pipeline->cmd_count = count_pipes(start, end) + 1;
     pipeline->commands = malloc(sizeof(t_command *) * pipeline->cmd_count);
     if (!pipeline->commands)
-        return (free(pipeline), NULL);
-    size_t  i = 0; 
-    while (start < end && i < pipeline->cmd_count) // true
+        return (free(pipeline), NULL); 
+    while (start < end && i < pipeline->cmd_count)
     {
-        t_token **command_end = find_token(start, end, TOKEN_PIPE);
+        t_token **command_end = find_token(start, end, '|');
         pipeline->commands[i] = parse_command(start, command_end);
         if (!pipeline->commands[i])
         {
@@ -83,6 +111,13 @@ t_command  *parse_command(t_token **start, t_token **end)
         i++;
     }
     command->argv[i] = NULL;
+    i = 0;
+    while(command->argv[i])
+    {
+        printf("%s ",command->argv[i]);
+        i++;
+    }
+    printf("\n");
     return (command);
 }
 
