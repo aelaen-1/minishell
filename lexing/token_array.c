@@ -78,7 +78,7 @@ void    find_token_type(t_token *token)
     else if (!ft_strcmp(token->value, ">>"))
         token->type = TOKEN_APPEND;
     else
-        token->type = WORD; 
+        token->type = TOKEN_WORD; 
 }
 
 // int     is_builtin(t_token  *token)

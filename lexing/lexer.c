@@ -19,6 +19,7 @@ void    append_to_token(t_token *dest, char *src, size_t length)
     dest->length += length;
 }
 // returns a token when end of word
+// Step 2 out of 7
 t_token *get_next_token(t_lex_context *context)
 {
     char    *s;

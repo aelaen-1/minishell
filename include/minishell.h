@@ -30,6 +30,10 @@
 # define DLESS "<<"
 # define DGREAT ">>"
 
+/**
+ * @brief Type of builtin functions
+ * 
+ */
 typedef enum e_builtins
 {
 	ECHO,
@@ -41,6 +45,10 @@ typedef enum e_builtins
 	EXIT
 }	t_builtin;
 
+/**
+ * @brief Token types to create parse tree
+ * 
+ */
 typedef enum e_token_type
 {
 	TOKEN_WORD,
@@ -50,7 +58,11 @@ typedef enum e_token_type
 	TOKEN_HEREDOC,
 	TOKEN_APPEND
 }	t_token_type;
- 
+
+/**
+ * @brief Token node
+ * 
+ */
 typedef struct	s_token
 {
 	t_token_type type;
@@ -61,6 +73,10 @@ typedef struct	s_token
 }	t_token;
 
 // growing array
+/**
+ * @brief Array of tokens derived from lexing of input
+ * 
+ */
 typedef struct s_token_array
 {
 	t_token **tokens;
@@ -75,6 +91,10 @@ typedef struct	s_lex_context
 	size_t		position;
 }	t_lex_context;
 
+/**
+ * @brief Command node 
+ * cmd = argv[0] and any arguments are onwards 
+ */
 typedef struct	s_command
 {
 	size_t		argc;
@@ -86,6 +106,16 @@ typedef struct	s_pipeline
 	size_t		cmd_count;
 	t_command	*commands;
 }	t_pipeline;
+
+typedef struct	s_redir
+{
+	int		type;
+	char	*infile;
+	char	*outfile;
+	int		fd;
+	int		mode;
+	t_command	*commands;
+}	t_redir;
 
 typedef struct	s_program
 {
