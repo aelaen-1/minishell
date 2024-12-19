@@ -46,6 +46,7 @@ t_token *get_next_token(t_lex_context *context)
             }
             append_to_token(last_token, s + context->position, 1);
             context->position++;
+            find_token_type(last_token);
             return (last_token);
         }
         append_to_token(last_token, s + context->position, 1);
@@ -66,6 +67,6 @@ t_token_array   tokenize_input(char *input)
         return (tokens);
     init_lex_context(&context, input);
     while(context.position < context.input_len)
-        add_token(&tokens, get_next_token(&context));
+        add_token_to_array(&tokens, get_next_token(&context));
     return (tokens);
 }

@@ -17,7 +17,7 @@ t_token     *create_token(size_t max_size)
     return (token);
 }
 // growing array function
-t_token    *add_token(t_token_array *array, t_token *token)
+t_token    *add_token_to_array(t_token_array *array, t_token *token)
 {
     if (array->count >= array->capacity)
     {
