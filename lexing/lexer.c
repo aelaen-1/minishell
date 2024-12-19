@@ -18,7 +18,7 @@ void    append_to_token(t_token *dest, char *src, size_t length)
     }
     dest->length += length;
 }
-// returns a token when end of word
+// returns a token when end of word (space, quote, pipe, etc) is reached
 t_token *get_next_token(t_lex_context *context)
 {
     char    *s;
@@ -45,6 +45,7 @@ t_token *get_next_token(t_lex_context *context)
             }
             append_to_token(last_token, s + context->position, 1);
             context->position++;
+            find_token_type(last_token);
             return (last_token);
         }
         append_to_token(last_token, s + context->position, 1);

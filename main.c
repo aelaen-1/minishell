@@ -9,8 +9,8 @@ int main (int ac, char **av)
     {
         char *input = readline("minishell % ");
         t_token_array tokens = tokenize_input(input);
-        // print_tokens(&tokens);
         parse_program(tokens);
+        // print_tokens(&tokens);
         destroy_tokens_array(&tokens);
     }
     return 0;
