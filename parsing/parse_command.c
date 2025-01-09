@@ -70,7 +70,10 @@ void    destroy_command(t_command *command)
     free(command);
 }
 
-
+// enleve les quotes trouvees une fois les expansions faites
+// exemple dans shell : input : echo $"PATH" ==> "PATH" ==> output = PATH  : le shell fait d'abord l'expansion, ici
+// pas de variable d'environnement juste apres le $ donc il saute le $ et passe a "PATH"
+// 
 void    remove_quotes(t_command *cmd)
 {
     size_t  i;

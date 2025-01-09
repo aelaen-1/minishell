@@ -2,6 +2,8 @@
 
 // IMPORTANT : QUOTE REMOVAL
 
+// renvoie la valeur de la variable
+// exemple : si $ABC = bonjour, renvoie bonjour
 char *get_env_value(const char *var)
 {
     char *value; 
@@ -11,6 +13,10 @@ char *get_env_value(const char *var)
     return (ft_strdup(value));
 }
 
+
+// Renvoie la taille de la valeur de la variable
+// Par exemple : $ABC = bonjour
+// la fonction renvoie 7
 size_t    get_expanded_var_length(const char *var)
 {
     char *value = get_env_value(var);
@@ -21,6 +27,7 @@ size_t    get_expanded_var_length(const char *var)
     return (len);
 }
 
+// Renvoie la taille de la commande apres expansion de toutes les variables
 size_t  get_expanded_arg_size(char **command_arg)
 {
     char *input;
@@ -31,6 +38,10 @@ size_t  get_expanded_arg_size(char **command_arg)
     i = 0;
     input = *command_arg;
     size = ft_strlen(input);
+    // la fonction get_quote_state permet de savoir quel caractere dans la string est quote
+    // et avec quel type de quote, ce qui nous permet de realise l'expansion d'une variable uniquement
+    // si elle n'est pas entre single-quote
+    // rappel : echo $ABC = echo "$ABC", mais echo '$ABC' = $ABC
     t_quote_type *quoting = get_quote_state(input);
     if (!quoting)
         return (0);
@@ -56,6 +67,10 @@ size_t  get_expanded_arg_size(char **command_arg)
     return (size);
 }
 
+// remplace chaque variable ($ABC) par sa valeur
+// si $ est suivi par un caractere non alpha-numerique, on saute simplement
+// le $
+// par exemple : echo $"PATH" ==> "PATH" ==> PATH (apres quote removal)
 char    *expand_command_arg(char **command_arg)
 {
     char *input;
@@ -91,7 +106,7 @@ char    *expand_command_arg(char **command_arg)
             {
                 char *var_name = ft_substr(input, i, len);
                 char *var_value = get_env_value(var_name);
-                if (var_value)
+                if (var_value) // si var_name est le nom d'une variable d'environnement alors on le remplace par sa valeur
                 {
                     ft_strlcpy(res + j, var_value, ft_strlen(var_value) + 1); // + 1 = null-terminating the result
                     j += ft_strlen(var_value);
@@ -109,7 +124,8 @@ char    *expand_command_arg(char **command_arg)
 }
 
 
-
+// Sur chaque commande, on cherche si on trouve un $ et s'il est suivi d'une chaine de caracteres
+// pour pouvoir remplace cet ensemble par sa valeur (rien si ce n'est pas une variable d'environnement)
 void    perform_expansions(t_command *command)
 {
     size_t  i;
