@@ -31,7 +31,9 @@ static int    redir_in(t_command *cmd, t_token **current, t_token_type token_typ
     return (0);
 }
 
-
+// si le token qui suit une redirection est de type word, alors
+//on l'utilise comme fichier : ls > a ou ls >> a ==> utilise a comme fichier de sortie
+// ls < a ==> utilise a comme fichier d'entre
 int    parse_redir(t_command *cmd, t_token **current) 
 {
     if ((*current)->type == TOKEN_REDIR_OUT) // ' > '
