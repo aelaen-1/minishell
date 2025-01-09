@@ -1,0 +1,128 @@
+#include "../include/minishell.h"
+
+// IMPORTANT : QUOTE REMOVAL
+
+char *get_env_value(const char *var)
+{
+    char *value; 
+    value = getenv(var);
+    if (value == NULL)
+        return (NULL);
+    return (ft_strdup(value));
+}
+
+size_t    get_expanded_var_length(const char *var)
+{
+    char *value = get_env_value(var);
+    if (value == NULL)
+        return (0);
+    size_t len = ft_strlen(value);
+    free(value);
+    return (len);
+}
+
+size_t  get_expanded_arg_size(char **command_arg)
+{
+    char *input;
+    size_t size;
+    size_t i;
+    size_t len;
+
+    i = 0;
+    input = *command_arg;
+    size = ft_strlen(input);
+    t_quote_type *quoting = get_quote_state(input);
+    if (!quoting)
+        return (0);
+    while (input[i])
+    {
+        if (input[i] == '$' && quoting[i] != QUOTE_SINGLE)
+        {
+            i++;
+            len = 0;
+            while (ft_isalnum(input[i + len]) || input[i + len] == '_')
+                len++;
+            if (len)
+            {
+                char *var_name = ft_substr(input, i, len);
+                size += get_expanded_var_length(var_name) - len - 1; // ajout de la taille de la valeur de la variable, enlève la taille du nom de la variable et du $
+                free(var_name);
+                i += len; 
+            }
+        }
+        else
+            i++;
+    }
+    return (size);
+}
+
+char    *expand_command_arg(char **command_arg)
+{
+    char *input;
+    char *res;
+    size_t size;
+    size_t i;
+    size_t j;
+    size_t len;
+
+    i = 0;
+    j = 0;
+    input = *command_arg;
+    size = get_expanded_arg_size(command_arg); // 1. Calcule la taille de la chaine de caractere apres expansion(s) : $A$B$C par exemple
+    // 2. réallocation de la mémoire en fonction de la size obtenue
+    res = malloc(size + 1);
+    if (!res)
+        return (NULL);
+    t_quote_type *quoting = get_quote_state(input);
+    if (!quoting)
+    {
+        free(res);
+        return (NULL);
+    }
+    while (input[i])
+    {
+        if (input[i] == '$' && quoting[i] != QUOTE_SINGLE)
+        {
+            i++;
+            len = 0;
+            while (ft_isalnum(input[i + len]) || input[i + len] == '_')
+               len++;
+            if (len)
+            {
+                char *var_name = ft_substr(input, i, len);
+                char *var_value = get_env_value(var_name);
+                if (var_value)
+                {
+                    ft_strlcpy(res + j, var_value, ft_strlen(var_value) + 1); // + 1 = null-terminating the result
+                    j += ft_strlen(var_value);
+                    free(var_value);
+                }
+                free(var_name);
+                i += len;
+            }
+        }
+        else
+            res[j++] = input[i++];
+    }
+    res[j] = '\0';
+    return (res);
+}
+
+
+
+void    perform_expansions(t_command *command)
+{
+    size_t  i;
+
+    i = 0;
+    while (command->argv[i] != NULL)
+    {
+        char *expanded = expand_command_arg(&command->argv[i]);
+        if (expanded)
+        {
+            free(command->argv[i]); // réallocation donc on free l'ancienne valeur
+            command->argv[i] = expanded;
+        }
+        i++;
+    }
+}
