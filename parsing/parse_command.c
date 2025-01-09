@@ -47,7 +47,7 @@ t_command  *parse_command(t_token **start, t_token **end)
     command->argv[iter - start] = NULL;
     perform_expansions(command);
     // quote removal
-    remove_quotes(command);
+    // remove_quotes(command);
     iter = start;
     while(command->argv[iter - start])
     {
