@@ -1,10 +1,11 @@
 #include "include/minishell.h"
 //REPL
-//./minishell --pp (print_program)
-int main (int ac, char **av)
+//./minishell --p(print_program)
+int main (int ac, char **av , char **env)
 {
     (void)ac;
     (void)av;
+    t_program *prg;
     if (ac == 2 && !strcmp(av[1], "--pp"))
     {
         char *input = readline("");
@@ -22,7 +23,13 @@ int main (int ac, char **av)
         // for (size_t i =0; i < ft_strlen(input); i++)
         //     printf("%d", quoting[i]);
         t_token_array tokens = tokenize_input(input);
-        parse_program(tokens);
+        prg = parse_program(tokens);
+        if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "echo"))
+            builtin_echo(prg->pipeline->commands[0]->argv);
+        else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "env"))
+            builtin_env(env);
+        else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "pwd"))
+            builtin_pwd(env);
         destroy_tokens_array(&tokens);
     }
     return 0;
