@@ -1,6 +1,6 @@
 #include "include/minishell.h"
 //REPL
-//./minishell --p(print_program)
+//./minishell --pp(print_program)
 int main (int ac, char **av , char **env)
 {
     (void)ac;
@@ -8,12 +8,15 @@ int main (int ac, char **av , char **env)
     t_program *prg;
     if (ac == 2 && !strcmp(av[1], "--pp"))
     {
-        char *input = readline("");
+        while (1)
+        {
+        char *input = readline("minishell % ");
         t_token_array tokens = tokenize_input(input);
-        t_program *program = parse_program(tokens);
+        t_program *program = parse_program(tokens, env);
         print_program_to_dot(program);
         destroy_tokens_array(&tokens);
-        return (0);
+        }
+        return 0;
     }
     while(1)
     {
@@ -23,7 +26,7 @@ int main (int ac, char **av , char **env)
         // for (size_t i =0; i < ft_strlen(input); i++)
         //     printf("%d", quoting[i]);
         t_token_array tokens = tokenize_input(input);
-        prg = parse_program(tokens);
+        prg = parse_program(tokens, env);
         if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "echo"))
             builtin_echo(prg->pipeline->commands[0]->argv);
         else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "env"))
