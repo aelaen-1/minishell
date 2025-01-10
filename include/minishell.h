@@ -168,8 +168,9 @@ void    print_command_to_dot(t_command *command);
 void    print_program_to_dot(t_program  *program);
 
 /*		builtins/		*/
-int	builtin_echo(char **argv);
-int	builtin_env(char **env);
+int	builtin_echo(t_command *command);
+int	builtin_env(t_command *command);
 int	builtin_pwd();
+int	builtin_cd(t_command *command);
 
 #endif

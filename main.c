@@ -28,11 +28,13 @@ int main (int ac, char **av , char **env)
         t_token_array tokens = tokenize_input(input);
         prg = parse_program(tokens, env);
         if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "echo"))
-            builtin_echo(prg->pipeline->commands[0]->argv);
+            builtin_echo(prg->pipeline->commands[0]);
         else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "env"))
-            builtin_env(env);
+            builtin_env(prg->pipeline->commands[0]);
         else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "pwd"))
-            builtin_pwd(env);
+            builtin_pwd();
+        else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "cd"))
+            builtin_cd(prg->pipeline->commands[0]);
         destroy_tokens_array(&tokens);
     }
     return 0;

@@ -12,14 +12,14 @@
 
 #include "../include/minishell.h"
 
-int	builtin_env(char **env)
+int	builtin_env(t_command *command)
 {
 	int	i;
 	
 	i = 0;
-	while (env[i])
+	while (command->envp[i])
 	{
-		ft_putstr_fd(env[i], 1);
+		ft_putstr_fd(command->envp[i], 1);
 		ft_putchar_fd('\n', 1);
 		i++;
 	}

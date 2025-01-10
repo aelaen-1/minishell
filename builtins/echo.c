@@ -12,24 +12,24 @@
 
 #include "../include/minishell.h"
 
-int	builtin_echo(char **argv)
+int	builtin_echo(t_command *command)
 {
 	int	i;
 	int	n_option;
 
 	i = 1;
 	n_option = 0;
-	if (!argv[i])
-		return (1);
-	if (!ft_strcmp("-n", argv[i]))
+	if (!command->argv[i])
+		return (ft_putchar_fd('\n', 1), 1);
+	if (!ft_strcmp("-n", command->argv[i]))
 	{
 		n_option = 1;
 		i++;
 	}
-	while (argv[i])
+	while (command->argv[i])
 	{
-		ft_putstr_fd(argv[i], 1);
-		if (argv[i + 1])
+		ft_putstr_fd(command->argv[i], 1);
+		if (command->argv[i + 1])
 			ft_putchar_fd(' ', 1);
 		i++;
 	}
