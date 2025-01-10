@@ -101,6 +101,7 @@ typedef struct	s_redir
 typedef struct	s_command
 {
 	char **argv;
+	char **envp;
 	t_redir redir_in;
 	t_redir redir_out;
 }	t_command;
@@ -152,11 +153,11 @@ void	destroy_tokens_array(t_token_array *array);
 void    append_to_token(t_token *dest, char *src, size_t length);
 
 /*		parsing/		*/
-t_command  *parse_command(t_token **start, t_token **end);
-t_command	*create_command(int argc);
+t_command  *parse_command(t_token **start, t_token **end, char **env);
+t_command	*create_command(int argc, char **env);
 void		destroy_command(t_command *command);
-t_pipeline  *parse_pipeline(t_token **start, t_token **end);
-t_program   *parse_program(t_token_array array);
+t_pipeline  *parse_pipeline(t_token **start, t_token **end, char **env);
+t_program   *parse_program(t_token_array array, char **env);
 int			parse_redir(t_command *cmd, t_token **current);
 
 void    perform_expansions(t_command *command);
@@ -166,7 +167,9 @@ void    print_pipeline_to_dot(t_pipeline *pipeline);
 void    print_command_to_dot(t_command *command);
 void    print_program_to_dot(t_program  *program);
 
-
-
+/*		builtins/		*/
+int	builtin_echo(char **argv);
+int	builtin_env(char **env);
+int	builtin_pwd();
 
 #endif
