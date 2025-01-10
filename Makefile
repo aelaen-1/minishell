@@ -1,47 +1,46 @@
+CC = gcc
+FLAGS = -Wall -Werror -Wextra
 NAME = minishell
+LIBFT = include/libft
+HEADER = include/minishell.h
+OBJ_PATH = objs
 
-CC = cc
-FLAGS = -Wall -Wextra -Werror #-fsanitize=address
+SOURCES = $(wildcard *.c) \
+        $(wildcard lexing/*.c) \
+        $(wildcard tools/*.c) \
+        $(wildcard expansions/*.c) \
+        $(wildcard parsing/*.c) \
+        $(wildcard exec/*.c) \
+        $(wildcard env_variables/*.c) \
+        $(wildcard history/*.c) \
+        $(wildcard init/*.c) \
+        $(wildcard pipes/*.c) \
+        $(wildcard redirections/*.c) \
+        $(wildcard signals/*.c) \
+        $(wildcard builtins/*.c)
 
-LIBFT = ./include/libft
-SRC = $(wildcard *.c) \
-		$(wildcard lexing/*.c) \
-		$(wildcard tools/*.c) \
-		$(wildcard expansions/*.c) \
-		$(wildcard parsing/*.c) \
-		$(wildcard exec/*.c) \
-		$(wildcard env_variables/*.c) \
-		$(wildcard history/*.c) \
-		$(wildcard init/*.c) \
-		$(wildcard pipes/*.c) \
-		$(wildcard redirections/*.c) \
-		$(wildcard signals/*.c) \
-    	$(wildcard builtins/*.c) \
-    	$(LIBFT)/libft.a
+OBJS = $(patsubst %.c,$(OBJ_PATH)/%.o,$(SOURCES))
 
-OBJ = $(SRC:.c=.o)
+all: lib $(NAME)
 
-debug: FLAGS += -g
-debug: all
+lib:
+	$(MAKE) -C $(LIBFT)
 
-all: $(NAME)
+$(NAME): $(OBJS)
+	$(CC) $(FLAGS) -L $(LIBFT) -o $(NAME) $(OBJS) -lft -lreadline
 
-%.o: %.c
+$(OBJ_PATH)/%.o: %.c
+	@mkdir -p $(dir $@)
 	$(CC) $(FLAGS) -c $< -o $@
 
-
-$(NAME) :
-	make all -C $(LIBFT)
-	$(CC) $(FLAGS) $(SRC) -o $(NAME) -lreadline
-
 clean:
-	$(RM) $(NAME)
-	make clean -C $(LIBFT)
-	
-fclean: clean	
-	$(RM) $(NAME)
-	make fclean -C $(LIBFT)
+	$(MAKE) clean -C $(LIBFT)
+	rm -rf $(OBJ_PATH)
+
+fclean: clean
+	rm -f $(NAME)
+	$(MAKE) fclean -C $(LIBFT)
 
 re: fclean all
 
-.PHONY: clean fclean re all
+.PHONY: all lib clean fclean re
