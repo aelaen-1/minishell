@@ -98,10 +98,17 @@ typedef struct	s_redir
 	char	*file;
 }	t_redir;
 
+typedef	struct	s_env_node
+{
+	char	*env_var;
+	struct	s_env_node *next;
+	struct	s_env_node *previous;
+}	t_env_node;
+
 typedef struct	s_command
 {
 	char **argv;
-	char **envp;
+	t_env_node *envp;
 	t_redir redir_in;
 	t_redir redir_out;
 }	t_command;
@@ -117,6 +124,7 @@ typedef struct	s_program
 {
 	t_pipeline	*pipeline;
 }	t_program;
+
 
 
 
@@ -153,11 +161,11 @@ void	destroy_tokens_array(t_token_array *array);
 void    append_to_token(t_token *dest, char *src, size_t length);
 
 /*		parsing/		*/
-t_command  *parse_command(t_token **start, t_token **end, char **env);
-t_command	*create_command(int argc, char **env);
+t_command  *parse_command(t_token **start, t_token **end,  t_env_node *envp);
+t_command	*create_command(int argc,  t_env_node *envp);
 void		destroy_command(t_command *command);
-t_pipeline  *parse_pipeline(t_token **start, t_token **end, char **env);
-t_program   *parse_program(t_token_array array, char **env);
+t_pipeline  *parse_pipeline(t_token **start, t_token **end,  t_env_node *envp);
+t_program   *parse_program(t_token_array array, t_env_node *envp);
 int			parse_redir(t_command *cmd, t_token **current);
 
 void    perform_expansions(t_command *command);
@@ -168,8 +176,14 @@ void    print_command_to_dot(t_command *command);
 void    print_program_to_dot(t_program  *program);
 
 /*		builtins/		*/
-int	builtin_echo(char **argv);
-int	builtin_env(char **env);
-int	builtin_pwd();
+t_env_node *init_env(char **env);
+int update_env(t_env_node **env , char *key, char *value);
+int unset_env(t_env_node **env, char *key);
 
+int	builtin_echo(t_command *command);
+int	builtin_env(t_command *command);
+int	builtin_pwd();
+int	builtin_cd(t_command *command);
+int builtin_export(t_command *command);
+int builtin_unset(t_command *command);
 #endif
