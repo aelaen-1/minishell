@@ -23,7 +23,6 @@ t_env_node *init_env(char **env)
     bottom = NULL;
     new_node = NULL;
     i = 0;
-
     while(env[i])
     {
         new_node = malloc(sizeof(t_env_node));

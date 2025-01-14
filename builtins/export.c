@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lvastel <lvastel@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/13 13:18:08 by lvastel           #+#    #+#             */
-/*   Updated: 2024/12/13 13:18:10 by lvastel          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../include/minishell.h"
 
 int parse_key_value(char *input, char **key, char **value)
@@ -40,6 +28,7 @@ int parse_key_value(char *input, char **key, char **value)
     strcpy(*value, separator + 1);
     return 0;
 }
+
 int builtin_export(t_command *command)
 {
     char *key;

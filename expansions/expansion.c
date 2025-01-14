@@ -89,7 +89,7 @@ char    *expand_command_arg(char **command_arg)
     if (!res)
         return (NULL);
     t_quote_type *quoting = get_quote_state(input);
-    if (!quoting)
+    if (!quoting) 
     {
         free(res);
         return (NULL);

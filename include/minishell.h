@@ -58,7 +58,6 @@ typedef enum e_token_type
 	TOKEN_APPEND
 }	t_token_type;
 
-
 typedef enum e_redir_type
 {
 	REDIR_NONE,
@@ -126,8 +125,6 @@ typedef struct	s_program
 }	t_program;
 
 
-
-
 /*      exec      */
 int		exec_cmd(t_command *cmd);
 
@@ -188,4 +185,5 @@ int	builtin_pwd();
 int	builtin_cd(t_command *command);
 int builtin_export(t_command *command);
 int builtin_unset(t_command *command);
+
 #endif
