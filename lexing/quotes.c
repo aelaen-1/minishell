@@ -83,7 +83,7 @@ t_quote_type    *get_quote_state(char *s)
 }
 
 
-static    remove_str_quotes(char *str)
+static void     remove_str_quotes(char *str)
 {
     t_quote_type    *quote_state;
     t_quote_type    current;
