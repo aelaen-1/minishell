@@ -6,16 +6,20 @@
 // exemple : si $ABC = bonjour, renvoie bonjour
 char *get_env_value(t_command *cmd, char *to_find)
  {
-        t_env_node *tmp;
+    size_t i;
 
-        tmp = cmd->envp;
-        while(tmp)
+    i = ft_strlen(to_find);
+    while(cmd->envp)
+    {
+        if (!ft_strncmp(cmd->envp->env_var, to_find, i))
         {
-            if (!ft_strcmp(tmp->env_var, to_find))
-                return (ft_strdup(tmp->env_var));
-            tmp = tmp->next;
+            char *value;
+            value = ft_strdup(cmd->envp->env_var + i + 1); // + 1 pour sauter le =
+            return (value);
         }
-        return (NULL);
+        cmd->envp = cmd->envp->next;
+    }
+    return (NULL);
 }
 
 // Renvoie la taille de la valeur de la variable
@@ -28,6 +32,7 @@ static size_t    get_expanded_var_length(t_command *cmd, char *var)
         return (0);
     size_t len = ft_strlen(value);
     free(value);
+    printf("len is : %zu\n", len);
     return (len);
 }
 

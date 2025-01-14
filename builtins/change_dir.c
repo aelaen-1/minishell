@@ -9,7 +9,7 @@ int	builtin_cd(t_command *command)
 	former_path = getcwd(NULL, 0);
 	if (!command->argv[1])
 	{
-		alternate_path = get_env_value(command, "HOME");
+		alternate_path = get_env("HOME");
 		if (alternate_path == NULL)
             return (write(2, "cd: HOME not set\n", 17),-1);
 	}
