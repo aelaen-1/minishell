@@ -9,7 +9,7 @@
 
  // 1
 
- static char *get_path(char **argv)
+ static char *get_path(t_command *cmd)
  {
     char **full_path;
     size_t  i;
@@ -17,11 +17,11 @@
     char    *path_to_try;
 
     i = 0;
-    full_path = ft_split(getenv("PATH"), ':');
+    full_path = ft_split(get_env_value(cmd, "PATH"), ':');
     while (full_path[i])
     {
         path_1 = ft_strjoin(full_path[i], "/");
-        path_to_try = ft_strjoin(path_1, argv[0]);
+        path_to_try = ft_strjoin(path_1, cmd->argv[0]);
         if (access(path_to_try, F_OK | X_OK))
         {
             free(path_1);
@@ -36,12 +36,10 @@
     return (NULL); 
  }
 
-
-
 int exec_cmd(t_command *cmd)
 {
     char    *path;
-    path = get_path(cmd->argv);
+    path = get_path(cmd);
     if (!path)
         return (-1); // afficher un code d'erreur
     // duplication de fd selon infile/outfile

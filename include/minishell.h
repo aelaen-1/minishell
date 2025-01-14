@@ -186,4 +186,7 @@ int	builtin_cd(t_command *command);
 int builtin_export(t_command *command);
 int builtin_unset(t_command *command);
 
+
+char *get_env_value(t_command *cmd, char *to_find);
+
 #endif
