@@ -37,3 +37,17 @@ void    print_program_to_dot(t_program  *program)
     print_pipeline_to_dot(program->pipeline);
     fprintf(stderr,"}\n");
 }
+// int main(int ac, char **av, char **env)
+// {
+// if (ac == 2 && !strcmp(av[1], "--pp"))
+// {
+//     while (1)
+//     {
+//     char *input = readline("minishell % ");
+//     t_token_array tokens = tokenize_input(input);
+//     t_program *program = parse_program(tokens, env);
+//     print_program_to_dot(program);
+//     destroy_tokens_array(&tokens);
+//     }
+//     return 0;
+// }

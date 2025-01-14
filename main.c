@@ -6,18 +6,7 @@ int main (int ac, char **av , char **env)
     (void)ac;
     (void)av;
     t_program *prg;
-    if (ac == 2 && !strcmp(av[1], "--pp"))
-    {
-        while (1)
-        {
-        char *input = readline("minishell % ");
-        t_token_array tokens = tokenize_input(input);
-        t_program *program = parse_program(tokens, env);
-        print_program_to_dot(program);
-        destroy_tokens_array(&tokens);
-        }
-        return 0;
-    }
+
     while(1)
     {
         char *input = readline("minishell % ");
@@ -32,7 +21,7 @@ int main (int ac, char **av , char **env)
         else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "env"))
             builtin_env(env);
         else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "pwd"))
-            builtin_pwd(env);
+            builtin_pwd();
         destroy_tokens_array(&tokens);
     }
     return 0;

@@ -1,46 +1,89 @@
-CC = gcc
-FLAGS = -Wall -Werror -Wextra
-NAME = minishell
-LIBFT = include/libft
-HEADER = include/minishell.h
-OBJ_PATH = objs
+# CC = gcc
+# FLAGS = -Wall -Werror -Wextra
+# NAME = minishell
+# LIBFT = include/libft
+# HEADER = include/minishell.h
+# OBJ_PATH = objs
 
-SOURCES = $(wildcard *.c) \
-        $(wildcard lexing/*.c) \
+# SOURCES = $(wildcard *.c) \
+#         $(wildcard lexing/*.c) \
+#         $(wildcard tools/*.c) \
+#         $(wildcard expansions/*.c) \
+#         $(wildcard parsing/*.c) \
+#         $(wildcard exec/*.c) \
+#         $(wildcard env_variables/*.c) \
+#         $(wildcard history/*.c) \
+#         $(wildcard init/*.c) \
+#         $(wildcard pipes/*.c) \
+#         $(wildcard redirections/*.c) \
+#         $(wildcard signals/*.c) \
+#         $(wildcard builtins/*.c)
+
+# OBJS = $(patsubst %.c,$(OBJ_PATH)/%.o,$(SOURCES))
+
+# all: lib $(NAME)
+
+# lib:
+# 	$(MAKE) -C $(LIBFT)
+
+# $(NAME): $(OBJS)
+# 	$(CC) $(FLAGS) -L $(LIBFT) -o $(NAME) $(OBJS) -lft -lreadline
+
+# $(OBJ_PATH)/%.o: %.c
+# 	@mkdir -p $(dir $@)
+# 	$(CC) $(FLAGS) -c $< -o $@
+
+# clean:
+# 	$(MAKE) clean -C $(LIBFT)
+# 	rm -rf $(OBJ_PATH)
+
+# fclean: clean
+# 	rm -f $(NAME)
+# 	$(MAKE) fclean -C $(LIBFT)
+
+# re: fclean all
+
+# .PHONY: all lib clean fclean re
+
+NAME = minishell
+
+CC = cc
+FLAGS = -Wall -Wextra -Werror #-fsanitize=address
+
+LIBFT = ./include/libft
+SRC = $(wildcard *.c) \
+	$(wildcard lexing/*.c) \
         $(wildcard tools/*.c) \
         $(wildcard expansions/*.c) \
-        $(wildcard parsing/*.c) \
-        $(wildcard exec/*.c) \
-        $(wildcard env_variables/*.c) \
-        $(wildcard history/*.c) \
-        $(wildcard init/*.c) \
-        $(wildcard pipes/*.c) \
-        $(wildcard redirections/*.c) \
-        $(wildcard signals/*.c) \
-        $(wildcard builtins/*.c)
+		$(wildcard parsing/*.c) \
+		$(wildcard exec/*.c) \
+		$(wildcard signals/*.c) \
+    	$(wildcard builtins/*.c) \
+    	$(LIBFT)/libft.a
 
-OBJS = $(patsubst %.c,$(OBJ_PATH)/%.o,$(SOURCES))
+OBJ = $(SRC:.c=.o)
 
-all: lib $(NAME)
+debug: FLAGS += -g
+debug: all
 
-lib:
-	$(MAKE) -C $(LIBFT)
+all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(FLAGS) -L $(LIBFT) -o $(NAME) $(OBJS) -lft -lreadline
-
-$(OBJ_PATH)/%.o: %.c
-	@mkdir -p $(dir $@)
+%.o: %.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-clean:
-	$(MAKE) clean -C $(LIBFT)
-	rm -rf $(OBJ_PATH)
 
-fclean: clean
-	rm -f $(NAME)
-	$(MAKE) fclean -C $(LIBFT)
+$(NAME) :
+	make all -C $(LIBFT)
+	$(CC) $(FLAGS) $(SRC) -o $(NAME) -lreadline
+
+clean:
+	$(RM) $(NAME)
+	make clean -C $(LIBFT)
+	
+fclean: clean	
+	$(RM) $(NAME)
+	make fclean -C $(LIBFT)
 
 re: fclean all
 
-.PHONY: all lib clean fclean re
+.PHONY: clean fclean re all

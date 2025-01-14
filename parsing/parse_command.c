@@ -48,7 +48,7 @@ t_command  *parse_command(t_token **start, t_token **end, char **env)
     command->argv[iter - start] = NULL;
     perform_expansions(command);
     // quote removal
-    // remove_quotes(command);
+    remove_quotes(command);
     iter = start;
     while(command->argv[iter - start])
     {
@@ -70,46 +70,3 @@ void    destroy_command(t_command *command)
     free(command->argv);
     free(command);
 }
-
-// enleve les quotes trouvees une fois les expansions faites
-// exemple dans shell : input : echo $"PATH" ==> "PATH" ==> output = PATH  : le shell fait d'abord l'expansion, ici
-// pas de variable d'environnement juste apres le $ donc il saute le $ et passe a "PATH"
-// 
-void    remove_quotes(t_command *cmd)
-{
-    size_t  i;
-    size_t  j;
-
-    i = 0;
-    j = 0;
-    while (cmd->argv[i][j])
-    {
-        j = 0;
-        while (j < ft_strlen(cmd->argv[i]))
-        {
-            if (cmd->argv[i][j] == SIMPLE_QUOTE)
-            {
-                if (ft_strchr(cmd->argv[i] + j, SIMPLE_QUOTE))
-                {
-                    size_t tmp = j;
-                    j++;
-                    while (cmd->argv[i][j] != SIMPLE_QUOTE)
-                    {
-                        ft_memmove(cmd->argv[i] + tmp, cmd->argv[i] + j, 1);
-                        tmp++;
-                        j++;
-                    }
-                }
-                else
-                {
-                    ft_putstr_fd("Unclosed squote\n", 2);
-                    exit(1);
-                }
-            }
-            else
-                j++;
-        }
-        i++;
-    }
-}
-///

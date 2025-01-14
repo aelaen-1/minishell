@@ -147,6 +147,7 @@ void    find_token_type(t_token *token);
 
 int     count_quotes(char *s, int start, char s_or_d);
 int     handle_quote(char *start_quote, t_token *token, t_lex_context *context);
+void    remove_quotes(t_command *cmd);
 
 void	print_tokens(t_token_array *tokens);
 void	destroy_tokens_array(t_token_array *array);
