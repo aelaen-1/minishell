@@ -9,7 +9,6 @@ t_token     *create_token(size_t max_size)
         return (NULL);
     token->type = TOKEN_WORD;
     token->length = 0;
-    token->is_builtin = 0;
     token->value = malloc(max_size);
     if (!token->value)
         return (free(token), NULL);

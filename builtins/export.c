@@ -29,7 +29,7 @@ int parse_key_value(char *input, char **key, char **value)
     return 0;
 }
 
-int builtin_export(t_command *command)
+int builtin_export(t_command *command, t_program *program)
 {
     char *key;
     char *value;
@@ -37,11 +37,11 @@ int builtin_export(t_command *command)
     key = NULL;
     value = NULL;
     if(!command->argv[1])
-        return (builtin_env(command),1);
+        return (builtin_env(command, program),1);
     else
     {
         parse_key_value(command->argv[1],&key, &value);
-        update_env(&command->envp,key,value);
+        update_env(&program->envp,key,value);
     } 
     return 0;
 }

@@ -1,15 +1,6 @@
-#include "../include/minishell.h"
+ #include "../include/minishell.h"
 
-// Par l 'exemple
-// ls -l infile > outfile | wc
-
-// First arg == cmd "ls -l"
-//  1 - On cherche cette commande avec access() :
-//  2 - On duplique stdin et stdout s'il y un input et/ou output precises (ici infile et outfile)
-
- // 1
-
- static char *get_path(t_command *cmd)
+ static char *get_path(t_command *cmd, t_program *program)
  {
     char **full_path;
     size_t  i;
@@ -17,7 +8,7 @@
     char    *path_to_try;
 
     i = 0;
-    full_path = ft_split(get_env_value(cmd, "PATH"), ':');
+    full_path = ft_split(get_env_value("PATH", program), ':');
     while (full_path[i])
     {
         path_1 = ft_strjoin(full_path[i], "/");
@@ -36,10 +27,10 @@
     return (NULL); 
  }
 
-int exec_cmd(t_command *cmd)
+int exec_cmd(t_command *cmd, t_program *program)
 {
     char    *path;
-    path = get_path(cmd);
+    path = get_path(cmd, program);
     if (!path)
         return (-1); // afficher un code d'erreur
     // duplication de fd selon infile/outfile
@@ -80,8 +71,20 @@ int exec_cmd(t_command *cmd)
             dup2(fd_outfile, 1);
         }
     }
+    if(!ft_strcmp(cmd->argv[0], "echo"))
+        builtin_echo(cmd);
+    else if(!ft_strcmp(cmd->argv[0], "env"))
+        builtin_env(cmd, program);
+    else if(!ft_strcmp(cmd->argv[0], "pwd"))
+        builtin_pwd();
+    else if(!ft_strcmp(cmd->argv[0], "cd"))
+        builtin_cd(cmd, program);
+    else if(!ft_strcmp(cmd->argv[0], "export"))
+        builtin_export(cmd, program);
+    else if(!ft_strcmp(cmd->argv[0], "unset"))
+        builtin_unset(cmd, program);
     // enlever infile et outfile de argv pour utiliser exec ??
-    if (execve(path, cmd->argv, NULL) == -1)
+    else if (execve(path, cmd->argv, NULL) == -1)
     {
         ft_putstr_fd("Could not execute following cmd: ", 2);
         ft_putendl_fd(cmd->argv[0], 2);
