@@ -16,19 +16,7 @@ int main (int ac, char **av , char **env)
 			add_history(input);
 		t_token_array tokens = tokenize_input(input);
 		prg = parse_program(tokens, envp);
-		// if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "echo"))
-		// 	builtin_echo(prg->pipeline->commands[0]);
-		// else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "env"))
-		// 	builtin_env(prg->pipeline->commands[0], prg);
-		// else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "pwd"))
-		// 	builtin_pwd();
-		// else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "cd"))
-		// 	builtin_cd(prg->pipeline->commands[0], prg);
-		// else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "export"))
-		// 	builtin_export(prg->pipeline->commands[0], prg);
-		// else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "unset"))
-		// 	builtin_unset(prg->pipeline->commands[0], prg);
-            pipeline_execution(prg);
+        pipeline_execution(prg);
         destroy_tokens_array(&tokens);
     }
     return 0;
