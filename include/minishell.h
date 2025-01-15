@@ -127,7 +127,7 @@ typedef struct	s_program
 
 
 /*      exec      */
-int		exec_cmd(t_command *cmd, char **env);
+int		exec_cmd(t_command *cmd);
 
 /*      utils/     */
 void    free_split(char **s);

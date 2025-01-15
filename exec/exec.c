@@ -36,7 +36,7 @@
     return (NULL); 
  }
 
-int exec_cmd(t_command *cmd, char **env)
+int exec_cmd(t_command *cmd)
 {
     char    *path;
     path = get_path(cmd);
@@ -81,7 +81,7 @@ int exec_cmd(t_command *cmd, char **env)
         }
     }  
     // enlever infile et outfile de argv pour utiliser exec ??
-    if (execve(path, cmd->argv, env) == -1)
+    if (execve(path, cmd->argv, NULL) == -1)
     {
         ft_putstr_fd("Could not execute following cmd: ", 2);
         ft_putendl_fd(cmd->argv[0], 2);
