@@ -29,24 +29,7 @@ int main (int ac, char **av , char **env)
 		else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "unset"))
 			builtin_unset(prg->pipeline->commands[0]);
         else
-        {
-            pid_t pid[200];
-            size_t i = 0;
-            while (i < prg->pipeline->cmd_count)
-            {
-
-                pid[i] = fork();
-                if (pid[i] == 0)
-                    exec_cmd(prg->pipeline->commands[i]);
-                i++;
-            }
-            size_t j = 0;
-            while (j < i)
-            {
-                waitpid(pid[j], NULL, 0);
-                j++;
-            }
-        }
+            pipeline_execution(prg);
         destroy_tokens_array(&tokens);
     }
     return 0;
