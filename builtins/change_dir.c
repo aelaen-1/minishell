@@ -1,6 +1,5 @@
 #include "../include/minishell.h"
 
-
 int	builtin_cd(t_command *command)
 {
 	char *alternate_path;
@@ -23,5 +22,4 @@ int	builtin_cd(t_command *command)
 	free(alternate_path);
 	free(former_path);
 	return 0;
-
 }

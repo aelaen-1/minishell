@@ -32,7 +32,6 @@ static size_t    get_expanded_var_length(t_command *cmd, char *var)
         return (0);
     size_t len = ft_strlen(value);
     free(value);
-    printf("len is : %zu\n", len);
     return (len);
 }
 

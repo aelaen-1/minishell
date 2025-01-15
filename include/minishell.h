@@ -128,6 +128,7 @@ typedef struct	s_program
 
 /*      exec      */
 int		exec_cmd(t_command *cmd);
+void	pipeline_execution(t_program *program);
 
 /*      utils/     */
 void    free_split(char **s);
@@ -189,5 +190,6 @@ int builtin_unset(t_command *command);
 
 
 char *get_env_value(t_command *cmd, char *to_find);
+
 
 #endif
