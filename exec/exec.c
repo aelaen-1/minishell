@@ -79,7 +79,7 @@ int exec_cmd(t_command *cmd)
             }
             dup2(fd_outfile, 1);
         }
-    }  
+    }
     // enlever infile et outfile de argv pour utiliser exec ??
     if (execve(path, cmd->argv, NULL) == -1)
     {
