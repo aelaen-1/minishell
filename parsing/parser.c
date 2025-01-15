@@ -9,6 +9,7 @@ t_program   *parse_program(t_token_array array, t_env_node *envp)
     t_program   *program;
 
     program = malloc(sizeof(t_program));
-    program->pipeline = parse_pipeline(array.tokens, array.tokens + array.count, envp);
+    program->envp = envp;
+    program->pipeline = parse_pipeline(array.tokens, array.tokens + array.count, program);
     return (program);
 }

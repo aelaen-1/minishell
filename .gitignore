@@ -4,3 +4,5 @@
 minishell
 *.o
 *.png
+infile
+outfile

@@ -18,6 +18,7 @@
 # include <signal.h>
 # include <dirent.h>
 # include <curses.h>
+# include <errno.h>
 
 # define SIMPLE_QUOTE 39
 # define DOUBLE_QUOTE 34
@@ -36,17 +37,6 @@ typedef enum e_quote_type
 	QUOTE_SINGLE,
 	QUOTE_DOUBLE
 }	t_quote_type;
-
-typedef enum e_builtins
-{
-	ECHO,
-	CD,
-	PWD,
-	EXPORT,
-	UNSET,
-	ENV,
-	EXIT
-}	t_builtin;
 
 typedef enum e_token_type
 {
@@ -70,8 +60,6 @@ typedef enum e_redir_type
 typedef struct	s_token
 {
 	t_token_type type;
-	t_builtin	builtin;
-	int		is_builtin;
 	size_t	length;
 	char *value;
 }	t_token;
@@ -122,11 +110,13 @@ typedef struct	s_pipeline
 typedef struct	s_program
 {
 	t_pipeline	*pipeline;
+	t_env_node *envp;
 }	t_program;
 
 
 /*      exec      */
-int		exec_cmd(t_command *cmd);
+int		exec_cmd(t_command *cmd, t_program *program);
+void	pipeline_execution(t_program *program);
 
 /*      utils/     */
 void    free_split(char **s);
@@ -147,7 +137,6 @@ void    append_to_token(t_token *dest, char *src, size_t length);
 t_token		*get_next_token(t_lex_context *context);
 t_token    *add_token_to_array(t_token_array *array, t_token *token);
 
-int     is_builtin(t_token  *token);
 void    find_token_type(t_token *token);
 
 int     count_quotes(char *s, int start, char s_or_d);
@@ -160,14 +149,14 @@ void	destroy_tokens_array(t_token_array *array);
 void    append_to_token(t_token *dest, char *src, size_t length);
 
 /*		parsing/		*/
-t_command  *parse_command(t_token **start, t_token **end,  t_env_node *envp);
-t_command	*create_command(int argc,  t_env_node *envp);
+t_command  *parse_command(t_token **start, t_token **end,  t_program *program);
+t_command	*create_command(int argc);
 void		destroy_command(t_command *command);
-t_pipeline  *parse_pipeline(t_token **start, t_token **end,  t_env_node *envp);
+t_pipeline  *parse_pipeline(t_token **start, t_token **end,  t_program *program);
 t_program   *parse_program(t_token_array array, t_env_node *envp);
 int			parse_redir(t_command *cmd, t_token **current);
 
-void    perform_expansions(t_command *command);
+void    perform_expansions(t_command *command, t_program *program);
 
 // outil pour print le prgram
 void    print_pipeline_to_dot(t_pipeline *pipeline);
@@ -180,10 +169,14 @@ int update_env(t_env_node **env , char *key, char *value);
 int unset_env(t_env_node **env, char *key);
 
 int	builtin_echo(t_command *command);
-int	builtin_env(t_command *command);
+int	builtin_env(t_command *command, t_program *program);
 int	builtin_pwd();
-int	builtin_cd(t_command *command);
-int builtin_export(t_command *command);
-int builtin_unset(t_command *command);
+int	builtin_cd(t_command *command, t_program *program);
+int builtin_export(t_command *command, t_program *program);
+int builtin_unset(t_command *command, t_program	*program);
+
+
+char *get_env_value(char *to_find, t_program *program);
+
 
 #endif

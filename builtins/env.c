@@ -1,13 +1,13 @@
 #include "../include/minishell.h"
 
-int	builtin_env(t_command *command)
+int	builtin_env(t_command *command, t_program *program)
 {
 	t_env_node	*loop;
 	
-	if(!command || !command->envp)
+	if(!command || !program->envp)
 		return 0;
 	
-	loop = command->envp;
+	loop = program->envp;
 	while (loop)
 	{
 		ft_putstr_fd(loop->env_var, 1);
