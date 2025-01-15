@@ -22,7 +22,7 @@
     {
         path_1 = ft_strjoin(full_path[i], "/");
         path_to_try = ft_strjoin(path_1, cmd->argv[0]);
-        if (access(path_to_try, F_OK | X_OK))
+        if (access(path_to_try, F_OK | X_OK) == 0)
         {
             free(path_1);
             return (path_to_try);
@@ -36,7 +36,7 @@
     return (NULL); 
  }
 
-int exec_cmd(t_command *cmd)
+int exec_cmd(t_command *cmd, char **env)
 {
     char    *path;
     path = get_path(cmd);
@@ -80,8 +80,8 @@ int exec_cmd(t_command *cmd)
             dup2(fd_outfile, 1);
         }
     }  
-    // enlever infile et outfile de argv pour utiliser exec ?? 
-    if (execve(path, cmd->argv, NULL) == -1)
+    // enlever infile et outfile de argv pour utiliser exec ??
+    if (execve(path, cmd->argv, env) == -1)
     {
         ft_putstr_fd("Could not execute following cmd: ", 2);
         ft_putendl_fd(cmd->argv[0], 2);

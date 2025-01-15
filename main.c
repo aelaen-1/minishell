@@ -28,6 +28,16 @@ int main (int ac, char **av , char **env)
 			builtin_export(prg->pipeline->commands[0]);
 		else if(!ft_strcmp(prg->pipeline->commands[0]->argv[0], "unset"))
 			builtin_unset(prg->pipeline->commands[0]);
+        else
+        {
+            // size_t i = 0;
+            // while (i < prg->pipeline->cmd_count)
+            // {
+            //     exec_cmd(prg->pipeline->commands[i]);
+            //     i++;
+            // }
+            exec_cmd(prg->pipeline->commands[0], env);
+        }
         destroy_tokens_array(&tokens);
     }
     return 0;

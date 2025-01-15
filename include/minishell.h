@@ -18,6 +18,7 @@
 # include <signal.h>
 # include <dirent.h>
 # include <curses.h>
+# include <errno.h>
 
 # define SIMPLE_QUOTE 39
 # define DOUBLE_QUOTE 34
@@ -126,7 +127,7 @@ typedef struct	s_program
 
 
 /*      exec      */
-int		exec_cmd(t_command *cmd);
+int		exec_cmd(t_command *cmd, char **env);
 
 /*      utils/     */
 void    free_split(char **s);
