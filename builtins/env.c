@@ -3,10 +3,9 @@
 int	builtin_env(t_command *command, t_program *program)
 {
 	t_env_node	*loop;
-	
-	if(!command || !program->envp)
-		return 0;
-	
+
+	if (!command || !program->envp)
+		return (0);
 	loop = program->envp;
 	while (loop)
 	{
