@@ -1,7 +1,5 @@
 #include "../include/minishell.h"
 
-// IMPORTANT : QUOTE REMOVAL
-
 // renvoie la valeur de la variable
 // exemple : si $ABC = bonjour, renvoie bonjour
 char *get_env_value(char *to_find, t_program *program)
