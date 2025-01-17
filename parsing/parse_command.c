@@ -39,7 +39,6 @@ t_command  *parse_command(t_token **start, t_token **end, t_program *program)
             iter += 2;
         else
         {
-            
             command->argv[iter - start] = (*iter)->value;
             iter++;
         }
