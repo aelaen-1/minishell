@@ -23,6 +23,9 @@ OBJS = $(patsubst %.c,$(OBJ_PATH)/%.o,$(SOURCES))
 
 all: lib $(NAME)
 
+debug: FLAGS += -g
+debug: all
+
 lib:
 	$(MAKE) -C $(LIBFT)
 

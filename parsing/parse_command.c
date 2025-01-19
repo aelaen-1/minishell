@@ -18,6 +18,8 @@ t_command	*create_command(int argc)
 	command->redir_out.type = REDIR_NONE;
 	command->redir_in.file = NULL;
 	command->redir_out.file = NULL;
+	command->fds[0] = 0;
+	command->fds[1] = 1;
 	return (command);
 }
 
@@ -32,6 +34,7 @@ t_command	*parse_command(t_token **start, t_token **end, t_program *program)
 
 	iter = start;
 	argc = end - start;
+	(void)program;
 	command = create_command(argc);
 	while (iter < end)
 	{
@@ -44,15 +47,6 @@ t_command	*parse_command(t_token **start, t_token **end, t_program *program)
 		}
 	}
 	command->argv[iter - start] = NULL;
-	perform_expansions(command, program);
-	remove_quotes(command);
-	iter = start;
-	while (command->argv[iter - start])
-	{
-		printf("[%s] ",command->argv[iter - start]);
-		iter++;
-	}
-	printf("\n");
 	return (command);
 }
 
@@ -62,6 +56,10 @@ void	destroy_command(t_command *command)
 {
 	if (!command)
 		return ;
+	if (command->fds[0] != 0)
+		close(command->fds[0] && command->fds[0] != -1);
+	if (command->fds[1] != 1 && command->fds[1] != -1)
+		close(command->fds[1]);
 	free(command->redir_in.file);
 	free(command->redir_out.file);
 	free(command->argv);

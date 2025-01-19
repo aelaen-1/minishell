@@ -39,6 +39,7 @@ int	parse_redir(t_command *cmd, t_token **current)
 {
 	if ((*current)->type == TOKEN_REDIR_OUT)
 	{
+		printf("redir out found\n");
 		if (redir_out(cmd, current, TOKEN_REDIR_OUT))
 			return (1);
 	}

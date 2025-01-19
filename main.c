@@ -1,5 +1,8 @@
 #include "include/minishell.h"
 
+// pipes, redirections builtins, field splitting, arguments du main, and_or
+
+// virer l'argument program des fonctions qui ne l'utilisent pas car trop général. Donner envp pour être clair et limiter l'accès aux trucs inutiles
 int	main(int ac, char **av, char **env)
 {
 	t_program		*prg;
@@ -17,7 +20,9 @@ int	main(int ac, char **av, char **env)
 			add_history(input);
 		tokens = tokenize_input(input);
 		prg = parse_program(tokens, envp);
-		pipeline_execution(prg);
+		expand_program(prg);
+		redirect_program(prg);
+		execute_program(prg);
 		destroy_tokens_array(&tokens);
 	}
 	return (0);

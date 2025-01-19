@@ -95,6 +95,7 @@ typedef struct s_command
 {
 	char		**argv;
 	t_env_node	*envp;
+	int			fds[2];
 	t_redir		redir_in;
 	t_redir		redir_out;
 }	t_command;
@@ -112,8 +113,15 @@ typedef struct s_program
 }	t_program;
 
 /*      exec      */
-int				exec_cmd(t_command *cmd, t_program *program);
-void			pipeline_execution(t_program *program);
+int				exec_cmd(t_command *cmd, t_program *program, int *pid);
+void			execute_program(t_program *program);
+void			link_commands_fds(t_pipeline *pipeline);
+
+
+int				*malloc_pids(t_pipeline *pipeline);
+int				**malloc_fds(t_pipeline *pipeline);
+void			free_fds(int **fds, size_t	command_count);
+
 
 /*      utils/     */
 void			free_split(char **s);
@@ -154,8 +162,15 @@ t_pipeline		*parse_pipeline(t_token **start, t_token **end,
 t_program		*parse_program(t_token_array array, t_env_node *envp);
 int				parse_redir(t_command *cmd, t_token **current);
 
-void			perform_expansions(t_command *command, t_program *program);
+size_t			get_expanded_arg_size(char *command_arg, t_program *program);
+size_t			get_expanded_var_length(char *var, t_program *program);
+void			expand_program(t_program *program);
+void			redirect_program(t_program *program);
+void			execute_program(t_program *program);
 
+int	handle_dollar(size_t *i, char *input,
+		t_program *program, t_quote_type *quoting);
+		
 // outil pour print le prgram
 void			print_pipeline_to_dot(t_pipeline *pipeline);
 void			print_command_to_dot(t_command *command);
@@ -169,7 +184,7 @@ char			*get_env_value(char *to_find, t_program *program);
 
 int				builtin_echo(t_command *command);
 int				builtin_env(t_command *command, t_program *program);
-int				builtin_pwd(void);
+int				builtin_pwd(t_command *command);
 int				builtin_cd(t_command *command, t_program *program);
 int				builtin_export(t_command *command, t_program *program);
 int				builtin_unset(t_command *command, t_program	*program);

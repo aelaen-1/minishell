@@ -10,12 +10,12 @@ int	builtin_cd(t_command *command, t_program *program)
 	{
 		alternate_path = get_env_value("HOME", program);
 		if (alternate_path == NULL)
-			return (write(2, "cd: HOME not set\n", 17), -1);
+			return (write(2, "cd: HOME not set\n", 17), 0);
 	}
 	else
 		alternate_path = command->argv[1];
 	if (chdir(alternate_path) != 0)
-		return (perror("cd"), -1);
+		return (perror("cd"), 0);
 	alternate_path = getcwd(NULL, 0);
 	update_env(&program->envp, "OLDPWD", former_path);
 	update_env(&program->envp, "PWD", alternate_path);

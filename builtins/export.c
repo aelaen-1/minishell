@@ -10,7 +10,7 @@ int	parse_key_value(char *input, char **key, char **value)
 		return (-1);
 	separator = strchr(input, '=');
 	if (!separator)
-		return (-2);
+		return (0);
 	len_key = separator - input;
 	len_value = strlen(separator + 1);
 	(*key) = (char *) malloc((len_key + 1) * sizeof(char));
@@ -21,7 +21,7 @@ int	parse_key_value(char *input, char **key, char **value)
 		value = NULL;
 		free(*key);
 		free(*value);
-		return (-3);
+		return (0);
 	}
 	ft_memcpy(*key, input, len_key);
 	(*key)[len_key] = '\0';
