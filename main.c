@@ -9,7 +9,7 @@ int	main(int ac, char **av, char **env)
 	t_env_node		*envp;
 	char			*input;
 	t_token_array	tokens;
-	t_expansion_context	context;
+	t_context	context;
 
 	(void)ac;
 	(void)av;
@@ -25,8 +25,6 @@ int	main(int ac, char **av, char **env)
 			add_history(input);
 		tokens = tokenize_input(input);
 		prg = parse_program(tokens);
-		// expand_program(prg);
-		// redirect_program(prg);
 		execute_program(prg, &context);
 		destroy_tokens_array(&tokens);
 	}

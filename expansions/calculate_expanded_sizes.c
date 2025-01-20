@@ -1,15 +1,6 @@
 #include "../include/minishell.h"
 
 // to do 
-static size_t	get_number_length(int n)
-{
-	size_t	i;
-
-	i = 0;
-	if (n < 0)
-		i++;
-	return (10);
-}
 
 static char	*get_var_end(char *start)
 {
@@ -24,7 +15,7 @@ static char	*get_var_end(char *start)
 		return (NULL);
 	return (iter);
 }	
-static size_t	get_expanded_var_length(char *var, t_expansion_context *context)
+static size_t	get_expanded_var_length(char *var, t_context *context)
 {
 	char	*value;
 	size_t	len;
@@ -41,7 +32,7 @@ static size_t	get_expanded_var_length(char *var, t_expansion_context *context)
 }
 
 
-static char *handle_dollar(char *dollar, t_expansion_context *context, size_t *size_out)
+static char *handle_dollar(char *dollar, t_context *context, size_t *size_out)
 {
 	char *end;
 	char *start;
@@ -62,7 +53,7 @@ static char *handle_dollar(char *dollar, t_expansion_context *context, size_t *s
 	return (start);
 }
 
-size_t	get_expanded_arg_size(char *command_arg, t_expansion_context *context, t_quote_type *quoting)
+size_t	get_expanded_arg_size(char *command_arg, t_context *context, t_quote_type *quoting)
 {
 	size_t			size;
 	char			*iter;

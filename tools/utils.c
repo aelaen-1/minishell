@@ -43,3 +43,22 @@ void	free_split(char **s)
 	free(s);
 	s = NULL;
 }
+size_t	get_number_length(int n)
+{
+	size_t	i;
+
+	i = 0;
+	if (n == 0)
+		return (1);
+	if (n < 0)
+	{
+		n = -n;
+		i++;
+	}
+	while (n > 0)
+	{
+		n /= 10;
+		i++;
+	}
+	return (i);
+}

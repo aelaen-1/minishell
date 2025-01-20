@@ -106,11 +106,11 @@ typedef struct s_pipeline
 	t_command	**commands;
 }	t_pipeline;
 
-typedef struct s_expansion_context
+typedef struct s_context
 {
 	int	last_cmd_status;
 	t_env_node	*envp;	
-}	t_expansion_context;
+}	t_context;
 
 typedef struct s_program
 {
@@ -118,7 +118,7 @@ typedef struct s_program
 }	t_program;
 
 /*      exec      */
-void			execute_program(t_program *program, t_expansion_context *context);
+void			execute_program(t_program *program, t_context *context);
 
 
 int				*malloc_pids(t_pipeline *pipeline);
@@ -131,6 +131,7 @@ void			free_split(char **s);
 int				ft_strcmp(char *s1, char *s2);
 int				is_space(char c);
 size_t			eat_spaces(t_lex_context *context);
+size_t			get_number_length(int n);
 
 t_quote_type	*get_quote_state(char *s);
 void			remove_quotes(t_command *cmd);
@@ -165,8 +166,8 @@ t_pipeline		*parse_pipeline(t_token **start, t_token **end,
 t_program		*parse_program(t_token_array array);
 int				parse_redir(t_command *cmd, t_token **current);
 
-size_t			get_expanded_arg_size(char *command_arg, t_expansion_context *context, t_quote_type *quoting);
-void			expand_command(t_command *command, t_expansion_context *context);
+size_t			get_expanded_arg_size(char *command_arg, t_context *context, t_quote_type *quoting);
+void			expand_command(t_command *command, t_context *context);
 void			redirect_command(t_command *command);
 		
 // outil pour print le prgram
@@ -181,10 +182,10 @@ int				unset_env(t_env_node **env, char *key);
 char			*get_env_value(char *to_find, t_env_node *envp);
 
 int				builtin_echo(t_command *command);
-int				builtin_env(t_command *command, t_expansion_context *context);
+int				builtin_env(t_command *command, t_context *context);
 int				builtin_pwd(t_command *command);
-int				builtin_cd(t_command *command, t_expansion_context *context);
-int				builtin_export(t_command *command, t_expansion_context *context);
-int				builtin_unset(t_command *command, t_expansion_context *context);
+int				builtin_cd(t_command *command, t_context *context);
+int				builtin_export(t_command *command, t_context *context);
+int				builtin_unset(t_command *command, t_context *context);
 
 #endif
