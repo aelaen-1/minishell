@@ -31,7 +31,9 @@ t_command	*parse_command(t_token **start, t_token **end, t_program *program)
 	size_t		argc;
 	t_command	*command;
 	t_token		**iter;
+	size_t		i;
 
+	i = 0;
 	iter = start;
 	argc = end - start;
 	(void)program;
@@ -42,11 +44,11 @@ t_command	*parse_command(t_token **start, t_token **end, t_program *program)
 			iter += 2;
 		else
 		{
-			command->argv[iter - start] = (*iter)->value;
+			command->argv[i++] = (*iter)->value;
 			iter++;
 		}
 	}
-	command->argv[iter - start] = NULL;
+	command->argv[i] = NULL;
 	return (command);
 }
 

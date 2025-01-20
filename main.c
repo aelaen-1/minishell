@@ -16,7 +16,7 @@ int	main(int ac, char **av, char **env)
 	while (1)
 	{
 		input = readline("minishell % ");
-		if (*input)
+		if (input)
 			add_history(input);
 		tokens = tokenize_input(input);
 		prg = parse_program(tokens, envp);

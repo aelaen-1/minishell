@@ -48,11 +48,11 @@ int exec_cmd(t_command *cmd, t_program *program, int *pid)
 	if (!handle_builtin_commands(cmd, program))
 		return (0);
 	path = get_path(cmd, program);
-	dup2(cmd->fds[0], 0);
-	dup2(cmd->fds[1], 1);
 	*pid = fork();
 	if (*pid == 0)
 	{
+		dup2(cmd->fds[0], 0);
+		dup2(cmd->fds[1], 1);
 		if (execve(path, cmd->argv, NULL) == -1)
 		{
 			fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
@@ -96,9 +96,7 @@ void	execute_program(t_program *program)
 void	link_commands_fds(t_pipeline *pipeline)
 {
 	size_t	i;
-	// int **fds;
 
-	// fds = malloc_fds(pipeline);
 	i = 0;
 	while (i < pipeline->cmd_count)
 	{
