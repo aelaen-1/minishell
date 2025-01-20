@@ -84,6 +84,21 @@ void	execute_program(t_program *program)
 	free(pids);
 }
 
+void	link_commands_fds(t_pipeline *pipeline)
+{
+	size_t	i;
+	int	pipe_fds[2];
+
+	i = 0;
+	while (i < pipeline->cmd_count - 1)
+	{
+		pipe(pipe_fds);
+		pipeline->commands[i]->fds[1] = pipe_fds[1];
+		pipeline->commands[i+1]->fds[0] = pipe_fds[0];
+		i++;
+	}
+}
+
 // 		 cat infile 			  | 		     wc                 |                grep 2
 // fd[i-1][0]     	  fd[i-1][1]		   fd[i][1]     fd[i][0]              fd[i + 1][0]          fd[i + 1][1]
 
@@ -93,32 +108,32 @@ void	execute_program(t_program *program)
 // 	dup2(fd[1], stdout);												
 
 
-void	link_commands_fds(t_pipeline *pipeline)
-{
-	size_t	i;
+// void	link_commands_fds(t_pipeline *pipeline)
+// {
+// 	size_t	i;
 
-	i = 0;
-	while (i < pipeline->cmd_count)
-	{
-		pipe(pipeline->commands[i]->fds);
-		i++;
-	}
-	i = 0;
-	while (i < pipeline->cmd_count)
-	{
-		if (i == 0) // 1ere commande
-			i++;
-		else
-		{
-			// stdin de notre commande est le stdout de la commande précédente si notre commande n'a pas d'infile
-			// et la commande précédente n'a pas d'outfile
-			if(pipeline->commands[i]->redir_in.file == NULL && pipeline->commands[i-1]->redir_out.file == NULL)
-			{
-				dup2(pipeline->commands[i-1]->fds[0], pipeline->commands[i]->fds[1]);
-				i++;
-			}
-		}
-	}
-	// free_fds(fds, pipeline->cmd_count);
-}
+// 	i = 0;
+// 	while (i < pipeline->cmd_count)
+// 	{
+// 		pipe(pipeline->commands[i]->fds);
+// 		i++;
+// 	}
+// 	i = 0;
+// 	while (i < pipeline->cmd_count)
+// 	{
+// 		if (i == 0) // 1ere commande
+// 			i++;
+// 		else
+// 		{
+// 			// stdin de notre commande est le stdout de la commande précédente si notre commande n'a pas d'infile
+// 			// et la commande précédente n'a pas d'outfile
+// 			if(pipeline->commands[i]->redir_in.file == NULL && pipeline->commands[i-1]->redir_out.file == NULL)
+// 			{
+// 				dup2(pipeline->commands[i-1]->fds[0], pipeline->commands[i]->fds[1]);
+// 				i++;
+// 			}
+// 		}
+// 	}
+// 	// free_fds(fds, pipeline->cmd_count);
+// }
 
