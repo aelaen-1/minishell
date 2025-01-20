@@ -43,6 +43,11 @@ void	free_split(char **s)
 	free(s);
 	s = NULL;
 }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 9ae4ba0 (giterr)
 size_t	get_number_length(int n)
 {
 	size_t	i;
@@ -61,4 +66,8 @@ size_t	get_number_length(int n)
 		i++;
 	}
 	return (i);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 9ae4ba0 (giterr)

@@ -136,6 +136,7 @@ size_t			get_number_length(int n);
 t_quote_type	*get_quote_state(char *s);
 void			remove_quotes(t_command *cmd);
 
+
 /*		lexing/	*/
 void			init_lex_context(t_lex_context *context, char *input);
 int				init_token_array(t_token_array *array);

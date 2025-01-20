@@ -1,7 +1,10 @@
 #include "../include/minishell.h"
 
+<<<<<<< HEAD
 // to do 
 
+=======
+>>>>>>> 9ae4ba0 (giterr)
 static char	*get_var_end(char *start)
 {
 	char *iter;
@@ -21,8 +24,9 @@ static size_t	get_expanded_var_length(char *var, t_context *context)
 	size_t	len;
 
 	if (ft_strcmp(var, "?") == 0)
-// to do 
+	{
 		return (get_number_length(context->last_cmd_status));
+	}
 	value = get_env_value(var, context->envp);
 	if (value == NULL)
 		return (0);

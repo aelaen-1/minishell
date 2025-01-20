@@ -3,8 +3,7 @@
 
 // waitpid status pour la valeur de $?
 
-// renvoie la valeur de la variable
-// exemple : si $ABC = bonjour, renvoie bonjour
+
 char	*get_env_value(char *to_find, t_env_node *envp)
 {
 	size_t		i;
@@ -52,7 +51,7 @@ char	*expand_command_arg(char *command_arg, t_expansion_context *context)
 		return (free(quoting), NULL);
 	while (command_arg[i])
 	{
-		if (command_arg[i] == '$' && quoting[i] != QUOTE_SINGLE)
+		if (command_arg[i] == '$' && quoting[i] != QUOTE_SINGLE && command_arg[i + 1])
 		{
 			i++;
 			len = 0;
