@@ -53,8 +53,7 @@ t_pipeline	*parse_pipeline(t_token **start, t_token **end, t_program *program)
 			while (i > 0)
 				free(pipeline->commands[i--]);
 			free(pipeline->commands);
-			free(pipeline);
-			return (NULL);
+			return (free(pipeline), NULL);
 		}
 		start = command_end + 1;
 		i++;
