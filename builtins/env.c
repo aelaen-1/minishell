@@ -1,12 +1,12 @@
 #include "../include/minishell.h"
 
-int	builtin_env(t_command *command, t_program *program)
+int	builtin_env(t_command *command, t_expansion_context *context)
 {
 	t_env_node	*loop;
 
-	if (!command || !program->envp)
+	if (!command || !context->envp)
 		return (0);
-	loop = program->envp;
+	loop = context->envp;
 	while (loop)
 	{
 		ft_putstr_fd(loop->env_var, command->fds[1]);

@@ -106,16 +106,19 @@ typedef struct s_pipeline
 	t_command	**commands;
 }	t_pipeline;
 
+typedef struct s_expansion_context
+{
+	int	last_cmd_status;
+	t_env_node	*envp;	
+}	t_expansion_context;
+
 typedef struct s_program
 {
 	t_pipeline	*pipeline;
-	t_env_node	*envp;
 }	t_program;
 
 /*      exec      */
-int				exec_cmd(t_command *cmd, t_program *program, int *pid);
-void			execute_program(t_program *program);
-void			link_commands_fds(t_pipeline *pipeline);
+void			execute_program(t_program *program, t_expansion_context *context);
 
 
 int				*malloc_pids(t_pipeline *pipeline);
@@ -159,17 +162,12 @@ t_command		*create_command(int argc);
 void			destroy_command(t_command *command);
 t_pipeline		*parse_pipeline(t_token **start, t_token **end,
 					t_program *program);
-t_program		*parse_program(t_token_array array, t_env_node *envp);
+t_program		*parse_program(t_token_array array);
 int				parse_redir(t_command *cmd, t_token **current);
 
-size_t			get_expanded_arg_size(char *command_arg, t_program *program);
-size_t			get_expanded_var_length(char *var, t_program *program);
-void			expand_program(t_program *program);
-void			redirect_program(t_program *program);
-void			execute_program(t_program *program);
-
-int	handle_dollar(size_t *i, char *input,
-		t_program *program, t_quote_type *quoting);
+size_t			get_expanded_arg_size(char *command_arg, t_expansion_context *context, t_quote_type *quoting);
+void			expand_command(t_command *command, t_expansion_context *context);
+void			redirect_command(t_command *command);
 		
 // outil pour print le prgram
 void			print_pipeline_to_dot(t_pipeline *pipeline);
@@ -180,13 +178,13 @@ void			print_program_to_dot(t_program *program);
 t_env_node		*init_env(char **env);
 int				update_env(t_env_node **env, char *key, char *value);
 int				unset_env(t_env_node **env, char *key);
-char			*get_env_value(char *to_find, t_program *program);
+char			*get_env_value(char *to_find, t_env_node *envp);
 
 int				builtin_echo(t_command *command);
-int				builtin_env(t_command *command, t_program *program);
+int				builtin_env(t_command *command, t_expansion_context *context);
 int				builtin_pwd(t_command *command);
-int				builtin_cd(t_command *command, t_program *program);
-int				builtin_export(t_command *command, t_program *program);
-int				builtin_unset(t_command *command, t_program	*program);
+int				builtin_cd(t_command *command, t_expansion_context *context);
+int				builtin_export(t_command *command, t_expansion_context *context);
+int				builtin_unset(t_command *command, t_expansion_context *context);
 
 #endif

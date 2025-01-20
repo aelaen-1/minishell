@@ -9,10 +9,13 @@ int	main(int ac, char **av, char **env)
 	t_env_node		*envp;
 	char			*input;
 	t_token_array	tokens;
+	t_expansion_context	context;
 
 	(void)ac;
 	(void)av;
 	envp = init_env(env);
+	context.envp = envp;
+	context.last_cmd_status = 0;
 	while (1)
 	{
 		input = readline("minishell % ");
@@ -21,10 +24,10 @@ int	main(int ac, char **av, char **env)
 		if (*input)
 			add_history(input);
 		tokens = tokenize_input(input);
-		prg = parse_program(tokens, envp);
-		expand_program(prg);
-		redirect_program(prg);
-		execute_program(prg);
+		prg = parse_program(tokens);
+		// expand_program(prg);
+		// redirect_program(prg);
+		execute_program(prg, &context);
 		destroy_tokens_array(&tokens);
 	}
 	return (0);
