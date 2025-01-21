@@ -29,7 +29,7 @@ int	parse_key_value(char *input, char **key, char **value)
 	return (0);
 }
 
-int	builtin_export(t_command *command, t_expansion_context *context)
+int	builtin_export(t_command *command, t_context *context)
 {
 	char	*key;
 	char	*value;

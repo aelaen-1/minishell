@@ -1,10 +1,6 @@
 #include "../include/minishell.h"
-
-
 // waitpid status pour la valeur de $?
 
-// renvoie la valeur de la variable
-// exemple : si $ABC = bonjour, renvoie bonjour
 char	*get_env_value(char *to_find, t_env_node *envp)
 {
 	size_t		i;
@@ -24,13 +20,20 @@ char	*get_env_value(char *to_find, t_env_node *envp)
 	}
 	return (NULL);
 }
+static void	get_last_command_return_value(char *var_value, char *res, size_t *j, size_t *i)
+{
+	ft_strlcpy(res + *j, var_value, ft_strlen(var_value) + 1);
+	*j += ft_strlen(var_value);
+	free(var_value);
+	(*i)++;
+}
 
 
 // remplace chaque variable ($ABC) par sa valeur
 // si $ est suivi par un caractere non alpha-numerique, on saute simplement
 // le $
 // par exemple : echo $"PATH" ==> "PATH" ==> PATH (apres quote removal)
-char	*expand_command_arg(char *command_arg, t_expansion_context *context)
+char	*expand_command_arg(char *command_arg, t_context *context)
 {
 	char			*res;
 	size_t			size;
@@ -52,10 +55,15 @@ char	*expand_command_arg(char *command_arg, t_expansion_context *context)
 		return (free(quoting), NULL);
 	while (command_arg[i])
 	{
-		if (command_arg[i] == '$' && quoting[i] != QUOTE_SINGLE)
+		if (command_arg[i] == '$' && quoting[i] != QUOTE_SINGLE && command_arg[i + 1])
 		{
 			i++;
 			len = 0;
+			if (command_arg[i] == '?')
+			{
+				get_last_command_return_value(ft_itoa(context->last_cmd_status), res, &j, &i);
+				continue;
+			}
 			while (ft_isalnum(command_arg[i + len]) || command_arg[i + len] == '_')
 				len++;
 			if (len)
@@ -82,7 +90,7 @@ char	*expand_command_arg(char *command_arg, t_expansion_context *context)
 
 // Sur chaque commande, on cherche si on trouve un $ et s'il est suivi d'une chaine de caracteres
 // pour pouvoir remplace cet ensemble par sa valeur (rien si ce n'est pas une variable d'environnement)
-static void	expand_parameters(t_command *command, t_expansion_context *context)
+static void	expand_parameters(t_command *command, t_context *context)
 {
 	size_t	i;
 	char	*expanded;
@@ -120,7 +128,7 @@ static void	expand_parameters(t_command *command, t_expansion_context *context)
 	}
 }
 
-void	expand_command(t_command *command, t_expansion_context *context)
+void	expand_command(t_command *command, t_context *context)
 {
 	expand_parameters(command, context);
 	remove_quotes(command);

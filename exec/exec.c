@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-static int	handle_builtin_commands(t_command *cmd, t_expansion_context *context)
+static int	handle_builtin_commands(t_command *cmd, t_context *context)
 {
 	if (!ft_strcmp(cmd->argv[0], "echo"))
 		return (builtin_echo(cmd));
@@ -36,13 +36,9 @@ static void	link_pipeline(t_pipeline *pipeline)
 static void close_command_fds(t_command *cmd)
 {
           if (cmd->fds[0] != 0)
-        {
             close(cmd->fds[0]);
-        }
         if (cmd->fds[1] != 1)
-        {
             close(cmd->fds[1]);
-        }
 }
 static char	*get_path(t_command *cmd, t_env_node *envp)
 {
@@ -69,7 +65,7 @@ static char	*get_path(t_command *cmd, t_env_node *envp)
 	return (NULL);
 }
 
-static int exec_cmd(t_command *cmd, int *pid, t_expansion_context *context)
+static int exec_cmd(t_command *cmd, int *pid, t_context *context)
 {
     char    *path;
 
@@ -103,7 +99,7 @@ static int exec_cmd(t_command *cmd, int *pid, t_expansion_context *context)
 } 
 
 
-void	execute_program(t_program *program, t_expansion_context *context)
+void	execute_program(t_program *program, t_context *context)
 {
 	size_t	i;
 	int *pids;

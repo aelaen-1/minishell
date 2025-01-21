@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-int	builtin_env(t_command *command, t_expansion_context *context)
+int	builtin_env(t_command *command, t_context *context)
 {
 	t_env_node	*loop;
 
