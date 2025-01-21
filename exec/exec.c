@@ -69,6 +69,8 @@ static int exec_cmd(t_command *cmd, int *pid, t_context *context)
 {
     char    *path;
 
+	if(!cmd)
+		return 0;
 	expand_command(cmd, context);
 	redirect_command(cmd);
     if (!handle_builtin_commands(cmd, context))

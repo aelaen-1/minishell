@@ -185,8 +185,11 @@ char			*get_env_value(char *to_find, t_env_node *envp);
 int				builtin_echo(t_command *command);
 int				builtin_env(t_command *command, t_context *context);
 int				builtin_pwd(t_command *command);
-int				builtin_cd(t_command *command, t_context *context);
-int				builtin_export(t_command *command, t_context *context);
-int				builtin_unset(t_command *command, t_context *context);
+int				builtin_cd(t_command *command, t_expansion_context *context);
+int				builtin_export(t_command *command, t_expansion_context *context);
+int				builtin_unset(t_command *command, t_expansion_context *context);
+
+void			free_program( t_env_node *envp);
+void			free_pipeline(t_pipeline *pipeline);
 
 #endif
