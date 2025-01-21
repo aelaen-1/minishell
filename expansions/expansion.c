@@ -1,8 +1,5 @@
 #include "../include/minishell.h"
-
-
 // waitpid status pour la valeur de $?
-
 
 char	*get_env_value(char *to_find, t_env_node *envp)
 {
