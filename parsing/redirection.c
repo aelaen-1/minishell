@@ -1,11 +1,5 @@
 #include "../include/minishell.h"
 
-// heredoc
-// do 
-// { 
-//  line = readline();
-// } while (strcmp(line, redir_in.file) != 0);
-
 static void handle_heredoc(t_command *command)
 {
     int pipe_fds[2];

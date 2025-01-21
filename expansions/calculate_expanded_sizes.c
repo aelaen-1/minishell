@@ -1,10 +1,5 @@
 #include "../include/minishell.h"
 
-<<<<<<< HEAD
-// to do 
-
-=======
->>>>>>> 9ae4ba0 (giterr)
 static char	*get_var_end(char *start)
 {
 	char *iter;
