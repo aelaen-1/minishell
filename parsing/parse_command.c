@@ -38,6 +38,8 @@ t_command	*parse_command(t_token **start, t_token **end, t_program *program)
 	argc = end - start;
 	(void)program;
 	command = create_command(argc);
+	if (!command)
+		return 0;
 	while (iter < end)
 	{
 		if (parse_redir(command, iter))
