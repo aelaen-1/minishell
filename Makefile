@@ -17,7 +17,8 @@ SOURCES = $(wildcard *.c) \
         $(wildcard pipes/*.c) \
         $(wildcard redirections/*.c) \
         $(wildcard signals/*.c) \
-        $(wildcard builtins/*.c)
+        $(wildcard builtins/*.c) \
+        $(wildcard free/*.c)
 
 OBJS = $(patsubst %.c,$(OBJ_PATH)/%.o,$(SOURCES))
 
