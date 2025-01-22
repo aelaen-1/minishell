@@ -122,8 +122,8 @@ static void	expand_parameters(t_command *command, t_context *context)
 		expanded = expand_command_arg(command->redir_out.file, context);
 		if (expanded)
 		{
-			free(command->redir_in.file);
-			command->redir_in.file = expanded;
+			free(command->redir_out.file);
+			command->redir_out.file = expanded;
 		}
 	}
 }

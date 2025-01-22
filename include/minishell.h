@@ -1,6 +1,5 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
 # include "libft/libft.h"
 # include <stdlib.h>
 # include <stdbool.h>
@@ -115,6 +114,7 @@ typedef struct s_context
 typedef struct s_program
 {
 	t_pipeline	*pipeline;
+	int			last_cmd_status;
 }	t_program;
 
 /*      exec      */
@@ -191,5 +191,5 @@ int				builtin_unset(t_command *command, t_context *context);
 
 void			free_program( t_env_node *envp);
 void			free_pipeline(t_pipeline *pipeline);
-
+void			signal_handler();
 #endif

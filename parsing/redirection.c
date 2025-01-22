@@ -28,13 +28,13 @@ void    redirect_command(t_command *command)
         handle_heredoc(command);
     if (command->redir_out.file && command->redir_out.type == REDIR_OUT)
     {
-        command->fds[1] = open(command->redir_out.file, O_RDWR | O_CREAT | O_TRUNC);
+        command->fds[1] = open(command->redir_out.file, O_RDWR | O_CREAT | O_TRUNC, 0777);
         if (command->fds[1] == -1)
             fprintf(stderr, "minishell: %s: Failed to open file for writing\n", command->redir_in.file);
     }
     if (command->redir_out.file && command->redir_out.type == REDIR_APPEND)
     {
-        command->fds[1] = open(command->redir_out.file, O_RDWR | O_CREAT | O_APPEND);
+        command->fds[1] = open(command->redir_out.file, O_RDWR | O_CREAT | O_APPEND, 0777);
         if (command->fds[1] == -1)
             fprintf(stderr, "minishell: %s: Failed to open file for writing\n", command->redir_in.file);
     }
