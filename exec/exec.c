@@ -48,6 +48,8 @@ static char	*get_path(t_command *cmd, t_env_node *envp)
 	char	*path_to_try;
 
 	i = 0;
+	if(access(cmd->argv[0], F_OK | X_OK) == 0)
+		return cmd->argv[0];
 	full_path = ft_split(get_env_value("PATH", envp), ':');
 	while (full_path[i])
 	{
@@ -64,10 +66,50 @@ static char	*get_path(t_command *cmd, t_env_node *envp)
 	}
 	return (NULL);
 }
+char **make_env_char(t_env_node *top)
+{
+    int count = 0;
+    t_env_node *current = top;
+    char **env_array;
+
+    // Count the number of nodes in the linked list
+    while (current)
+    {
+        count++;
+        current = current->next;
+    }
+
+    // Allocate memory for the char ** array
+    env_array = (char **)malloc((count + 1) * sizeof(char *));
+    if (!env_array)
+        return NULL;
+
+    // Reset the current pointer and fill the array
+    current = top;
+    for (int i = 0; i < count; i++)
+    {
+        env_array[i] = strdup(current->env_var);
+        if (!env_array[i])
+        {
+            // Free previously allocated memory on failure
+            for (int j = 0; j < i; j++)
+                free(env_array[j]);
+            free(env_array);
+            return NULL;
+        }
+        current = current->next;
+    }
+
+    // Null-terminate the array
+    env_array[count] = NULL;
+
+    return env_array;
+}
 
 static int exec_cmd(t_command *cmd, int *pid, t_context *context)
 {
     char    *path;
+	char	**env;
 
 	if(!cmd)
 		return 0;
@@ -80,12 +122,13 @@ static int exec_cmd(t_command *cmd, int *pid, t_context *context)
     }
     path = get_path(cmd, context->envp);
     *pid = fork();
+	env = make_env_char(context->envp);
     if (*pid == 0)
     {
         dup2(cmd->fds[0], 0);
         dup2(cmd->fds[1], 1);
         close_command_fds(cmd);
-        if (execve(path, cmd->argv, NULL) == -1)
+        if (execve(path, cmd->argv, env) == -1)
         {
             fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
             exit(1);
@@ -95,6 +138,7 @@ static int exec_cmd(t_command *cmd, int *pid, t_context *context)
     {
         close_command_fds(cmd);
     }
+	free_split(env);
     return (0);
 } 
 
@@ -103,6 +147,7 @@ void	execute_program(t_program *program, t_context *context)
 {
 	size_t	i;
 	int *pids;
+	int status;
 
 	i = 0;
 	pids = malloc_pids(program->pipeline);
@@ -115,9 +160,11 @@ void	execute_program(t_program *program, t_context *context)
 	i = 0;
 	while (i < program->pipeline->cmd_count)
 	{
-		waitpid(pids[i], NULL, 0);
+		waitpid(pids[i], &status, 0);
 		i++;
 	}
+	if (WIFEXITED(status)) 
+        context->last_cmd_status = WEXITSTATUS(status);
 	free(pids);
 }
 

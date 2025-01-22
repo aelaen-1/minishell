@@ -14,6 +14,7 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
+	signal_handler();
 	envp = init_env(env);
 	context.envp = envp;
 	context.last_cmd_status = 0;
