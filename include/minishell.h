@@ -86,6 +86,7 @@ typedef struct s_redir
 typedef struct s_env_node
 {
 	char				*env_var;
+	bool			is_exported;
 	struct s_env_node	*next;
 	struct s_env_node	*previous;
 }	t_env_node;
@@ -120,6 +121,8 @@ typedef struct s_program
 /*      exec      */
 void			execute_program(t_program *program, t_context *context);
 
+
+t_env_node	*create_env_node(char *env_var, t_env_node *bottom);
 
 int				*malloc_pids(t_pipeline *pipeline);
 int				**malloc_fds(t_pipeline *pipeline);
@@ -181,6 +184,7 @@ t_env_node		*init_env(char **env);
 int				update_env(t_env_node **env, char *key, char *value);
 int				unset_env(t_env_node **env, char *key);
 char			*get_env_value(char *to_find, t_env_node *envp);
+char			*key_value_join(char *key, char *value);
 
 int				builtin_echo(t_command *command);
 int				builtin_env(t_command *command, t_context *context);
@@ -192,4 +196,7 @@ int				builtin_unset(t_command *command, t_context *context);
 void			free_program( t_env_node *envp);
 void			free_pipeline(t_pipeline *pipeline);
 void			signal_handler();
+
+
+
 #endif

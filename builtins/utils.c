@@ -21,6 +21,7 @@ t_env_node	*create_env_node(char *env_var, t_env_node *bottom)
 	if (!new_node)
 		return (NULL);
 	new_node->env_var = ft_strdup(env_var);
+	new_node->is_exported = true;
 	if (!new_node->env_var)
 	{
 		free(new_node);
