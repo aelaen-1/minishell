@@ -42,7 +42,7 @@ int	*malloc_pids(t_pipeline *pipeline)
 	}
 	while (i < pipeline->cmd_count)
 	{
-		pids[i] = 0;
+		pids[i] = -1;
 		i++;
 	}
 	pids[i] = 0;
