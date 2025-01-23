@@ -3,7 +3,7 @@
 int	builtin_unset(t_command *command,  t_context *context)
 {
 	if (!command->argv[1])
-		return (write(1, "unset: not enough arguments\n", 28), 1);
+		return (1);
 	else
 	{
 		size_t i = 1;
