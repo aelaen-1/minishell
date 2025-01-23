@@ -121,13 +121,17 @@ typedef struct s_program
 /*      exec      */
 void			execute_program(t_program *program, t_context *context);
 
+int				is_builtin(t_command *cmd);
+int				handle_builtin_commands(t_command *cmd, t_context *context);
 
 t_env_node	*create_env_node(char *env_var, t_env_node *bottom);
+char			**lst_to_char(t_env_node *top); // used to pass env to execve
 
 int				*malloc_pids(t_pipeline *pipeline);
 int				**malloc_fds(t_pipeline *pipeline);
 void			free_fds(int **fds, size_t	command_count);
-
+// error_msg.c
+void			command_not_found_and_exit(char *arg, char *path, char **env);
 
 /*      utils/     */
 void			free_split(char **s);
@@ -187,9 +191,9 @@ char			*get_env_value(char *to_find, t_env_node *envp);
 char			*key_value_join(char *key, char *value);
 int				is_valid_identifier(char *arg);
 
-int				builtin_echo(t_command *command);
+int				builtin_echo(t_command *command, t_context *context);
 int				builtin_env(t_command *command, t_context *context);
-int				builtin_pwd(t_command *command);
+int				builtin_pwd(t_command *command, t_context *context);
 int				builtin_cd(t_command *command, t_context *context);
 int				builtin_export(t_command *command, t_context *context);
 int				builtin_unset(t_command *command, t_context *context);

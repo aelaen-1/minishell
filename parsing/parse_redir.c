@@ -10,7 +10,6 @@ static int	redir_out(t_command *cmd, t_token ***current,
 	if ((**current)->type == TOKEN_WORD)
 	{
 		cmd->redir_out.file = ft_strdup((**current)->value);
-		printf("[%s] redir out : %s \n",(**current)->value, cmd->redir_out.file);
 		if (token_type == TOKEN_REDIR_OUT)
 			cmd->redir_out.type = REDIR_OUT;
 		else if (token_type == TOKEN_APPEND)
@@ -28,7 +27,6 @@ static int	redir_in(t_command *cmd, t_token ***current, t_token_type token_type)
 	if ((**current)->type == TOKEN_WORD)
 	{
 		cmd->redir_in.file = ft_strdup((**current)->value);
-		printf("[%s] redir in : %s \n",(**current)->value, cmd->redir_in.file);
 		if (token_type == TOKEN_REDIR_IN)
 			cmd->redir_in.type = REDIR_IN;
 		else if (token_type == TOKEN_HEREDOC)

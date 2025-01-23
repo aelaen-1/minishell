@@ -46,7 +46,7 @@ t_command	*parse_command(t_token **start, t_token **end, t_program *program)
 			iter += 2;
 		else
 		{
-			command->argv[i++] = (*iter)->value;
+			command->argv[i++] = ft_strdup((*iter)->value);
 			iter++;
 		}
 	}
@@ -66,6 +66,6 @@ void	destroy_command(t_command *command)
 		close(command->fds[1]);
 	free(command->redir_in.file);
 	free(command->redir_out.file);
-	free(command->argv);
+	free(command->argv); // les argv[i] sont free dans free_command
 	free(command);
 }
