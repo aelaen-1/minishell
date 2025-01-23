@@ -14,15 +14,25 @@ int	builtin_cd(t_command *command, t_context *context)
 			return (context->last_cmd_status = 1, free(former_path),ft_putstr_fd("minishell: cd: HOME not set\n", 2), 0);
 	}
 	else if (command->argv[2])
-		return (context->last_cmd_status = 1,free(former_path), ft_putstr_fd("minishell: cd: too many arguments\n", 2), 0);
+	{
+		context->last_cmd_status = 1;
+		free(former_path);
+		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 0);
+	}
 	else
 		alternate_path = command->argv[1];
 	if (chdir(alternate_path) != 0)
-		return (free(former_path),context->last_cmd_status = 1, perror("minishell: cd"), 0);
+	{
+		context->last_cmd_status = 1;
+		free(former_path);
+		return(perror("minishell: cd"), 0);
+
+	}
 	alternate_path = getcwd(NULL, 0);
 	update_env(&context->envp, "OLDPWD", former_path);
 	update_env(&context->envp, "PWD", alternate_path);
 	free(alternate_path);
 	free(former_path);
-	return (context->last_cmd_status = 0, 0);
+	context->last_cmd_status = 0;
+	return (0);
 }
