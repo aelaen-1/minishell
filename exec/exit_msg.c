@@ -1,8 +1,9 @@
 #include "../include/minishell.h"
 
-void command_not_found_and_exit(char *arg, char *path, char **env)
+void command_not_found_and_exit(char *arg, char *path, char **env, int *free_path)
 {
-    free(path);
+    if (free_path)
+        free(path);
     free_split(env);
     ft_putstr_fd("minishell: ", 2);
     ft_putstr_fd(arg, 2);
