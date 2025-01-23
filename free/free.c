@@ -48,5 +48,5 @@ void free_pipeline(t_pipeline *pipeline)
 void free_program( t_env_node *envp) 
 {
 	free_env_node(envp);
-	rl_clear_history();
+	// rl_clear_history();
 }

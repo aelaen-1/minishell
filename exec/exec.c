@@ -108,39 +108,46 @@ char **make_env_char(t_env_node *top)
 
 static int exec_cmd(t_command *cmd, int *pid, t_context *context)
 {
-    char    *path;
-	char	**env;
+    if (!cmd || !cmd->argv[0])
+        return 0;
+    expand_command(cmd, context);
+    redirect_command(cmd);
 
-	if(!cmd)
-		return 0;
-	expand_command(cmd, context);
-	redirect_command(cmd);
-    if (!handle_builtin_commands(cmd, context))
+    // Builtins qui modifient l'env sans pipe
+    if (*pid == -1 && (!ft_strcmp(cmd->argv[0], "export") || 
+        !ft_strcmp(cmd->argv[0], "cd") || 
+        !ft_strcmp(cmd->argv[0], "unset")))
     {
-        close_command_fds(cmd);
-        return (0);
-    }
-    path = get_path(cmd, context->envp);
-    *pid = fork();
-	env = make_env_char(context->envp);
-    if (*pid == 0)
-    {
-        dup2(cmd->fds[0], 0);
-        dup2(cmd->fds[1], 1);
-        close_command_fds(cmd);
-        if (execve(path, cmd->argv, env) == -1)
+        if (!handle_builtin_commands(cmd, context))
         {
-            fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
-            exit(1);
+            close_command_fds(cmd);
+            return (0);
         }
     }
     else
     {
+        *pid = fork();
+        if (*pid == 0)
+        {
+            dup2(cmd->fds[0], 0);
+            dup2(cmd->fds[1], 1);
+            close_command_fds(cmd);
+            if (!handle_builtin_commands(cmd, context))
+                exit(0);
+            char **env = make_env_char(context->envp);
+            char *path = get_path(cmd, context->envp);
+            if (execve(path, cmd->argv, env) == -1)
+            {
+                fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
+                free(path);
+                free_split(env);
+                exit(1);
+            }
+        }
         close_command_fds(cmd);
     }
-	free_split(env);
-    return (0);
-} 
+    return (1);
+}
 
 
 void	execute_program(t_program *program, t_context *context)
@@ -167,3 +174,5 @@ void	execute_program(t_program *program, t_context *context)
         context->last_cmd_status = WEXITSTATUS(status);
 	free(pids);
 }
+
+
