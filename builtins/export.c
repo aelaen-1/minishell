@@ -1,8 +1,8 @@
 #include "../include/minishell.h"
 
-static int	is_valid_identifier(char *arg)
+int	is_valid_identifier(char *arg)
 {
-	if (!arg || !(*arg) || ft_isdigit(*arg))
+	if (!arg || !(*arg) || (!ft_isalpha(*arg) && *arg != '_'))
 		return (0);
 	while (*arg)
 	{
@@ -93,7 +93,7 @@ static void export_key_without_value(char *key, t_context *context)
 	create_export_node(context->envp, key, NULL);
 }
 
-static int	handle_export_arg(char *arg, t_context *context)
+static int	export_arg(char *arg, t_context *context)
 {
 	char *key;
 	char *value;
@@ -111,15 +111,10 @@ static int	handle_export_arg(char *arg, t_context *context)
 		return (export_key_without_value(arg, context), 0);
 	key = ft_substr(arg, 0, separator - arg);
 	value = ft_strdup(separator + 1);
-	if (key && value)
-	{
-		update_env(&context->envp, key, value);
-		if (check_if_exported(key, context))
-			return (free(key), free(value), 0);
-		create_export_node(context->envp, key, value);
-	}
+	if (!key || !value)
+		return (free(key), free(value), 1);
+    update_env(&context->envp, key, value);
 	return (free(value), free(key), 0);
-	
 }
 
 int builtin_export(t_command *command, t_context *context)
@@ -135,7 +130,9 @@ int builtin_export(t_command *command, t_context *context)
 	i = 1;
 	while (command->argv[i])
 	{
-		ret = handle_export_arg(command->argv[i], context);
+		ret = export_arg(command->argv[i], context);
+		if (ret)
+			break ;
 		i++;
 	}
 	return (ret);

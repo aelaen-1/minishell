@@ -185,6 +185,7 @@ int				update_env(t_env_node **env, char *key, char *value);
 int				unset_env(t_env_node **env, char *key);
 char			*get_env_value(char *to_find, t_env_node *envp);
 char			*key_value_join(char *key, char *value);
+int				is_valid_identifier(char *arg);
 
 int				builtin_echo(t_command *command);
 int				builtin_env(t_command *command, t_context *context);
@@ -196,6 +197,7 @@ int				builtin_unset(t_command *command, t_context *context);
 void			free_program( t_env_node *envp);
 void			free_pipeline(t_pipeline *pipeline);
 void			signal_handler();
+
 
 
 
