@@ -1,22 +1,5 @@
 #include "../include/minishell.h"
 
-static int	handle_builtin_commands(t_command *cmd, t_context *context)
-{
-	if (!ft_strcmp(cmd->argv[0], "echo"))
-		return (builtin_echo(cmd));
-	else if (!ft_strcmp(cmd->argv[0], "env"))
-		return (builtin_env(cmd, context));
-	else if (!ft_strcmp(cmd->argv[0], "pwd"))
-		return (builtin_pwd(cmd));
-	else if (!ft_strcmp(cmd->argv[0], "cd"))
-		return (builtin_cd(cmd, context));
-	else if (!ft_strcmp(cmd->argv[0], "export"))
-		return (builtin_export(cmd, context));
-	else if (!ft_strcmp(cmd->argv[0], "unset"))
-		return (builtin_unset(cmd, context));
-	return (1);
-}
-
 static void	link_pipeline(t_pipeline *pipeline)
 {
 	size_t	i;
@@ -66,89 +49,32 @@ static char	*get_path(t_command *cmd, t_env_node *envp)
 	}
 	return (NULL);
 }
-char **make_env_char(t_env_node *top)
-{
-    int count = 0;
-    t_env_node *current = top;
-    char **env_array;
 
-    // Count the number of nodes in the linked list
-    while (current)
-    {
-        count++;
-        current = current->next;
-    }
-
-    // Allocate memory for the char ** array
-    env_array = (char **)malloc((count + 1) * sizeof(char *));
-    if (!env_array)
-        return NULL;
-
-    // Reset the current pointer and fill the array
-    current = top;
-    for (int i = 0; i < count; i++)
-    {
-        env_array[i] = strdup(current->env_var);
-        if (!env_array[i])
-        {
-            // Free previously allocated memory on failure
-            for (int j = 0; j < i; j++)
-                free(env_array[j]);
-            free(env_array);
-            return NULL;
-        }
-        current = current->next;
-    }
-
-    // Null-terminate the array
-    env_array[count] = NULL;
-
-    return env_array;
-}
-
-static int exec_cmd(t_command *cmd, int *pid, t_context *context)
+static void  exec_cmd(t_command *cmd, int *pid, t_context *context)
 {
     if (!cmd || !cmd->argv[0])
-        return 0;
+        return ;
     expand_command(cmd, context);
     redirect_command(cmd);
-
-    // Builtins qui modifient l'env sans pipe
-    if (*pid == -1 && (!ft_strcmp(cmd->argv[0], "export") || 
-        !ft_strcmp(cmd->argv[0], "cd") || 
-        !ft_strcmp(cmd->argv[0], "unset")))
+    if (is_builtin(cmd))
     {
-        if (!handle_builtin_commands(cmd, context))
-        {
-            close_command_fds(cmd);
-            return (0);
-        }
+        handle_builtin_commands(cmd, context);
+        close_command_fds(cmd);
+        return ;
     }
-    else
+    *pid = fork();
+    if (*pid == 0)
     {
-        *pid = fork();
-        if (*pid == 0)
-        {
-            dup2(cmd->fds[0], 0);
-            dup2(cmd->fds[1], 1);
-            close_command_fds(cmd);
-            if (!handle_builtin_commands(cmd, context))
-                exit(0);
-            char **env = make_env_char(context->envp);
-            char *path = get_path(cmd, context->envp);
-            if (execve(path, cmd->argv, env) == -1)
-            {
-                fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
-                free(path);
-                free_split(env);
-                exit(1);
-            }
-        }
+        dup2(cmd->fds[0], 0);
+        dup2(cmd->fds[1], 1);
+        close_command_fds(cmd);
+        char **env = lst_to_char(context->envp);
+        char *path = get_path(cmd, context->envp);
+        if (execve(path, cmd->argv, env) == -1)
+            command_not_found_and_exit(cmd->argv[0], path, env);// error msg, free, exit
         close_command_fds(cmd);
     }
-    return (1);
 }
-
 
 void	execute_program(t_program *program, t_context *context)
 {
@@ -175,4 +101,48 @@ void	execute_program(t_program *program, t_context *context)
 	free(pids);
 }
 
+
+
+// static int exec_cmd(t_command *cmd, int *pid, t_context *context)
+// {
+//     if (!cmd || !cmd->argv[0])
+//         return 0;
+//     expand_command(cmd, context);
+//     redirect_command(cmd);
+
+//     // Builtins qui modifient l'env sans pipe
+//     if (*pid == -1 && (!ft_strcmp(cmd->argv[0], "export") || 
+//         !ft_strcmp(cmd->argv[0], "cd") || 
+//         !ft_strcmp(cmd->argv[0], "unset")))
+//     {
+//         if (!handle_builtin_commands(cmd, context))
+//         {
+//             close_command_fds(cmd);
+//             return (0);
+//         }
+//     }
+//     else
+//     {
+//         *pid = fork();
+//         if (*pid == 0)
+//         {
+//             dup2(cmd->fds[0], 0);
+//             dup2(cmd->fds[1], 1);
+//             close_command_fds(cmd);
+//             if (!handle_builtin_commands(cmd, context))
+//                 exit(0);
+//             char **env = make_env_char(context->envp);
+//             char *path = get_path(cmd, context->envp);
+//             if (execve(path, cmd->argv, env) == -1)
+//             {
+//                 fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
+//                 free(path);
+//                 free_split(env);
+//                 exit(1);
+//             }
+//         }
+//         close_command_fds(cmd);
+//     }
+//     return (1);
+// }
 
