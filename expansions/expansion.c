@@ -11,7 +11,7 @@ char	*get_env_value(char *to_find, t_env_node *envp)
 	i = ft_strlen(to_find);
 	while (envp)
 	{
-		if (!ft_strncmp(envp->env_var, to_find, i))
+		if (!ft_strncmp(envp->env_var, to_find, i ) && envp->env_var[i] == '=')
 		{
 			value = ft_strdup(envp->env_var + i + 1);
 			return (value);
