@@ -1,5 +1,19 @@
 #include "../include/minishell.h"
 
+void close_command_fds(t_command *command)
+{
+	if (command->fds[0] != 0 && command->fds[0] != -1)
+	{
+		close(command->fds[0]);
+		command->fds[0] = -1;
+	}
+	if (command->fds[1] != 1 && command->fds[1] != -1)
+	{
+		close(command->fds[1]);
+		command->fds[1] = -1;
+	}
+}
+
 // argv est un char ** qui stocke les noms des tokens (les (char *) token->value)
 // redir_in est soit de type < soit <<, redir_out est soit > soit >>
 // le file associé est le token qui suit la redirection, c'est le nom du fichier qui sert soit d'input soit d'output
@@ -32,6 +46,7 @@ t_command	*parse_command(t_token **start, t_token **end)
 	t_command	*command;
 	t_token		**iter;
 	size_t		i;
+	int			redir;
 
 	i = 0;
 	iter = start;
@@ -39,20 +54,23 @@ t_command	*parse_command(t_token **start, t_token **end)
 	command = create_command(argc);
 	if (!command)
 		return 0;
+	redir = 0;
 	while (iter < end)
 	{
-		if (parse_redir(command, iter) == 1)
+		redir = parse_redir(command, iter);
+		if (redir == 1)
 		{
 			iter += 2;
 			continue ;
 		}
-		else if (parse_redir(command, iter) == -1)
-			return (free(command), NULL);
-		else
+		if (redir == -1)
 		{
-			command->argv[i++] = ft_strdup((*iter)->value);
-			iter++;
+			ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
+			return (free(command), NULL);
 		}
+		command->argv[i++] = ft_strdup((*iter)->value);
+		iter++;
+
 	}
 	command->argv[i] = NULL;
 	return (command);
@@ -62,10 +80,7 @@ void	destroy_command(t_command *command)
 {
 	if (!command)
 		return ;
-	if (command->fds[0] != 0 && command->fds[0] != -1)
-		close(command->fds[0]);
-	if (command->fds[1] != 1 && command->fds[1] != -1)
-		close(command->fds[1]);
+	close_command_fds(command);
 	free(command->redir_in.file);
 	free(command->redir_out.file);
 	free_command_argv(command->argv);

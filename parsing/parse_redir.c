@@ -9,10 +9,7 @@ static int	redir_out(t_command *cmd, t_token ***current,
 {
 	(*current)++;
 	if (!(*current) || !(**current) || !(**current)->value)
-	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
 		return	(-1);
-	}
 	if ((**current)->type == TOKEN_WORD)
 	{
 		cmd->redir_out.file = ft_strdup((**current)->value);
@@ -22,17 +19,14 @@ static int	redir_out(t_command *cmd, t_token ***current,
 			cmd->redir_out.type = REDIR_APPEND;
 		return (1);
 	}
-	return (0);
+	return (-1);
 }
 
 static int	redir_in(t_command *cmd, t_token ***current, t_token_type token_type)
 {
 	(*current)++;
 	if (!(*current) || !(**current) || !(**current)->value)
-	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
 		return	(-1);
-	}
 	if ((**current)->type == TOKEN_WORD)
 	{
 		cmd->redir_in.file = ft_strdup((**current)->value);
@@ -42,7 +36,7 @@ static int	redir_in(t_command *cmd, t_token ***current, t_token_type token_type)
 			cmd->redir_in.type = REDIR_HEREDOC;
 		return (1);
 	}
-	return (0);
+	return (-1);
 }
 
 int	parse_redir(t_command *cmd, t_token **current)

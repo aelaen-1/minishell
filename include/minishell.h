@@ -167,6 +167,7 @@ void			append_to_token(t_token *dest, char *src, size_t length);
 /*		parsing/		*/
 t_command		*parse_command(t_token **start, t_token **end);
 t_command		*create_command(int argc);
+void			close_command_fds(t_command *command);
 void			destroy_command(t_command *command);
 t_pipeline		*parse_pipeline(t_token **start, t_token **end);
 t_program		*parse_program(t_token_array array);

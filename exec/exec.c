@@ -16,13 +16,6 @@ static void	link_pipeline(t_pipeline *pipeline)
 	}
 }
 
-static void close_command_fds(t_command *cmd)
-{
-          if (cmd->fds[0] != 0)
-            close(cmd->fds[0]);
-        if (cmd->fds[1] != 1)
-            close(cmd->fds[1]);
-}
 //met la valeur de free_path à 0 si on peut accéder à cmd->argv[0]
 static char	*get_path(t_command *cmd, t_env_node *envp, int	*should_free_path)
 {

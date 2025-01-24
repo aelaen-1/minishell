@@ -2,7 +2,7 @@
 
 // pipes, redirections builtins, field splitting, arguments du main, and_or
 
-
+extern int		g_is_reading_line;
 // virer l'argument program des fonctions qui ne l'utilisent pas car trop général. Donner envp pour être clair et limiter l'accès aux trucs inutiles
 int	main(int ac, char **av, char **env)
 {
@@ -21,22 +21,24 @@ int	main(int ac, char **av, char **env)
 	prg = NULL;
 	while (1)
 	{
+		g_is_reading_line = 1;
 		input = readline("minishell % ");
+		g_is_reading_line = 0;
 		if (!input)
 			break ;
 		if (*input)
 			add_history(input);
+		else
+			continue ;
 		tokens = tokenize_input(input);
 		prg = parse_program(tokens);
-		if(!prg)
+		if(prg)
 		{
-			destroy_tokens_array(&tokens);
-			break ;
+			execute_program(prg, &context);
+			free_pipeline(prg->pipeline);
+			free(prg);
 		}
-		execute_program(prg, &context);
 		destroy_tokens_array(&tokens);
-		free_pipeline(prg->pipeline);
-		free(prg);
 		free(input);
 	}
 	free_program(envp);
