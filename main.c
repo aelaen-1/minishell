@@ -36,10 +36,9 @@ int	main(int ac, char **av, char **env)
 		execute_program(prg, &context);
 		destroy_tokens_array(&tokens);
 		free_pipeline(prg->pipeline);
+		free(prg);
 		free(input);
 	}
-	if(prg)
-		free(prg);
 	free_program(envp);
 	return (0);
 }

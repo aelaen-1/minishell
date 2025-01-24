@@ -12,9 +12,8 @@ t_program	*parse_program(t_token_array array)
 	if(!program)
 		return (0);
 	program->pipeline = parse_pipeline(array.tokens,
-			array.tokens + array.count, program);
+			array.tokens + array.count);
 	if(!program->pipeline)
 		return(0);
-
 	return (program);
 }

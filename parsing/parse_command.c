@@ -26,7 +26,7 @@ t_command	*create_command(int argc)
 // récupère les tokens entre start et end pour les stocker dans command->argv (char **)
 // appelle parse_redir() dans la boucle while sur chaque token, pour verifier si le token est une redirection
 // et si c'est le cas verifie que le token qui suit est de type WORD, qui sera soit l'infile soit l'outfile selon la redir
-t_command	*parse_command(t_token **start, t_token **end, t_program *program)
+t_command	*parse_command(t_token **start, t_token **end)
 {
 	size_t		argc;
 	t_command	*command;
@@ -36,14 +36,15 @@ t_command	*parse_command(t_token **start, t_token **end, t_program *program)
 	i = 0;
 	iter = start;
 	argc = end - start;
-	(void)program;
 	command = create_command(argc);
 	if (!command)
 		return 0;
 	while (iter < end)
 	{
-		if (parse_redir(command, iter))
+		if (parse_redir(command, iter) == 1)
 			iter += 2;
+		else if (parse_redir(command, iter) == -1)
+			return (free(command), NULL);
 		else
 		{
 			command->argv[i++] = ft_strdup((*iter)->value);
@@ -54,18 +55,16 @@ t_command	*parse_command(t_token **start, t_token **end, t_program *program)
 	return (command);
 }
 
-// free proprement ce que l'on a cree avec create_command
-// et dans la fonction parse_redir (strdup sur redir_in et redir_out)
 void	destroy_command(t_command *command)
 {
 	if (!command)
 		return ;
-	if (command->fds[0] != 0)
-		close(command->fds[0] && command->fds[0] != -1);
+	if (command->fds[0] != 0 && command->fds[0] != -1)
+		close(command->fds[0]);
 	if (command->fds[1] != 1 && command->fds[1] != -1)
 		close(command->fds[1]);
 	free(command->redir_in.file);
 	free(command->redir_out.file);
-	free(command->argv); // les argv[i] sont free dans free_command
+	free_command_argv(command->argv);
 	free(command);
 }

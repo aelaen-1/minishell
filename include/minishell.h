@@ -131,7 +131,7 @@ int				*malloc_pids(t_pipeline *pipeline);
 int				**malloc_fds(t_pipeline *pipeline);
 void			free_fds(int **fds, size_t	command_count);
 // error_msg.c
-void			command_not_found_and_exit(char *arg, char *path, char **env);
+void			command_not_found_and_exit(char *arg, char *path, char **env, int *free_path);
 
 /*      utils/     */
 void			free_split(char **s);
@@ -165,12 +165,10 @@ void			destroy_tokens_array(t_token_array *array);
 void			append_to_token(t_token *dest, char *src, size_t length);
 
 /*		parsing/		*/
-t_command		*parse_command(t_token **start, t_token **end,
-					t_program *program);
+t_command		*parse_command(t_token **start, t_token **end);
 t_command		*create_command(int argc);
 void			destroy_command(t_command *command);
-t_pipeline		*parse_pipeline(t_token **start, t_token **end,
-					t_program *program);
+t_pipeline		*parse_pipeline(t_token **start, t_token **end);
 t_program		*parse_program(t_token_array array);
 int				parse_redir(t_command *cmd, t_token **current);
 
@@ -201,6 +199,9 @@ int				builtin_unset(t_command *command, t_context *context);
 void			free_program( t_env_node *envp);
 void			free_pipeline(t_pipeline *pipeline);
 void			signal_handler();
+
+/*		free/		*/
+void			free_command_argv(char **cmd_arg);
 
 
 

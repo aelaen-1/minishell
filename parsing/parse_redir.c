@@ -1,12 +1,18 @@
 #include "../include/minishell.h"
 
-// returns 1 if the redir op is followed by a TOKEN_WORD
+// ATTENTION SI PLUSEURS REDIRECTIONS 
+// si on a strdup un token et que le token suivant 
+// n'est pas un WORD, on free le strdup et on return -1
+//DANS DESTROY COMMAND()
 static int	redir_out(t_command *cmd, t_token ***current,
 		t_token_type token_type)
 {
 	(*current)++;
 	if (!(*current) || !(**current) || !(**current)->value)
-		return (0);
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
+		return	(-1);
+	}
 	if ((**current)->type == TOKEN_WORD)
 	{
 		cmd->redir_out.file = ft_strdup((**current)->value);
@@ -23,7 +29,10 @@ static int	redir_in(t_command *cmd, t_token ***current, t_token_type token_type)
 {
 	(*current)++;
 	if (!(*current) || !(**current) || !(**current)->value)
-		return (0);
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
+		return	(-1);
+	}
 	if ((**current)->type == TOKEN_WORD)
 	{
 		cmd->redir_in.file = ft_strdup((**current)->value);
@@ -40,8 +49,7 @@ int	parse_redir(t_command *cmd, t_token **current)
 {
 	if ((*current)->type == TOKEN_REDIR_OUT)
 	{
-		if (redir_out(cmd, &current, TOKEN_REDIR_OUT))
-			return (1);
+		return (redir_out(cmd, &current, TOKEN_REDIR_OUT));
 	}
 	else if ((*current)->type == TOKEN_APPEND)
 	{

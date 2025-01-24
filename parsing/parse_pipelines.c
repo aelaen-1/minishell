@@ -30,7 +30,7 @@ static t_token	**find_token(t_token **start, t_token **end, t_token_type token_t
 
 // récupère les commandes entre chaque pipeline (pipeline->commands[i])
 // en appellant parse_command(), fonction qui retourne un (t_command *)
-t_pipeline	*parse_pipeline(t_token **start, t_token **end, t_program *program)
+t_pipeline	*parse_pipeline(t_token **start, t_token **end)
 {
 	t_pipeline	*pipeline;
 	size_t		i;
@@ -47,7 +47,7 @@ t_pipeline	*parse_pipeline(t_token **start, t_token **end, t_program *program)
 	while (start < end && i < pipeline->cmd_count)
 	{
 		command_end = find_token(start, end, TOKEN_PIPE);
-		pipeline->commands[i] = parse_command(start, command_end, program);
+		pipeline->commands[i] = parse_command(start, command_end);
 		if (!pipeline->commands[i])
 		{
 			while (i > 0)
