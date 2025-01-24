@@ -1,9 +1,8 @@
 #include "include/minishell.h"
 
-// pipes, redirections builtins, field splitting, arguments du main, and_or
 
 extern int		g_is_reading_line;
-// virer l'argument program des fonctions qui ne l'utilisent pas car trop général. Donner envp pour être clair et limiter l'accès aux trucs inutiles
+
 int	main(int ac, char **av, char **env)
 {
 	t_program		*prg;
@@ -38,9 +37,10 @@ int	main(int ac, char **av, char **env)
 			free_pipeline(prg->pipeline);
 			free(prg);
 		}
+		rl_clear_history();
 		destroy_tokens_array(&tokens);
 		free(input);
 	}
-	free_program(envp);
+	free_env_node(envp);
 	return (0);
 }

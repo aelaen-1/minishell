@@ -203,6 +203,8 @@ void			signal_handler();
 
 /*		free/		*/
 void			free_command_argv(char **cmd_arg);
+void			free_env_node(t_env_node *node);
+void			free_env_and_history( t_env_node *envp);
 
 
 
