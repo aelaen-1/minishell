@@ -46,6 +46,7 @@ void	destroy_tokens_array(t_token_array *array)
 	i = 0;
 	while (i < array->count)
 	{
+		free(array->tokens[i]->value);
 		free(array->tokens[i]);
 		i++;
 	}

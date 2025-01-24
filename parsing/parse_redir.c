@@ -48,23 +48,12 @@ static int	redir_in(t_command *cmd, t_token ***current, t_token_type token_type)
 int	parse_redir(t_command *cmd, t_token **current)
 {
 	if ((*current)->type == TOKEN_REDIR_OUT)
-	{
 		return (redir_out(cmd, &current, TOKEN_REDIR_OUT));
-	}
 	else if ((*current)->type == TOKEN_APPEND)
-	{
-		if (redir_out(cmd, &current, TOKEN_APPEND))
-			return (1);
-	}
+		return (redir_out(cmd, &current, TOKEN_APPEND));
 	else if ((*current)->type == TOKEN_REDIR_IN)
-	{
-		if (redir_in(cmd, &current, TOKEN_REDIR_IN))
-			return (1);
-	}
+		return (redir_in(cmd, &current, TOKEN_REDIR_IN));
 	else if ((*current)->type == TOKEN_HEREDOC)
-	{
-		if (redir_in(cmd, &current, TOKEN_HEREDOC))
-			return (1);
-	}
+		return (redir_in(cmd, &current, TOKEN_HEREDOC));
 	return (0);
 }

@@ -42,7 +42,10 @@ t_command	*parse_command(t_token **start, t_token **end)
 	while (iter < end)
 	{
 		if (parse_redir(command, iter) == 1)
+		{
 			iter += 2;
+			continue ;
+		}
 		else if (parse_redir(command, iter) == -1)
 			return (free(command), NULL);
 		else
