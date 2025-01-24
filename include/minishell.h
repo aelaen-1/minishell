@@ -166,12 +166,12 @@ void			append_to_token(t_token *dest, char *src, size_t length);
 
 /*		parsing/		*/
 t_command		*parse_command(t_token **start, t_token **end);
-t_command		*create_command(int argc);
+t_command		*create_command(size_t argc);
 void			close_command_fds(t_command *command);
 void			destroy_command(t_command *command);
 t_pipeline		*parse_pipeline(t_token **start, t_token **end);
 t_program		*parse_program(t_token_array array);
-int				parse_redir(t_command *cmd, t_token **current);
+int				parse_redir(t_command *cmd, t_token **current, t_token **last_token);
 
 size_t			get_expanded_arg_size(char *command_arg, t_context *context, t_quote_type *quoting);
 void			expand_command(t_command *command, t_context *context);
@@ -197,7 +197,7 @@ int				builtin_cd(t_command *command, t_context *context);
 int				builtin_export(t_command *command, t_context *context);
 int				builtin_unset(t_command *command, t_context *context);
 
-void			free_program( t_env_node *envp);
+void			free_program( t_program *program);
 void			free_pipeline(t_pipeline *pipeline);
 void			signal_handler();
 

@@ -9,6 +9,7 @@ void free_command_argv(char **cmd_arg)
     {
         while (cmd_arg[i]) 
         {
+            // printf("free arg : %s \n", cmd_arg[i]);
             free(cmd_arg[i]);
             i++;
         }
@@ -43,4 +44,10 @@ void free_pipeline(t_pipeline *pipeline)
 	}
     free(pipeline->commands);
     free(pipeline);
+}
+
+void    free_program(t_program *program)
+{
+    free_pipeline(program->pipeline);
+    free(program);
 }

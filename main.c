@@ -34,8 +34,7 @@ int	main(int ac, char **av, char **env)
 		if(prg)
 		{
 			execute_program(prg, &context);
-			free_pipeline(prg->pipeline);
-			free(prg);
+			free_program(prg);
 		}
 		rl_clear_history();
 		destroy_tokens_array(&tokens);

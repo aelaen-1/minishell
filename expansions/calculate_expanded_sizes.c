@@ -12,7 +12,8 @@ static char	*get_var_end(char *start)
 	if (iter == start)
 		return (NULL);
 	return (iter);
-}	
+}
+
 static size_t	get_expanded_var_length(char *var, t_context *context)
 {
 	char	*value;

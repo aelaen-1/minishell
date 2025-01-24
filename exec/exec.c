@@ -23,25 +23,31 @@ static char	*get_path(t_command *cmd, t_env_node *envp, int	*should_free_path)
 	size_t	i;
 	char	*path_1;
 	char	*path_to_try;
+	char	*path_env_value;
+
 
 	i = 0;
+	path_env_value = get_env_value("PATH", envp);
 	if(access(cmd->argv[0], F_OK | X_OK) == 0)
 		return (*should_free_path = 0, cmd->argv[0]);
-	full_path = ft_split(get_env_value("PATH", envp), ':');
+	full_path = ft_split(path_env_value, ':');
 	while (full_path[i])
 	{
 		path_1 = ft_strjoin(full_path[i], "/");
 		path_to_try = ft_strjoin(path_1, cmd->argv[0]);
 		if (access(path_to_try, F_OK | X_OK) == 0)
 		{
+			free(path_env_value);
 			free(path_1);
+			free_split(full_path);
 			return (path_to_try);
 		}
+		
 		free(path_1);
 		free(path_to_try);
 		i++;
 	}
-	return (NULL);
+	return (free(path_env_value), free_split(full_path), NULL);
 }
 
 static void  exec_cmd(t_command *cmd, int *pid, t_context *context)

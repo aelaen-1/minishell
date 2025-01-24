@@ -39,21 +39,6 @@ t_token	*add_token_to_array(t_token_array *array, t_token *token)
 	return (token);
 }
 
-void	destroy_tokens_array(t_token_array *array)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < array->count)
-	{
-		free(array->tokens[i]->value);
-		free(array->tokens[i]);
-		i++;
-	}
-	free(array->tokens);
-	array->tokens = NULL;
-}
-
 void	print_tokens(t_token_array *array)
 {
 	size_t	i;
