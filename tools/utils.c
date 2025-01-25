@@ -35,6 +35,8 @@ void	free_split(char **s)
 	int	i;
 
 	i = 0;
+	if (!s)
+		return ;
 	while (s[i])
 	{
 		free(s[i]);

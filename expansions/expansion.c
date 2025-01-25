@@ -1,6 +1,14 @@
 #include "../include/minishell.h"
 // waitpid status pour la valeur de $?
 
+static void	expand_last_cmd_status(char *var_value, char *res, size_t *j, size_t *i)
+{
+	ft_strlcpy(res + *j, var_value, ft_strlen(var_value) + 1);
+	*j += ft_strlen(var_value);
+	free(var_value);
+	(*i)++;
+}
+
 char	*get_env_value(char *to_find, t_env_node *envp)
 {
 	size_t		i;
@@ -20,14 +28,6 @@ char	*get_env_value(char *to_find, t_env_node *envp)
 	}
 	return (NULL);
 }
-static void	get_last_command_return_value(char *var_value, char *res, size_t *j, size_t *i)
-{
-	ft_strlcpy(res + *j, var_value, ft_strlen(var_value) + 1);
-	*j += ft_strlen(var_value);
-	free(var_value);
-	(*i)++;
-}
-
 
 // remplace chaque variable ($ABC) par sa valeur
 // si $ est suivi par un caractere non alpha-numerique, on saute simplement
@@ -61,7 +61,7 @@ char	*expand_command_arg(char *command_arg, t_context *context)
 			len = 0;
 			if (command_arg[i] == '?')
 			{
-				get_last_command_return_value(ft_itoa(context->last_cmd_status), res, &j, &i);
+				expand_last_cmd_status(ft_itoa(context->last_cmd_status), res, &j, &i);
 				continue;
 			}
 			while (ft_isalnum(command_arg[i + len]) || command_arg[i + len] == '_')

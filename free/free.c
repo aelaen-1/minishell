@@ -9,7 +9,6 @@ void free_command_argv(char **cmd_arg)
     {
         while (cmd_arg[i]) 
         {
-            // printf("free arg : %s \n", cmd_arg[i]);
             free(cmd_arg[i]);
             i++;
         }

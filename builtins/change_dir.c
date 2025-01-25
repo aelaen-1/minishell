@@ -1,6 +1,5 @@
 #include "../include/minishell.h"
 
-
 int	builtin_cd(t_command *command, t_context *context)
 {
 	char	*alternate_path;

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: aelaen <aelaen@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/14 21:35:46 by lvastel           #+#    #+#             */
-/*   Updated: 2025/01/23 23:58:28 by aelaen           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../include/minishell.h"
 
 int g_is_reading_line = 0;
@@ -35,5 +23,4 @@ void signal_handler()
     signal(SIGINT,  handle_ctrlc);
     signal(SIGQUIT, handle_ctrlslash);
 }
-
 

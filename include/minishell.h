@@ -128,10 +128,9 @@ t_env_node	*create_env_node(char *env_var, t_env_node *bottom);
 char			**lst_to_char(t_env_node *top); // used to pass env to execve
 
 int				*malloc_pids(t_pipeline *pipeline);
-int				**malloc_fds(t_pipeline *pipeline);
-void			free_fds(int **fds, size_t	command_count);
+
 // error_msg.c
-void			command_not_found_and_exit(char *arg, char *path, char **env, int *free_path);
+void			command_not_found_and_free(char *arg, char *path, char **env, int *free_path);
 
 /*      utils/     */
 void			free_split(char **s);
@@ -205,8 +204,6 @@ void			signal_handler();
 void			free_command_argv(char **cmd_arg);
 void			free_env_node(t_env_node *node);
 void			free_env_and_history( t_env_node *envp);
-
-
 
 
 #endif

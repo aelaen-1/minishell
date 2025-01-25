@@ -36,8 +36,8 @@ int	main(int ac, char **av, char **env)
 			execute_program(prg, &context);
 			free_program(prg);
 		}
-		rl_clear_history();
 		destroy_tokens_array(&tokens);
+		rl_clear_history();
 		free(input);
 	}
 	free_env_node(envp);
