@@ -1,7 +1,6 @@
 #include "include/minishell.h"
 
-
-extern int		g_is_reading_line;
+extern int		g_sig;
 
 int	main(int ac, char **av, char **env)
 {
@@ -16,45 +15,36 @@ int	main(int ac, char **av, char **env)
 	envp = init_env(env);
 	context.envp = envp;
 	context.last_cmd_status = 0;
-	signal_handler(&context.last_cmd_status);
+	signal_handler();
 	prg = NULL;
-	while (1)
+	int should_loop = 1;
+	while (should_loop)
 	{
-		g_is_reading_line = 1;
+		g_sig = 0;
 		input = readline("minishell % ");
-		g_is_reading_line = 0;
+		if (g_sig)
+			context.last_cmd_status = 130;
 		if (!input)
 			break ;
-		if (*input)
-			add_history(input);
-		else
+		if (!check_input(input, &context))
+		{
+			free(input);
 			continue ;
+		}
 		tokens = tokenize_input(input);
 		prg = parse_program(tokens);
 		if(prg)
 		{
 			if (execute_program(prg, &context) == -1)
-			{
-				printf("error\n");
-				//child process is here
-				free_program(prg);
-				destroy_tokens_array(&tokens);
-				rl_clear_history();
-				free(input);
-				free_env_node(envp);
-				return (0);
-			}
-			else
-			{
-				//parent process is here
-				// printf("well executed\n");
-				free_program(prg);
-			}
+				should_loop = 0;
+			free_program(prg);
 		}
 		destroy_tokens_array(&tokens);
-		rl_clear_history();
 		free(input);
+		if (g_sig)
+			context.last_cmd_status = 130;
 	}
+	rl_clear_history();
 	free_env_node(envp);
 	return (0);
 }

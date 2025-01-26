@@ -55,16 +55,16 @@ char	*expand_command_arg(char *command_arg, t_context *context)
 		return (free(quoting), NULL);
 	while (command_arg[i])
 	{
-		if (command_arg[i] == '$' && quoting[i] != QUOTE_SINGLE && command_arg[i + 1])
+		if ((command_arg[i] == '$' && quoting[i] != QUOTE_SINGLE) && (command_arg[i + 1] && command_arg[i + 1] && (ft_isalnum(command_arg[i + 1]) || command_arg[i + 1] == '?')))
 		{
 			i++;
 			len = 0;
-			if (command_arg[i] == '?')
+			if (command_arg[i] && command_arg[i] == '?')
 			{
 				expand_last_cmd_status(ft_itoa(context->last_cmd_status), res, &j, &i);
 				continue;
 			}
-			while (ft_isalnum(command_arg[i + len]) || command_arg[i + len] == '_')
+			while (command_arg[i + len] && (ft_isalnum(command_arg[i + len]) || command_arg[i + len] == '_'))
 				len++;
 			if (len)
 			{
@@ -130,6 +130,26 @@ static void	expand_parameters(t_command *command, t_context *context)
 
 void	expand_command(t_command *command, t_context *context)
 {
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	// fonction qui enleve les argv vides
 	expand_parameters(command, context);
+	while(command->argv[i])
+	{
+		while (command->argv[i] && *command->argv[i] == '\0')
+		{
+			free(command->argv[i]);
+			i++;
+		}
+		if (!command->argv[i])
+			break ;
+		command->argv[j] = command->argv[i];
+		i++;
+		j++;
+	}
+	command->argv[j] = NULL;
 	remove_quotes(command);
 }

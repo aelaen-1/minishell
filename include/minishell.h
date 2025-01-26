@@ -124,12 +124,10 @@ int				execute_program(t_program *program, t_context *context);
 int				is_builtin(t_command *cmd);
 int				handle_builtin_commands(t_command *cmd, t_context *context);
 
-t_env_node	*create_env_node(char *env_var, t_env_node *bottom);
+t_env_node		*create_env_node(char *env_var, t_env_node *bottom);
 char			**lst_to_char(t_env_node *top); // used to pass env to execve
-
 int				*malloc_pids(t_pipeline *pipeline);
 
-// error_msg.c
 void			command_not_found_and_free(char *arg, char *path, char **env, int *free_path);
 
 /*      utils/     */
@@ -144,6 +142,9 @@ void			remove_quotes(t_command *cmd);
 
 
 /*		lexing/	*/
+// bool    		check_input(char *input);
+
+
 void			init_lex_context(t_lex_context *context, char *input);
 int				init_token_array(t_token_array *array);
 t_token_array	tokenize_input(char *input);
@@ -204,5 +205,9 @@ void			signal_handler();
 void			free_command_argv(char **cmd_arg);
 void			free_env_node(t_env_node *node);
 
+
+
+// nouvelles fonctions
+bool    check_input(char *input, t_context *context);
 
 #endif

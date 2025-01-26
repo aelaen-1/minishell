@@ -4,11 +4,11 @@ void command_not_found_and_free(char *arg, char *path, char **env, int *should_f
 {
     if (path != NULL && *should_free_path == 1)
 		free(path);
-	free_split(env); // ne fait rien si env est NULL
+	free_split(env);
     ft_putstr_fd("minishell: ", 2);
     ft_putstr_fd(arg, 2);
     ft_putstr_fd(": command not found\n", 2);
-	exit (EXIT_FAILURE);
+	// exit (EXIT_FAILURE);
 }
 
 static void	link_pipeline(t_pipeline *pipeline)
@@ -22,7 +22,7 @@ static void	link_pipeline(t_pipeline *pipeline)
 		pipe(pipe_fds);
 		pipeline->commands[i]->fds[1] = pipe_fds[1];
 		// if (pipeline->commands[i + 1]) condition inutile car on sait qu'il y a un élément suivant (i < pipeline->cmd_count - 1)
-		pipeline->commands[i+1]->fds[0] = pipe_fds[0];
+		pipeline->commands[i + 1]->fds[0] = pipe_fds[0];
 		i++;
 	}
 }
@@ -117,20 +117,17 @@ int	execute_program(t_program *program, t_context *context)
 	int status;
 
 	i = 0;
+	status = 0;
 	pids = malloc_pids(program->pipeline);
 	link_pipeline(program->pipeline);
 	while (i < program->pipeline->cmd_count)
 	{
 		if (exec_cmd(program->pipeline->commands[i], &pids[i], context) == -1)
 		{
-			fprintf(stderr, "exec_cmd failed, should return -1\n");
 			return (free(pids), -1);
 		}
 		else
-		{
-			printf("command %s executed\n", program->pipeline->commands[i]->argv[0]);
 			i++;
-		}
 	}
 	i = 0;
 	while (i < program->pipeline->cmd_count)
@@ -139,7 +136,7 @@ int	execute_program(t_program *program, t_context *context)
 		if (WIFEXITED(status))
 		{
 			context->last_cmd_status = WEXITSTATUS(status);
-			printf("exit status: %d\n", context->last_cmd_status);
+			// printf("exit status: %d\n", context->last_cmd_status);
 		}
 		i++;
 	}
