@@ -14,10 +14,6 @@ void close_command_fds(t_command *command)
 	}
 }
 
-// argv est un char ** qui stocke les noms des tokens (les (char *) token->value)
-// redir_in est soit de type < soit <<, redir_out est soit > soit >>
-// le file associé est le token qui suit la redirection, c'est le nom du fichier qui sert soit d'input soit d'output
-// ne traite pas encore s'il y a plusieurs redirections 
 t_command	*create_command(size_t argc)
 {
 	size_t	i;
@@ -41,9 +37,6 @@ t_command	*create_command(size_t argc)
 	return (command);
 }
 
-// récupère les tokens entre start et end pour les stocker dans command->argv (char **)
-// appelle parse_redir() dans la boucle while sur chaque token, pour verifier si le token est une redirection
-// et si c'est le cas verifie que le token qui suit est de type WORD, qui sera soit l'infile soit l'outfile selon la redir
 t_command	*parse_command(t_token **start, t_token **end)
 {
 	size_t		argc;
