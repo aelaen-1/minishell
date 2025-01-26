@@ -8,6 +8,7 @@ void command_not_found_and_free(char *arg, char *path, char **env, int *should_f
     ft_putstr_fd("minishell: ", 2);
     ft_putstr_fd(arg, 2);
     ft_putstr_fd(": command not found\n", 2);
+	exit (EXIT_FAILURE);
 }
 
 static void	link_pipeline(t_pipeline *pipeline)
@@ -91,13 +92,17 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 		if (!path)
 		{
 			context->last_cmd_status = 127;
-			return (command_not_found_and_free(cmd->argv[0], path, env, &should_free_path), -1);
+			// fprintf(stderr, "PATH NOT FOUND, SHOULD RETURN -1\n");
+			command_not_found_and_free(cmd->argv[0], path, env, &should_free_path);
+			return (-1);
 		}
 		env = lst_to_char(context->envp);
         if (execve(path, cmd->argv, env) == -1)
 		{
 			context->last_cmd_status = 127;
-			return (command_not_found_and_free(cmd->argv[0], path, env, &should_free_path), -1);
+			// fprintf(stderr, "EXECVE FAILED, SHOULD RETURN -1\n");
+			command_not_found_and_free(cmd->argv[0], path, env, &should_free_path);
+			return (-1);
 		}
     }
 	else
@@ -105,7 +110,7 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 	return (0);
 }
 
-void	execute_program(t_program *program, t_context *context)
+int	execute_program(t_program *program, t_context *context)
 {
 	size_t	i;
 	int *pids;
@@ -117,17 +122,28 @@ void	execute_program(t_program *program, t_context *context)
 	while (i < program->pipeline->cmd_count)
 	{
 		if (exec_cmd(program->pipeline->commands[i], &pids[i], context) == -1)
-			break ;
-		i++;
+		{
+			fprintf(stderr, "exec_cmd failed, should return -1\n");
+			return (free(pids), -1);
+		}
+		else
+		{
+			printf("command %s executed\n", program->pipeline->commands[i]->argv[0]);
+			i++;
+		}
 	}
 	i = 0;
 	while (i < program->pipeline->cmd_count)
 	{
 		waitpid(pids[i], &status, 0);
+		if (WIFEXITED(status))
+		{
+			context->last_cmd_status = WEXITSTATUS(status);
+			printf("exit status: %d\n", context->last_cmd_status);
+		}
 		i++;
 	}
-	if (WIFEXITED(status))
-        context->last_cmd_status = WEXITSTATUS(status);
 	free(pids);
+	return (0);
 }
 

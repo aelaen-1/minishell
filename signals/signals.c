@@ -4,6 +4,7 @@ int g_is_reading_line = 0;
 
 void handle_ctrlc()
 {
+    // g_is_reading_line = 130; exit status
     write(1, "\n",1);
     if (g_is_reading_line == 1)
     {    

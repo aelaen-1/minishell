@@ -13,10 +13,10 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
-	signal_handler();
 	envp = init_env(env);
 	context.envp = envp;
 	context.last_cmd_status = 0;
+	signal_handler(&context.last_cmd_status);
 	prg = NULL;
 	while (1)
 	{
@@ -33,8 +33,23 @@ int	main(int ac, char **av, char **env)
 		prg = parse_program(tokens);
 		if(prg)
 		{
-			execute_program(prg, &context);
-			free_program(prg);
+			if (execute_program(prg, &context) == -1)
+			{
+				printf("error\n");
+				//child process is here
+				free_program(prg);
+				destroy_tokens_array(&tokens);
+				rl_clear_history();
+				free(input);
+				free_env_node(envp);
+				return (0);
+			}
+			else
+			{
+				//parent process is here
+				// printf("well executed\n");
+				free_program(prg);
+			}
 		}
 		destroy_tokens_array(&tokens);
 		rl_clear_history();
