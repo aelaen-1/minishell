@@ -128,28 +128,28 @@ static void	expand_parameters(t_command *command, t_context *context)
 	}
 }
 
-void	expand_command(t_command *command, t_context *context)
+static void	remove_null_commands(t_command *command)
 {
 	size_t	i;
 	size_t	j;
 
 	i = 0;
 	j = 0;
-	// fonction qui enleve les argv vides
-	expand_parameters(command, context);
-	while(command->argv[i])
+	while (command->argv[i])
 	{
-		while (command->argv[i] && *command->argv[i] == '\0')
+		if (*command->argv[i] != '\0')
 		{
-			free(command->argv[i]);
-			i++;
+			command->argv[j] = command->argv[i];
+			j++;
 		}
-		if (!command->argv[i])
-			break ;
-		command->argv[j] = command->argv[i];
 		i++;
-		j++;
 	}
 	command->argv[j] = NULL;
+}
+
+void	expand_command(t_command *command, t_context *context)
+{
+	expand_parameters(command, context);
+	remove_null_commands(command);
 	remove_quotes(command);
 }

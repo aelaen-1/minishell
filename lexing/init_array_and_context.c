@@ -7,6 +7,7 @@ int	init_token_array(t_token_array *array)
 	array->tokens = malloc(array->capacity * sizeof(t_token *));
 	return (array->tokens != NULL);
 }
+
 void	destroy_tokens_array(t_token_array *array)
 {
 	size_t	i;

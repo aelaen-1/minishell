@@ -8,7 +8,6 @@ void command_not_found_and_free(char *arg, char *path, char **env, int *should_f
     ft_putstr_fd("minishell: ", 2);
     ft_putstr_fd(arg, 2);
     ft_putstr_fd(": command not found\n", 2);
-	// exit (EXIT_FAILURE);
 }
 
 static void	link_pipeline(t_pipeline *pipeline)
@@ -21,7 +20,6 @@ static void	link_pipeline(t_pipeline *pipeline)
 	{
 		pipe(pipe_fds);
 		pipeline->commands[i]->fds[1] = pipe_fds[1];
-		// if (pipeline->commands[i + 1]) condition inutile car on sait qu'il y a un élément suivant (i < pipeline->cmd_count - 1)
 		pipeline->commands[i + 1]->fds[0] = pipe_fds[0];
 		i++;
 	}
@@ -76,6 +74,8 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
         return (-1);
     expand_command(cmd, context);
     redirect_command(cmd);
+	if (!redirect_command(cmd))
+		return (1);
     if (is_builtin(cmd))
     {
         handle_builtin_commands(cmd, context);
@@ -92,7 +92,6 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 		if (!path)
 		{
 			context->last_cmd_status = 127;
-			// fprintf(stderr, "PATH NOT FOUND, SHOULD RETURN -1\n");
 			command_not_found_and_free(cmd->argv[0], path, env, &should_free_path);
 			return (-1);
 		}
@@ -100,7 +99,6 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
         if (execve(path, cmd->argv, env) == -1)
 		{
 			context->last_cmd_status = 127;
-			// fprintf(stderr, "EXECVE FAILED, SHOULD RETURN -1\n");
 			command_not_found_and_free(cmd->argv[0], path, env, &should_free_path);
 			return (-1);
 		}
@@ -115,17 +113,20 @@ int	execute_program(t_program *program, t_context *context)
 	size_t	i;
 	int *pids;
 	int status;
+	int	ret;
 
 	i = 0;
+	ret = 0;
 	status = 0;
 	pids = malloc_pids(program->pipeline);
 	link_pipeline(program->pipeline);
 	while (i < program->pipeline->cmd_count)
 	{
-		if (exec_cmd(program->pipeline->commands[i], &pids[i], context) == -1)
-		{
+		ret = exec_cmd(program->pipeline->commands[i], &pids[i], context);
+		if (ret == -1)
 			return (free(pids), -1);
-		}
+		else if(ret == 1)
+			return (free(pids), 1);
 		else
 			i++;
 	}
@@ -134,13 +135,9 @@ int	execute_program(t_program *program, t_context *context)
 	{
 		waitpid(pids[i], &status, 0);
 		if (WIFEXITED(status))
-		{
 			context->last_cmd_status = WEXITSTATUS(status);
-			// printf("exit status: %d\n", context->last_cmd_status);
-		}
 		i++;
 	}
 	free(pids);
 	return (0);
 }
-

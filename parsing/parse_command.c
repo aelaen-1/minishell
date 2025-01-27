@@ -27,7 +27,7 @@ t_command	*create_command(size_t argc)
 		return (free(command), NULL);
 	i = 0;
 	while (i <= argc)
-		command->argv[i++] = NULL; // ?
+		command->argv[i++] = NULL;
 	command->redir_in.type = REDIR_NONE;
 	command->redir_out.type = REDIR_NONE;
 	command->redir_in.file = NULL;

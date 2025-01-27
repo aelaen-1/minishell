@@ -33,17 +33,11 @@ static int	check_if_pipeline_error(t_token **start, t_token **end, size_t cmd_co
 	{
 		command_end = find_token(start, end, TOKEN_PIPE);
 		if (command_end == start)
-		{
-			ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
-			return (1);
-		}
+			return (ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2), 1);
 		start = command_end + 1;
 	}
 	if (start == end)
-	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
-		return (1);
-	}
+			return (ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2), 1);
 	return (0);
 }
 

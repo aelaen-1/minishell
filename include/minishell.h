@@ -160,7 +160,6 @@ int				handle_quote(char *start_quote, t_token *token,
 					t_lex_context *context);
 void			remove_quotes(t_command *cmd);
 
-void			print_tokens(t_token_array *tokens);
 void			destroy_tokens_array(t_token_array *array);
 void			append_to_token(t_token *dest, char *src, size_t length);
 
@@ -175,7 +174,7 @@ int				parse_redir(t_command *cmd, t_token **current, t_token **last_token);
 
 size_t			get_expanded_arg_size(char *command_arg, t_context *context, t_quote_type *quoting);
 void			expand_command(t_command *command, t_context *context);
-void			redirect_command(t_command *command);
+int			redirect_command(t_command *command);
 		
 // outil pour print le prgram
 void			print_pipeline_to_dot(t_pipeline *pipeline);

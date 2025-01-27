@@ -39,18 +39,6 @@ t_token	*add_token_to_array(t_token_array *array, t_token *token)
 	return (token);
 }
 
-void	print_tokens(t_token_array *array)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < array->count)
-	{
-		printf("%s\n", array->tokens[i]->value);
-		i++;
-	}
-}
-
 void	find_token_type(t_token *token)
 {
 	if (!ft_strcmp(token->value, "|"))

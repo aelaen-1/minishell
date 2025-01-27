@@ -23,32 +23,6 @@ static bool empty_input(char *input)
         return (true);
     return (false);
 }
-
-bool	check_start_end(char *s, char c, bool ends)
-{
-    size_t  i;
-
-    i = 0;
-    if (ends == true)
-        i = 0;
-    else
-        i = ft_strlen(s) - 1;
-    while (s[i] && is_space(s[i]))
-    {
-        if (ends == true)
-            i++;
-        else
-            i--;
-    }
-    if (s[i] == c)
-    {
-        ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-        ft_putchar_fd(c, 2);
-        ft_putstr_fd("'\n", 2);
-        return (true);
-    }
-    return (false);
-}
 bool   pipe_error(char *s)
 {
     size_t  i;
@@ -74,30 +48,19 @@ bool   pipe_error(char *s)
                     tmp++;
                 i++;
             }
-            if (i == tmp)
+            if (i == tmp || tmp == len)
                 return (ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2), true);
+            i = tmp;
         }
         i++;
     }
     return (false);
 }
 
-static  int check_access(char *path)
-{
-    if (access(path, F_OK) == -1)
-    {
-        ft_putstr_fd("minishell: ", 2);
-        ft_putstr_fd(path, 2);
-        ft_putstr_fd(": No such file or directory\n", 2);
-        return (1);
-    }
-}
 
 bool    check_input(char *input, t_context *context)
 {
-    if ()
-    if (empty_input(input) || check_start_end(input, '|', false) || check_start_end(input, '|', true)
-        || check_start_end(input, '<', false) || check_start_end(input, '>', true))
+    if (empty_input(input) || pipe_error(input))
     {
         context->last_cmd_status = 2;
         return (false);
