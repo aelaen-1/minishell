@@ -71,9 +71,8 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 	env = NULL;
 	should_free_path = 1;
     if (!cmd || !cmd->argv[0])
-        return (-1);
+        return (2);
     expand_command(cmd, context);
-    redirect_command(cmd);
 	if (!redirect_command(cmd))
 		return (1);
     if (is_builtin(cmd))
@@ -127,6 +126,8 @@ int	execute_program(t_program *program, t_context *context)
 			return (free(pids), -1);
 		else if(ret == 1)
 			return (free(pids), 1);
+		else if (ret == 2)
+			return (free(pids), 0);
 		else
 			i++;
 	}
