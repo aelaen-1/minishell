@@ -16,7 +16,6 @@ static void	link_pipeline(t_pipeline *pipeline)
 	}
 }
 
-//met la valeur de free_path à 0 si on peut accéder à cmd->argv[0]
 static char	*get_path(t_command *cmd, t_env_node *envp, int	*should_free_path)
 {
 	char	**full_path;
@@ -27,12 +26,14 @@ static char	*get_path(t_command *cmd, t_env_node *envp, int	*should_free_path)
 
 
 	i = 0;
-	path_env_value = get_env_value("PATH", envp);
 	if(access(cmd->argv[0], F_OK | X_OK) == 0)
 	{
 		*should_free_path = 0;
 		return (cmd->argv[0]);
 	}
+	path_env_value = get_env_value("PATH", envp);
+	if (!path_env_value)
+		return (ft_putstr_fd("minishell: PATH not set\n", STDERR_FILENO), NULL);
 	full_path = ft_split(path_env_value, ':');
 	while (full_path[i])
 	{
@@ -90,6 +91,7 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 		context->last_cmd_status = handle_exec_error(path, context);
 		if (context->last_cmd_status)
 		{
+			printf("context->last_cmd_status = %d\n", context->last_cmd_status);
 			if (path != NULL && should_free_path == 1)
 				free(path);
 			return (-1);
