@@ -10,6 +10,6 @@ t_program	*parse_program(t_token_array array)
 	program->pipeline = parse_pipeline(array.tokens,
 			array.tokens + array.count);
 	if(!program->pipeline)
-		return(0);
+		return(free(program), NULL);
 	return (program);
 }
