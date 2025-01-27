@@ -74,6 +74,9 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
         return (0);
     }
 	path = get_path(cmd, context->envp, &should_free_path);
+	context->last_cmd_status = handle_exec_error(path, context);
+	if (context->last_cmd_status)
+		return (context->last_cmd_status);
 	if (!path)
 	{
 		ft_putstr_fd("minishell: ", 2);
