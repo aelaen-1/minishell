@@ -208,5 +208,6 @@ void			free_env_node(t_env_node *node);
 
 // nouvelles fonctions
 bool    check_input(char *input, t_context *context);
+int		handle_exec_error(char *cmd, t_context *context);
 
 #endif

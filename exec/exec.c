@@ -1,14 +1,5 @@
 #include "../include/minishell.h"
 
-void command_not_found_and_free(char *arg, char *path, char **env, int *should_free_path)
-{
-    if (path != NULL && *should_free_path == 1)
-		free(path);
-	free_split(env);
-    ft_putstr_fd("minishell: ", 2);
-    ft_putstr_fd(arg, 2);
-    ft_putstr_fd(": command not found\n", 2);
-}
 
 static void	link_pipeline(t_pipeline *pipeline)
 {
@@ -90,15 +81,25 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 		path = get_path(cmd, context->envp, &should_free_path);
 		if (!path)
 		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+			ft_putstr_fd(": command not found\n", STDERR_FILENO);
 			context->last_cmd_status = 127;
-			command_not_found_and_free(cmd->argv[0], path, env, &should_free_path);
+			return (-1);
+		}
+		context->last_cmd_status = handle_exec_error(path, context);
+		if (context->last_cmd_status)
+		{
+			if (path != NULL && should_free_path == 1)
+				free(path);
 			return (-1);
 		}
 		env = lst_to_char(context->envp);
         if (execve(path, cmd->argv, env) == -1)
 		{
-			context->last_cmd_status = 127;
-			command_not_found_and_free(cmd->argv[0], path, env, &should_free_path);
+			if (path != NULL && should_free_path == 1)
+				free(path);
+			free_split(env);
 			return (-1);
 		}
     }
