@@ -63,7 +63,7 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 	env = NULL;
 	should_free_path = 1;
     if (!cmd || !cmd->argv[0])
-        return (2);
+        return (1);
     expand_command(cmd, context);
 	if (!redirect_command(cmd))
 		return (1);
@@ -73,33 +73,32 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
         close_command_fds(cmd);
         return (0);
     }
+	path = get_path(cmd, context->envp, &should_free_path);
+	if (!path)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd->argv[0], 2);
+		ft_putstr_fd(": command not found\n", 2);
+		context->last_cmd_status = 127;
+		return (context->last_cmd_status);
+	}
+	env = lst_to_char(context->envp);
     *pid = fork();
     if (*pid == 0)
     {
         dup2(cmd->fds[0], 0);
         dup2(cmd->fds[1], 1);
         close_command_fds(cmd);
-		path = get_path(cmd, context->envp, &should_free_path);
-		if (!path)
-		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-			ft_putstr_fd(": command not found\n", STDERR_FILENO);
-			context->last_cmd_status = 127;
-			return (-1);
-		}
 		context->last_cmd_status = handle_exec_error(path, context);
 		if (context->last_cmd_status)
 		{
-			printf("context->last_cmd_status = %d\n", context->last_cmd_status);
-			if (path != NULL && should_free_path == 1)
+			if (should_free_path == 1)
 				free(path);
-			return (-1);
+			return (free_split(env), context->last_cmd_status);
 		}
-		env = lst_to_char(context->envp);
         if (execve(path, cmd->argv, env) == -1)
 		{
-			if (path != NULL && should_free_path == 1)
+			if (should_free_path == 1)
 				free(path);
 			free_split(env);
 			return (-1);
@@ -107,6 +106,9 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
     }
 	else
 		close_command_fds(cmd);
+	free_split(env);
+	if (should_free_path == 1)
+		free(path);
 	return (0);
 }
 
@@ -125,12 +127,8 @@ int	execute_program(t_program *program, t_context *context)
 	while (i < program->pipeline->cmd_count)
 	{
 		ret = exec_cmd(program->pipeline->commands[i], &pids[i], context);
-		if (ret == -1)
-			return (free(pids), -1);
-		else if(ret == 1)
-			return (free(pids), 1);
-		else if (ret == 2)
-			return (free(pids), 0);
+		if (ret != 0)
+			return (free(pids), ret);
 		else
 			i++;
 	}

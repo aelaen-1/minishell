@@ -16,7 +16,9 @@ static	void	shell_repl_loop(t_context *context)
 	t_token_array	tokens;
 	t_program	*program;
 	int		should_loop;
+	int		status;
 
+	status = 0;
 	should_loop = 1;
 	while (should_loop)
 	{
@@ -35,8 +37,10 @@ static	void	shell_repl_loop(t_context *context)
 		program = parse_program(tokens);
 		if(program)
 		{
-			if (execute_program(program, context) == -1)
+			status = execute_program(program, context);
+			if (status != 0)
 				should_loop = 0;
+			context->last_cmd_status = status;
 			free_program(program);
 		}
 		destroy_tokens_array(&tokens);
