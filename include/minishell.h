@@ -189,9 +189,9 @@ char			*get_env_value(char *to_find, t_env_node *envp);
 char			*key_value_join(char *key, char *value);
 int				is_valid_identifier(char *arg);
 
-int				builtin_echo(t_command *command, t_context *context);
+int				builtin_echo(t_command *command);
 int				builtin_env(t_command *command, t_context *context);
-int				builtin_pwd(t_command *command, t_context *context);
+int				builtin_pwd(t_command *command);
 int				builtin_cd(t_command *command, t_context *context);
 int				builtin_export(t_command *command, t_context *context);
 int				builtin_unset(t_command *command, t_context *context);

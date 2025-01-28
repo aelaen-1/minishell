@@ -50,6 +50,8 @@ char	*expand_command_arg(char *command_arg, t_context *context)
 	if (!quoting)
 		return (NULL);
 	size = get_expanded_arg_size(command_arg, context, quoting);
+	if (!size)
+		return (free(quoting), NULL);
 	res = malloc(size + 1);
 	if (!res)
 		return (free(quoting), NULL);

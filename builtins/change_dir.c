@@ -10,7 +10,7 @@ int	builtin_cd(t_command *command, t_context *context)
 	{
 		alternate_path = get_env_value("HOME", context->envp);
 		if (!alternate_path)
-			return (free(former_path),ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
+			return (free(former_path), ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
 	}
 	else if (command->argv[2])
 	{

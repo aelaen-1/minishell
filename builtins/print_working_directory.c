@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-int	builtin_pwd(t_command *command, t_context *context)
+int	builtin_pwd(t_command *command)
 {
 	char	*working_directory;
 

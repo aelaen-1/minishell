@@ -1,5 +1,6 @@
 #include "../include/minishell.h"
 
+extern int		g_sig;
 
 static void	link_pipeline(t_pipeline *pipeline)
 {
@@ -73,6 +74,8 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
     if (!cmd || !cmd->argv[0])
         return (0);
     expand_command(cmd, context);
+	if (!cmd->argv[0])
+		return (56);
 	if (!redirect_command(cmd))
 		return (0);
     if (is_builtin(cmd))
@@ -126,6 +129,7 @@ int	execute_program(t_program *program, t_context *context)
 	status = 0;
 	pids = malloc_pids(program->pipeline);
 	link_pipeline(program->pipeline);
+	g_sig = 2;
 	while (i < program->pipeline->cmd_count)
 	{
 		if (exec_cmd(program->pipeline->commands[i], &pids[i], context))
@@ -141,6 +145,7 @@ int	execute_program(t_program *program, t_context *context)
 			context->last_cmd_status = WEXITSTATUS(status);
 		i++;
 	}
+	g_sig = 0;
 	free(pids);
 	return (0);
 }

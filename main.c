@@ -51,7 +51,7 @@ static	void	shell_repl_loop(t_context *context)
 		program = parse_program(tokens);
 		if(program)
 		{
-			context->last_cmd_status = execute_program(program, context);
+			execute_program(program, context);
 			free_program(program);
 		}
 		destroy_tokens_array(&tokens);
