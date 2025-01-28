@@ -33,7 +33,7 @@ static char	*get_path(t_command *cmd, t_env_node *envp, int	*should_free_path)
 	}
 	path_env_value = get_env_value("PATH", envp);
 	if (!path_env_value)
-		return (ft_putstr_fd("minishell: PATH not set\n", STDERR_FILENO), NULL);
+		return (ft_putstr_fd("minishell: PATH not set\n", 2), NULL);
 	full_path = ft_split(path_env_value, ':');
 	while (full_path[i])
 	{
@@ -77,7 +77,9 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 		return (0);
     if (is_builtin(cmd))
 	{
-        return (close_command_fds(cmd), handle_builtin_commands(cmd, context));
+		close_command_fds(cmd);
+		context->last_cmd_status = handle_builtin_commands(cmd, context);
+		return (1);
 	}
 	path = get_path(cmd, context->envp, &should_free_path);
 	if (!path)
