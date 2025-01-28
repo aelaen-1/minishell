@@ -15,12 +15,8 @@ static	void	shell_repl_loop(t_context *context)
 	char	*input;
 	t_token_array	tokens;
 	t_program	*program;
-	int		should_loop;
-	int		status;
 
-	status = 0;
-	should_loop = 1;
-	while (should_loop)
+	while (1)
 	{
 		g_sig = 0;
 		input = readline("minishell % ");
@@ -37,10 +33,7 @@ static	void	shell_repl_loop(t_context *context)
 		program = parse_program(tokens);
 		if(program)
 		{
-			status = execute_program(program, context);
-			if (status != 0)
-				should_loop = 0;
-			context->last_cmd_status = status;
+			context->last_cmd_status = execute_program(program, context);
 			free_program(program);
 		}
 		destroy_tokens_array(&tokens);
