@@ -1,64 +1,53 @@
 #include "../include/minishell.h"
 
-// returns 1 if the redir op is followed by a TOKEN_WORD
-static int	redir_out(t_command *cmd, t_token ***current,
-		t_token_type token_type)
+// ATTENTION SI PLUSEURS REDIRECTIONS 
+// si on a strdup un token et que le token suivant 
+// n'est pas un WORD, on free le strdup et on return -1
+//DANS DESTROY COMMAND()
+
+static int	redir_out(t_command *cmd, t_token **current, t_token **last_token, t_token_type token_type)
 {
-	(*current)++;
-	if (!(*current) || !(**current) || !(**current)->value)
-		return (0);
-	if ((**current)->type == TOKEN_WORD)
-	{
-		cmd->redir_out.file = ft_strdup((**current)->value);
-		printf("[%s] redir out : %s \n",(**current)->value, cmd->redir_out.file);
-		if (token_type == TOKEN_REDIR_OUT)
-			cmd->redir_out.type = REDIR_OUT;
-		else if (token_type == TOKEN_APPEND)
-			cmd->redir_out.type = REDIR_APPEND;
-		return (1);
-	}
-	return (0);
+	if (last_token - current < 2)
+		return (-1);
+	current++;
+	if (!current || !*current || !(*current)->value || (*current)->type != TOKEN_WORD)
+		return (-1);
+	if (cmd->redir_out.file)
+		free(cmd->redir_out.file);
+	cmd->redir_out.file = ft_strdup((*current)->value);
+	if (token_type == TOKEN_REDIR_OUT)
+		cmd->redir_out.type = REDIR_OUT;
+	else if (token_type == TOKEN_APPEND)
+		cmd->redir_out.type = REDIR_APPEND;
+	return (1);
 }
 
-static int	redir_in(t_command *cmd, t_token ***current, t_token_type token_type)
+static int	redir_in(t_command *cmd, t_token **current, t_token **last_token, t_token_type token_type)
 {
-	(*current)++;
-	if (!(*current) || !(**current) || !(**current)->value)
-		return (0);
-	if ((**current)->type == TOKEN_WORD)
-	{
-		cmd->redir_in.file = ft_strdup((**current)->value);
-		printf("[%s] redir in : %s \n",(**current)->value, cmd->redir_in.file);
-		if (token_type == TOKEN_REDIR_IN)
-			cmd->redir_in.type = REDIR_IN;
-		else if (token_type == TOKEN_HEREDOC)
-			cmd->redir_in.type = REDIR_HEREDOC;
-		return (1);
-	}
-	return (0);
+	if (last_token - current < 2)
+		return (-1);
+	current++;
+	if (!current || !*current || !(*current)->value || (*current)->type != TOKEN_WORD)
+		return (-1);
+	if (cmd->redir_in.file)
+		free(cmd->redir_in.file);
+	cmd->redir_in.file = ft_strdup((*current)->value);
+	if (token_type == TOKEN_REDIR_IN)
+		cmd->redir_in.type = REDIR_IN;
+	else if (token_type == TOKEN_HEREDOC)
+		cmd->redir_in.type = REDIR_HEREDOC;
+	return (1);
 }
 
-int	parse_redir(t_command *cmd, t_token **current)
+int	parse_redir(t_command *cmd, t_token **current, t_token **last_token)
 {
 	if ((*current)->type == TOKEN_REDIR_OUT)
-	{
-		if (redir_out(cmd, &current, TOKEN_REDIR_OUT))
-			return (1);
-	}
+		return (redir_out(cmd, current, last_token, TOKEN_REDIR_OUT));
 	else if ((*current)->type == TOKEN_APPEND)
-	{
-		if (redir_out(cmd, &current, TOKEN_APPEND))
-			return (1);
-	}
+		return (redir_out(cmd, current, last_token, TOKEN_APPEND));
 	else if ((*current)->type == TOKEN_REDIR_IN)
-	{
-		if (redir_in(cmd, &current, TOKEN_REDIR_IN))
-			return (1);
-	}
+		return (redir_in(cmd, current, last_token, TOKEN_REDIR_IN));
 	else if ((*current)->type == TOKEN_HEREDOC)
-	{
-		if (redir_in(cmd, &current, TOKEN_HEREDOC))
-			return (1);
-	}
+		return (redir_in(cmd, current, last_token, TOKEN_HEREDOC));
 	return (0);
 }

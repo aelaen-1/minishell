@@ -23,13 +23,14 @@ static void	skip_n(t_command *command, size_t *i, int *n_option)
 	}
 }
 
-int	builtin_echo(t_command *command)
+int	builtin_echo(t_command *command, t_context *context)
 {
 	size_t	i;
 	int	n_option;
 
 	i = 1;
 	n_option = 0;
+	context->last_cmd_status = 0;
 	if (!command->argv[i])
 		return (ft_putchar_fd('\n', command->fds[1]), 0);
 	skip_n(command, &i, &n_option);

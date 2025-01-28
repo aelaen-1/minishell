@@ -26,7 +26,7 @@ static void declare_x(t_env_node *env, t_command *command)
             separator = ft_strchr(current->env_var, '=');
             if (separator)
             {
-                ft_putstr_fd("declare -x ", command->fds[1]);
+                ft_putstr_fd("export ", command->fds[1]);
                 write(command->fds[1], current->env_var, separator - current->env_var);
                 ft_putstr_fd("=\"", command->fds[1]);
                 ft_putstr_fd(separator + 1, command->fds[1]);
@@ -34,7 +34,7 @@ static void declare_x(t_env_node *env, t_command *command)
             }
             else
             {
-                ft_putstr_fd("declare -x ", command->fds[1]);
+                ft_putstr_fd("export ", command->fds[1]);
                 ft_putstr_fd(current->env_var, command->fds[1]);
                 ft_putstr_fd("\n", command->fds[1]);
             }
@@ -122,6 +122,7 @@ int builtin_export(t_command *command, t_context *context)
 	int ret;
 	int i;
 
+	context->last_cmd_status = 0;
 	if (!command->argv[1])
 	{
 		declare_x(context->envp, command);
@@ -132,7 +133,10 @@ int builtin_export(t_command *command, t_context *context)
 	{
 		ret = export_arg(command->argv[i], context);
 		if (ret)
+		{
+			context->last_cmd_status = 1;
 			break ;
+		}
 		i++;
 	}
 	return (ret);

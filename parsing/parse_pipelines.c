@@ -1,6 +1,5 @@
 #include "../include/minishell.h"
 
-// compte le nombre de pipes entre start et end
 static size_t	count_pipes(t_token **start, t_token **end)
 {
 	size_t	i;
@@ -15,8 +14,6 @@ static size_t	count_pipes(t_token **start, t_token **end)
 	return (i);
 }
 
-// trouve le prochain token de type token_type, utilise ici pour trouver le prochain token de type PIPE
-// et donc de delimiter notre commande actuelle
 static t_token	**find_token(t_token **start, t_token **end, t_token_type token_type)
 {
 	while (start < end)
@@ -28,9 +25,23 @@ static t_token	**find_token(t_token **start, t_token **end, t_token_type token_t
 	return (end);
 }
 
-// récupère les commandes entre chaque pipeline (pipeline->commands[i])
-// en appellant parse_command(), fonction qui retourne un (t_command *)
-t_pipeline	*parse_pipeline(t_token **start, t_token **end, t_program *program)
+static int	check_if_pipeline_error(t_token **start, t_token **end, size_t cmd_count)
+{
+	t_token **command_end;
+
+	while (start < end && cmd_count > 0)
+	{
+		command_end = find_token(start, end, TOKEN_PIPE);
+		if (command_end == start)
+			return (ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2), 1);
+		start = command_end + 1;
+	}
+	if (start == end)
+			return (ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2), 1);
+	return (0);
+}
+
+t_pipeline	*parse_pipeline(t_token **start, t_token **end)
 {
 	t_pipeline	*pipeline;
 	size_t		i;
@@ -44,10 +55,19 @@ t_pipeline	*parse_pipeline(t_token **start, t_token **end, t_program *program)
 	pipeline->commands = malloc(sizeof(t_command *) * pipeline->cmd_count);
 	if (!pipeline->commands)
 		return (free(pipeline), NULL);
+	if (check_if_pipeline_error(start, end, pipeline->cmd_count))
+		return (free(pipeline->commands), free(pipeline), NULL);
 	while (start < end && i < pipeline->cmd_count)
 	{
 		command_end = find_token(start, end, TOKEN_PIPE);
-		pipeline->commands[i] = parse_command(start, command_end, program);
+		if (command_end == start)
+		{
+			while (i > 0)
+				free(pipeline->commands[i--]);
+			free(pipeline->commands);
+			return (free(pipeline), NULL);
+		}
+		pipeline->commands[i] = parse_command(start, command_end);
 		if (!pipeline->commands[i])
 		{
 			while (i > 0)

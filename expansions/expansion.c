@@ -1,6 +1,14 @@
 #include "../include/minishell.h"
 // waitpid status pour la valeur de $?
 
+static void	expand_last_cmd_status(char *var_value, char *res, size_t *j, size_t *i)
+{
+	ft_strlcpy(res + *j, var_value, ft_strlen(var_value) + 1);
+	*j += ft_strlen(var_value);
+	free(var_value);
+	(*i)++;
+}
+
 char	*get_env_value(char *to_find, t_env_node *envp)
 {
 	size_t		i;
@@ -11,7 +19,7 @@ char	*get_env_value(char *to_find, t_env_node *envp)
 	i = ft_strlen(to_find);
 	while (envp)
 	{
-		if (!ft_strncmp(envp->env_var, to_find, i))
+		if (!ft_strncmp(envp->env_var, to_find, i ) && envp->env_var[i] == '=')
 		{
 			value = ft_strdup(envp->env_var + i + 1);
 			return (value);
@@ -20,14 +28,6 @@ char	*get_env_value(char *to_find, t_env_node *envp)
 	}
 	return (NULL);
 }
-static void	get_last_command_return_value(char *var_value, char *res, size_t *j, size_t *i)
-{
-	ft_strlcpy(res + *j, var_value, ft_strlen(var_value) + 1);
-	*j += ft_strlen(var_value);
-	free(var_value);
-	(*i)++;
-}
-
 
 // remplace chaque variable ($ABC) par sa valeur
 // si $ est suivi par un caractere non alpha-numerique, on saute simplement
@@ -55,16 +55,16 @@ char	*expand_command_arg(char *command_arg, t_context *context)
 		return (free(quoting), NULL);
 	while (command_arg[i])
 	{
-		if (command_arg[i] == '$' && quoting[i] != QUOTE_SINGLE && command_arg[i + 1])
+		if ((command_arg[i] == '$' && quoting[i] != QUOTE_SINGLE) && (command_arg[i + 1] && command_arg[i + 1] && (ft_isalnum(command_arg[i + 1]) || command_arg[i + 1] == '?')))
 		{
 			i++;
 			len = 0;
-			if (command_arg[i] == '?')
+			if (command_arg[i] && command_arg[i] == '?')
 			{
-				get_last_command_return_value(ft_itoa(context->last_cmd_status), res, &j, &i);
+				expand_last_cmd_status(ft_itoa(context->last_cmd_status), res, &j, &i);
 				continue;
 			}
-			while (ft_isalnum(command_arg[i + len]) || command_arg[i + len] == '_')
+			while (command_arg[i + len] && (ft_isalnum(command_arg[i + len]) || command_arg[i + len] == '_'))
 				len++;
 			if (len)
 			{
@@ -128,8 +128,28 @@ static void	expand_parameters(t_command *command, t_context *context)
 	}
 }
 
+static void	remove_null_commands(t_command *command)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	while (command->argv[i])
+	{
+		if (*command->argv[i] != '\0')
+		{
+			command->argv[j] = command->argv[i];
+			j++;
+		}
+		i++;
+	}
+	command->argv[j] = NULL;
+}
+
 void	expand_command(t_command *command, t_context *context)
 {
 	expand_parameters(command, context);
+	remove_null_commands(command);
 	remove_quotes(command);
 }

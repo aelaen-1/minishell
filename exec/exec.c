@@ -1,21 +1,5 @@
 #include "../include/minishell.h"
 
-static int	handle_builtin_commands(t_command *cmd, t_context *context)
-{
-	if (!ft_strcmp(cmd->argv[0], "echo"))
-		return (builtin_echo(cmd));
-	else if (!ft_strcmp(cmd->argv[0], "env"))
-		return (builtin_env(cmd, context));
-	else if (!ft_strcmp(cmd->argv[0], "pwd"))
-		return (builtin_pwd(cmd));
-	else if (!ft_strcmp(cmd->argv[0], "cd"))
-		return (builtin_cd(cmd, context));
-	else if (!ft_strcmp(cmd->argv[0], "export"))
-		return (builtin_export(cmd, context));
-	else if (!ft_strcmp(cmd->argv[0], "unset"))
-		return (builtin_unset(cmd, context));
-	return (1);
-}
 
 static void	link_pipeline(t_pipeline *pipeline)
 {
@@ -27,143 +11,138 @@ static void	link_pipeline(t_pipeline *pipeline)
 	{
 		pipe(pipe_fds);
 		pipeline->commands[i]->fds[1] = pipe_fds[1];
-		pipeline->commands[i+1]->fds[0] = pipe_fds[0];
-
+		pipeline->commands[i + 1]->fds[0] = pipe_fds[0];
 		i++;
 	}
 }
 
-static void close_command_fds(t_command *cmd)
-{
-          if (cmd->fds[0] != 0)
-            close(cmd->fds[0]);
-        if (cmd->fds[1] != 1)
-            close(cmd->fds[1]);
-}
-static char	*get_path(t_command *cmd, t_env_node *envp)
+static char	*get_path(t_command *cmd, t_env_node *envp, int	*should_free_path)
 {
 	char	**full_path;
 	size_t	i;
 	char	*path_1;
 	char	*path_to_try;
+	char	*path_env_value;
+
 
 	i = 0;
 	if(access(cmd->argv[0], F_OK | X_OK) == 0)
-		return cmd->argv[0];
-	full_path = ft_split(get_env_value("PATH", envp), ':');
+	{
+		*should_free_path = 0;
+		return (cmd->argv[0]);
+	}
+	path_env_value = get_env_value("PATH", envp);
+	if (!path_env_value)
+		return (ft_putstr_fd("minishell: PATH not set\n", STDERR_FILENO), NULL);
+	full_path = ft_split(path_env_value, ':');
 	while (full_path[i])
 	{
 		path_1 = ft_strjoin(full_path[i], "/");
 		path_to_try = ft_strjoin(path_1, cmd->argv[0]);
 		if (access(path_to_try, F_OK | X_OK) == 0)
 		{
+			free(path_env_value);
 			free(path_1);
+			free_split(full_path);
 			return (path_to_try);
 		}
+		
 		free(path_1);
 		free(path_to_try);
 		i++;
 	}
-	return (NULL);
-}
-char **make_env_char(t_env_node *top)
-{
-    int count = 0;
-    t_env_node *current = top;
-    char **env_array;
-
-    // Count the number of nodes in the linked list
-    while (current)
-    {
-        count++;
-        current = current->next;
-    }
-
-    // Allocate memory for the char ** array
-    env_array = (char **)malloc((count + 1) * sizeof(char *));
-    if (!env_array)
-        return NULL;
-
-    // Reset the current pointer and fill the array
-    current = top;
-    for (int i = 0; i < count; i++)
-    {
-        env_array[i] = strdup(current->env_var);
-        if (!env_array[i])
-        {
-            // Free previously allocated memory on failure
-            for (int j = 0; j < i; j++)
-                free(env_array[j]);
-            free(env_array);
-            return NULL;
-        }
-        current = current->next;
-    }
-
-    // Null-terminate the array
-    env_array[count] = NULL;
-
-    return env_array;
+	return (free(path_env_value), free_split(full_path), NULL);
 }
 
-static int exec_cmd(t_command *cmd, int *pid, t_context *context)
+static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 {
-    char    *path;
-	char	**env;
-
-	if(!cmd)
-		return 0;
-	expand_command(cmd, context);
-	redirect_command(cmd);
-    if (!handle_builtin_commands(cmd, context))
+	int should_free_path;
+	char *path;
+	char **env;
+	
+	env = NULL;
+	should_free_path = 1;
+    if (!cmd || !cmd->argv[0])
+        return (1);
+    expand_command(cmd, context);
+	if (!redirect_command(cmd))
+		return (1);
+    if (is_builtin(cmd))
     {
+        handle_builtin_commands(cmd, context);
         close_command_fds(cmd);
         return (0);
     }
-    path = get_path(cmd, context->envp);
+	path = get_path(cmd, context->envp, &should_free_path);
+	context->last_cmd_status = handle_exec_error(path, context);
+	if (context->last_cmd_status)
+		return (context->last_cmd_status);
+	if (!path)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd->argv[0], 2);
+		ft_putstr_fd(": command not found\n", 2);
+		context->last_cmd_status = 127;
+		return (context->last_cmd_status);
+	}
+	env = lst_to_char(context->envp);
     *pid = fork();
-	env = make_env_char(context->envp);
     if (*pid == 0)
     {
         dup2(cmd->fds[0], 0);
         dup2(cmd->fds[1], 1);
         close_command_fds(cmd);
+		context->last_cmd_status = handle_exec_error(path, context);
+		if (context->last_cmd_status)
+		{
+			if (should_free_path == 1)
+				free(path);
+			return (free_split(env), context->last_cmd_status);
+		}
         if (execve(path, cmd->argv, env) == -1)
-        {
-            fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
-            exit(1);
-        }
+		{
+			if (should_free_path == 1)
+				free(path);
+			free_split(env);
+			return (-1);
+		}
     }
-    else
-    {
-        close_command_fds(cmd);
-    }
+	else
+		close_command_fds(cmd);
 	free_split(env);
-    return (0);
-} 
+	if (should_free_path == 1)
+		free(path);
+	return (0);
+}
 
-
-void	execute_program(t_program *program, t_context *context)
+int	execute_program(t_program *program, t_context *context)
 {
 	size_t	i;
 	int *pids;
 	int status;
+	int	ret;
 
 	i = 0;
+	ret = 0;
+	status = 0;
 	pids = malloc_pids(program->pipeline);
 	link_pipeline(program->pipeline);
 	while (i < program->pipeline->cmd_count)
 	{
-		exec_cmd(program->pipeline->commands[i], &pids[i], context);
-		i++;
+		ret = exec_cmd(program->pipeline->commands[i], &pids[i], context);
+		if (ret != 0)
+			return (free(pids), ret);
+		else
+			i++;
 	}
 	i = 0;
 	while (i < program->pipeline->cmd_count)
 	{
 		waitpid(pids[i], &status, 0);
+		if (WIFEXITED(status))
+			context->last_cmd_status = WEXITSTATUS(status);
 		i++;
 	}
-	if (WIFEXITED(status)) 
-        context->last_cmd_status = WEXITSTATUS(status);
 	free(pids);
+	return (0);
 }

@@ -138,3 +138,51 @@ int	unset_env(t_env_node **env, char *key)
 	}
 	return (0);
 }
+
+
+static size_t	count_nodes(t_env_node *top)
+{
+	size_t count;
+	t_env_node *current;
+
+	count = 0;
+	current = top;
+	while (current)
+	{
+		count++;
+		current = current->next;
+	}
+	return (count);
+}
+
+char **lst_to_char(t_env_node *top)
+{
+    size_t count;
+	size_t i;
+	size_t j;
+    t_env_node *current;
+    char **env_array;
+
+	i = 0;
+	j = 0;
+	count = count_nodes(top);
+    env_array = (char **)malloc((count + 1) * sizeof(char *));
+    if (!env_array)
+        return NULL;
+    current = top;
+	while (i < count)
+	{
+		env_array[i] = ft_strdup(current->env_var);
+		if (!env_array[i])
+		{
+			while (j < i)
+				free(env_array[j++]);
+			free(env_array);
+			return (NULL);
+		}
+		current = current->next;
+		i++;
+	}
+    env_array[count] = NULL;
+    return (env_array);
+}

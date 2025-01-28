@@ -1,23 +1,23 @@
 #include "../include/minishell.h"
 
-void free_command(t_command *command) 
+void free_command_argv(char **cmd_arg) 
 {
 	int i;
 
 	i = 0;
-    if (!command)
-        return;
-    if (command->argv) {
-        while (command->argv[i])
-		{
-			free(command->argv[i]);
-			i++;
-		}
-        free(command->argv);
+    if (cmd_arg) 
+    {
+        while (cmd_arg[i]) 
+        {
+            free(cmd_arg[i]);
+            i++;
+        }
+        free(cmd_arg);
+        cmd_arg = NULL;
     }
-    free(command);
 }
-void free_env_node(t_env_node *node) 
+
+void free_env_node(t_env_node *node)
 {
     t_env_node *temp;
 
@@ -38,15 +38,15 @@ void free_pipeline(t_pipeline *pipeline)
 	while(pipeline->cmd_count != i)
 	{
         if (pipeline->commands[i])
-            free_command(pipeline->commands[i]);
+            destroy_command(pipeline->commands[i]);
 		i++;
 	}
     free(pipeline->commands);
     free(pipeline);
 }
 
-void free_program( t_env_node *envp) 
+void    free_program(t_program *program)
 {
-	free_env_node(envp);
-	rl_clear_history();
+    free_pipeline(program->pipeline);
+    free(program);
 }
