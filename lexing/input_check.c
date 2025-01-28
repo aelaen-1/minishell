@@ -6,6 +6,7 @@ static int  is_redir(char c)
         return (1);
     return (0);
 }
+
 static bool empty_input(char *input)
 {
     size_t  i;
@@ -23,6 +24,7 @@ static bool empty_input(char *input)
         return (true);
     return (false);
 }
+
 bool   pipe_error(char *s)
 {
     size_t  i;

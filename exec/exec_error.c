@@ -96,7 +96,7 @@ int	handle_exec_error(char *cmd, t_context *context)
 
 	
 	if (stat(cmd, &path_stat) == 0)
-		return (fprintf(stderr, "stat == 0\n"), exec_error_on_filedir(cmd, context, path_stat));
+		return (exec_error_on_filedir(cmd, context, path_stat));
 	else
-		return (fprintf(stderr, "stat != 0\n"), exec_error_otherwise(cmd, context));
+		return (exec_error_otherwise(cmd, context));
 }

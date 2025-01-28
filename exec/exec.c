@@ -54,6 +54,14 @@ static char	*get_path(t_command *cmd, t_env_node *envp, int	*should_free_path)
 	return (free(path_env_value), free_split(full_path), NULL);
 }
 
+static	int	fork_error(char **env, char *path, int *should_free_path)
+{
+	ft_putstr_fd("Fork error\n", 2);
+	free_split(env);
+	if (*should_free_path == 1)
+		free(path);
+	return (-1);
+}
 static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 {
 	int should_free_path;
@@ -72,11 +80,20 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
         return (handle_builtin_commands(cmd, context), close_command_fds(cmd), 0);
 	}
 	path = get_path(cmd, context->envp, &should_free_path);
-	context->last_cmd_status = handle_exec_error(path, context);
+	if (!path)
+		context->last_cmd_status = handle_exec_error(cmd->argv[0], context);
+	else
+		context->last_cmd_status = handle_exec_error(path, context);
 	if (context->last_cmd_status)
+	{
+		if (should_free_path == 1)
+			free(path);
 		return (context->last_cmd_status);
+	}
 	env = lst_to_char(context->envp);
     *pid = fork();
+	if (*pid == -1)
+		return (fork_error(env, path, &should_free_path));
     if (*pid == 0)
     {
         dup2(cmd->fds[0], 0);
