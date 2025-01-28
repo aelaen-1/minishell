@@ -77,7 +77,7 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 		return (0);
     if (is_builtin(cmd))
 	{
-        return (handle_builtin_commands(cmd, context), close_command_fds(cmd), 0);
+        return (close_command_fds(cmd), handle_builtin_commands(cmd, context));
 	}
 	path = get_path(cmd, context->envp, &should_free_path);
 	if (!path)

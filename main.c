@@ -68,7 +68,10 @@ int	main(int ac, char **av, char **env)
 	(void)av;
 	shell_env = init_env(env);
 	if (!shell_env)
-		return (perror("Failed to initialize environment"), 1);
+	{
+		ft_putstr_fd("Failed to initialized environment\n", 2);
+		return (1);
+	}
 	init_program_context(&context, shell_env);
 	shell_repl_loop(&context);
 	rl_clear_history();

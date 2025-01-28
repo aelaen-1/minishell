@@ -21,6 +21,7 @@ static int is_directory(char *cmd, t_context *context, struct stat path_stat)
 	}
 	return (0);
 }
+
 static int permission_denied(char *cmd, t_context *context)
 {
 	if (access(cmd, F_OK) == 0 && access(cmd, R_OK) == -1
@@ -59,10 +60,11 @@ static	int exec_error_on_filedir(char *cmd, t_context	*context, struct stat path
 {
 	int	res;
 
-	res = is_directory(cmd, context, path_stat);
+	
+	res = permission_denied(cmd, context);
 	if (res)
 		return (res);
-	res = permission_denied(cmd, context);
+	res = is_directory(cmd, context, path_stat);
 	if (res)
 		return (res);
 	res = exec_permission(cmd, context, path_stat);
@@ -70,6 +72,7 @@ static	int exec_error_on_filedir(char *cmd, t_context	*context, struct stat path
 		return (res);
 	return (0);
 }
+
 static int exec_error_otherwise(char *cmd, t_context *context)
 {
 	if (errno == ENOENT)
