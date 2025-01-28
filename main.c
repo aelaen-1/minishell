@@ -34,6 +34,7 @@ static	void	shell_repl_loop(t_context *context)
 	t_token_array	tokens;
 	t_program	*program;
 
+	g_sig = 0;
 	while (1)
 	{
 		input = readline("minishell % ");

@@ -25,6 +25,8 @@ int	builtin_cd(t_command *command, t_context *context)
 		return(perror("minishell: cd"), 1);
 
 	}
+	if (!command->argv[1])
+		free(alternate_path);
 	alternate_path = getcwd(NULL, 0);
 	update_env(&context->envp, "OLDPWD", former_path);
 	update_env(&context->envp, "PWD", alternate_path);
