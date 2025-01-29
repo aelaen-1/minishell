@@ -1,6 +1,5 @@
 #include "../include/minishell.h"
 
-// QUOTING RULES 
 int	count_quotes(char *s, int start, char s_or_d)
 {
 	int	count;
@@ -27,8 +26,6 @@ int	count_quotes(char *s, int start, char s_or_d)
 	return (count);
 }
 
-// verifie si la quote trouvee (egale a start_quote) est fermee grace strchr
-// si c'est le cas on ajoute le token qui part de start_quote (le quote ouvrant) au next_quote (le quote fermant), les deux inclus
 int	handle_quote(char *start_quote, t_token *token, t_lex_context *context)
 {
 	char	*next_quote;
