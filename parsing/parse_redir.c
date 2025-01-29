@@ -1,16 +1,13 @@
 #include "../include/minishell.h"
 
-// ATTENTION SI PLUSEURS REDIRECTIONS 
-// si on a strdup un token et que le token suivant 
-// n'est pas un WORD, on free le strdup et on return -1
-//DANS DESTROY COMMAND()
-
-static int	redir_out(t_command *cmd, t_token **current, t_token **last_token, t_token_type token_type)
+static int	redir_out(t_command *cmd, t_token **current, t_token **last_token,
+		t_token_type token_type)
 {
 	if (last_token - current < 2)
 		return (-1);
 	current++;
-	if (!current || !*current || !(*current)->value || (*current)->type != TOKEN_WORD)
+	if (!current || !*current || !(*current)->value
+		|| (*current)->type != TOKEN_WORD)
 		return (-1);
 	if (cmd->redir_out.file)
 		free(cmd->redir_out.file);
@@ -22,12 +19,14 @@ static int	redir_out(t_command *cmd, t_token **current, t_token **last_token, t_
 	return (1);
 }
 
-static int	redir_in(t_command *cmd, t_token **current, t_token **last_token, t_token_type token_type)
+static int	redir_in(t_command *cmd, t_token **current, t_token **last_token,
+		t_token_type token_type)
 {
 	if (last_token - current < 2)
 		return (-1);
 	current++;
-	if (!current || !*current || !(*current)->value || (*current)->type != TOKEN_WORD)
+	if (!current || !*current || !(*current)->value
+		|| (*current)->type != TOKEN_WORD)
 		return (-1);
 	if (cmd->redir_in.file)
 		free(cmd->redir_in.file);
