@@ -6,7 +6,6 @@ void	add_expanded_var(char **command_arg, char **res, size_t *i, size_t *j, size
 	char *var_name;
 	char *var_value;
 
-
 	if (*len != 0)
 		{
 			var_name = ft_substr(*command_arg, *i, *len);
@@ -20,6 +19,16 @@ void	add_expanded_var(char **command_arg, char **res, size_t *i, size_t *j, size
 			free(var_name);
 			*i += *len;
 		}
+}
+
+bool try_expand_status(t_context *context, char *res, int* i_ptr, int *j_ptr)
+{
+  if (command_arg[*i_ptr] == '?')
+  {
+    expand_last_cmd_status(ft_itoa(context->last_cmd_status), res, j_ptr, i_ptr);
+    return true;
+  }
+  return false;
 }
 
 char	*expand_command_arg(char *command_arg, t_context *context)
@@ -48,6 +57,8 @@ char	*expand_command_arg(char *command_arg, t_context *context)
 		{
 			i++;
 			len = 0;
+			if (try_expand_status(context, res, &j, &i))
+				continue ;
 			if (command_arg[i] == '?')
 			{
 				expand_last_cmd_status(ft_itoa(context->last_cmd_status), res, &j, &i);
@@ -71,7 +82,7 @@ void	expand_redir(t_command *command, t_context *context)
 	if (!command || !command->argv)
 		return ;
 	
-	if (command->redir_in.file && command->redir_in.type != REDIR_HEREDOC) // pas d'expansion si heredoc, car unspecified
+	if (command->redir_in.file && command->redir_in.type != REDIR_HEREDOC)
 	{
 		expanded = expand_command_arg(command->redir_in.file, context);
 		if (expanded)
@@ -110,8 +121,6 @@ static void	expand_parameters(t_command *command, t_context *context)
 		i++;
 	}
 }
-
-
 
 void	expand_command(t_command *command, t_context *context)
 {
