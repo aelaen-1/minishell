@@ -6,7 +6,7 @@ static void	append_and_shift(t_token *token, t_lex_context *context)
 	context->position += 1;
 }
 
-static t_token *finalize_token(t_token *token)
+static t_token	*finalize_token(t_token *token)
 {
 	if (token->length == 0)
 	{
@@ -19,7 +19,6 @@ static t_token *finalize_token(t_token *token)
 	return (token);
 }
 
-// add src to the end of dest
 void	append_to_token(t_token *dest, char *src, size_t length)
 {
 	size_t	i;
@@ -38,7 +37,6 @@ void	append_to_token(t_token *dest, char *src, size_t length)
 	dest->length += length;
 }
 
-// returns a token when end of word
 t_token	*get_next_token(t_lex_context *context)
 {
 	char	*s;
@@ -51,14 +49,14 @@ t_token	*get_next_token(t_lex_context *context)
 	{
 		if (eat_spaces(context))
 			break ;
-		if (s[context->position] == SIMPLE_QUOTE || s[context->position] == DOUBLE_QUOTE)
+		if (is_quote(s[context->position]))
 			if (handle_quote(s + context->position, last_token, context))
 				continue ;
-		if ((s[context->position] == PIPE || s[context->position] == LESS || s[context->position] == GREAT))
+		if (is_pipe_or_redir(s[context->position]))
 		{
 			if (last_token->length > 0)
 				break ;
-			if ((s[context->position] == LESS && s[context->position + 1] == LESS) || (s[context->position] == GREAT && s[context->position + 1] == GREAT))
+			if (is_double_redir(s[context->position], s[context->position + 1]))
 				append_and_shift(last_token, context);
 			append_and_shift(last_token, context);
 			break ;
@@ -70,8 +68,8 @@ t_token	*get_next_token(t_lex_context *context)
 
 t_token_array	tokenize_input(char *input)
 {
-	t_token_array   tokens;
-	t_lex_context   context;
+	t_token_array	tokens;
+	t_lex_context	context;
 	t_token			*token;
 
 	if (!init_token_array(&tokens))
@@ -83,6 +81,5 @@ t_token_array	tokenize_input(char *input)
 		if (token)
 			add_token_to_array(&tokens, token);
 	}
-		
 	return (tokens);
 }

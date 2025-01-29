@@ -128,8 +128,6 @@ t_env_node		*create_env_node(char *env_var, t_env_node *bottom);
 char			**lst_to_char(t_env_node *top); // used to pass env to execve
 int				*malloc_pids(t_pipeline *pipeline);
 
-void			command_not_found_and_free(char *arg, char *path, char **env, int *free_path);
-
 /*      utils/     */
 void			free_split(char **s);
 int				ft_strcmp(char *s1, char *s2);
@@ -162,6 +160,10 @@ void			remove_quotes(t_command *cmd);
 
 void			destroy_tokens_array(t_token_array *array);
 void			append_to_token(t_token *dest, char *src, size_t length);
+
+int				is_quote(char c);
+int				is_pipe_or_redir(char c);
+int				is_double_redir(char c, char d);
 
 /*		parsing/		*/
 t_command		*parse_command(t_token **start, t_token **end);
