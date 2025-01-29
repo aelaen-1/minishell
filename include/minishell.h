@@ -174,9 +174,13 @@ t_pipeline		*parse_pipeline(t_token **start, t_token **end);
 t_program		*parse_program(t_token_array array);
 int				parse_redir(t_command *cmd, t_token **current, t_token **last_token);
 
-size_t			get_expanded_arg_size(char *command_arg, t_context *context, t_quote_type *quoting);
+size_t			get_expanded_arg_size(char **command_arg, t_context *context, t_quote_type *quoting);
+int				is_expandable_dollar(char c, char d, char quoting);
+size_t			get_var_len(char *arg);
 void			expand_command(t_command *command, t_context *context);
-int			redirect_command(t_command *command);
+void			expand_last_cmd_status(char *var_value, char *res, size_t *j, size_t *i);
+void			remove_null_commands(t_command *command);
+int				redirect_command(t_command *command);
 		
 // outil pour print le prgram
 void			print_pipeline_to_dot(t_pipeline *pipeline);
@@ -206,10 +210,7 @@ void			signal_handler();
 void			free_command_argv(char **cmd_arg);
 void			free_env_node(t_env_node *node);
 
-
-
 // nouvelles fonctions
-bool    check_input(char *input, t_context *context);
-int		handle_exec_error(char *cmd, t_context *context);
+int				handle_exec_error(char *cmd, t_context *context);
 
 #endif

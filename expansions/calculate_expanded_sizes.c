@@ -51,16 +51,16 @@ static char *handle_dollar(char *dollar, t_context *context, size_t *size_out)
 	return (start);
 }
 
-size_t	get_expanded_arg_size(char *command_arg, t_context *context, t_quote_type *quoting)
+size_t	get_expanded_arg_size(char **command_arg, t_context *context, t_quote_type *quoting)
 {
 	size_t			size;
 	char			*iter;
 
-	size = ft_strlen(command_arg);
-	iter = command_arg;
+	size = ft_strlen(*command_arg);
+	iter = *command_arg;
 	while (*iter)
 	{
-		if (*iter == '$' && quoting[iter-command_arg] != QUOTE_SINGLE)
+		if (*iter == '$' && quoting[iter - *command_arg] != QUOTE_SINGLE)
 			iter = handle_dollar(iter, context, &size);
 		else
 			iter++;
