@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-void close_command_fds(t_command *command)
+void	close_command_fds(t_command *command)
 {
 	if (command->fds[0] != 0 && command->fds[0] != -1)
 	{
@@ -16,7 +16,7 @@ void close_command_fds(t_command *command)
 
 t_command	*create_command(size_t argc)
 {
-	size_t	i;
+	size_t		i;
 	t_command	*command;
 
 	command = malloc(sizeof(t_command));
@@ -37,9 +37,28 @@ t_command	*create_command(size_t argc)
 	return (command);
 }
 
+static int	handle_redirections(t_command *command, t_token ***iter,
+		t_token **end)
+{
+	int	redir;
+
+	redir = parse_redir(command, *iter, end);
+	if (redir == 1)
+	{
+		*iter += 2;
+		return (1);
+	}
+	if (redir == -1)
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token ", 2);
+		ft_putstr_fd("`newline'\n", 2);
+		return (-1);
+	}
+	return (0);
+}
+
 t_command	*parse_command(t_token **start, t_token **end)
 {
-	size_t		argc;
 	t_command	*command;
 	t_token		**iter;
 	size_t		i;
@@ -47,24 +66,17 @@ t_command	*parse_command(t_token **start, t_token **end)
 
 	i = 0;
 	iter = start;
-	argc = end - start;
-	command = create_command(argc);
+	command = create_command(end - start);
 	if (!command)
-		return 0;
+		return (0);
 	redir = 0;
 	while (iter < end)
-	{	
-		redir = parse_redir(command, iter, end);
+	{
+		redir = handle_redirections(command, &iter, end);
 		if (redir == 1)
-		{
-			iter += 2;
 			continue ;
-		}
 		if (redir == -1)
-		{
-			ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
 			return (destroy_command(command), NULL);
-		}
 		command->argv[i++] = ft_strdup((*iter)->value);
 		iter++;
 	}
