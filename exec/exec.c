@@ -28,10 +28,7 @@ static char	*get_path(t_command *cmd, t_env_node *envp, int	*should_free_path)
 
 	i = 0;
 	if(access(cmd->argv[0], F_OK | X_OK) == 0)
-	{
-		*should_free_path = 0;
-		return (cmd->argv[0]);
-	}
+		return (*should_free_path = 0, cmd->argv[0]);
 	path_env_value = get_env_value("PATH", envp);
 	if (!path_env_value)
 		return (ft_putstr_fd("minishell: PATH not set\n", 2), NULL);
@@ -41,13 +38,7 @@ static char	*get_path(t_command *cmd, t_env_node *envp, int	*should_free_path)
 		path_1 = ft_strjoin(full_path[i], "/");
 		path_to_try = ft_strjoin(path_1, cmd->argv[0]);
 		if (access(path_to_try, F_OK | X_OK) == 0)
-		{
-			free(path_env_value);
-			free(path_1);
-			free_split(full_path);
-			return (path_to_try);
-		}
-		
+			return (free(path_env_value), free(path_1), free_split(full_path), path_to_try);
 		free(path_1);
 		free(path_to_try);
 		i++;
@@ -63,6 +54,14 @@ static	int	fork_error(char **env, char *path, int *should_free_path)
 		free(path);
 	return (-1);
 }
+
+static	int	exec_builtin(t_command *cmd, t_context *context)
+{
+	close_command_fds(cmd);
+	context->last_cmd_status = handle_builtin_commands(cmd, context);
+	return (1);
+}
+
 static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 {
 	int should_free_path;
@@ -79,11 +78,7 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 	if (!redirect_command(cmd))
 		return (0);
     if (is_builtin(cmd))
-	{
-		close_command_fds(cmd);
-		context->last_cmd_status = handle_builtin_commands(cmd, context);
-		return (1);
-	}
+		return (exec_builtin(cmd, context));
 	path = get_path(cmd, context->envp, &should_free_path);
 	if (!path)
 		context->last_cmd_status = handle_exec_error(cmd->argv[0], context);
@@ -145,7 +140,5 @@ int	execute_program(t_program *program, t_context *context)
 			context->last_cmd_status = WEXITSTATUS(status);
 		i++;
 	}
-	g_sig = 0;
-	free(pids);
-	return (0);
+	return (g_sig = 0, free(pids), 0);
 }
