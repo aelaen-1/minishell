@@ -11,10 +11,15 @@ static void handle_heredoc(t_command *command)
     {
         line = readline("heredoc> ");
         if (!line || !ft_strcmp(line, command->redir_in.file))
+        {
+            free(line);
             break ;
+        }
         ft_putstr_fd(line, pipe_fds[1]);
         ft_putchar_fd('\n', pipe_fds[1]);
+        free(line);
     }
+    close(pipe_fds[1]);
 }
 int    redirect_command(t_command *command)
 {

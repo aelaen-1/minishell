@@ -3,11 +3,11 @@
 int handle_builtin_commands(t_command *cmd, t_context *context)
 {
 	if (!ft_strcmp(cmd->argv[0], "echo"))
-		return (builtin_echo(cmd, context));
+		return (builtin_echo(cmd));
 	else if (!ft_strcmp(cmd->argv[0], "env"))
 		return (builtin_env(cmd, context));
 	else if (!ft_strcmp(cmd->argv[0], "pwd"))
-		return (builtin_pwd(cmd, context));
+		return (builtin_pwd(cmd));
 	else if (!ft_strcmp(cmd->argv[0], "cd"))
 		return (builtin_cd(cmd, context));
 	else if (!ft_strcmp(cmd->argv[0], "export"))

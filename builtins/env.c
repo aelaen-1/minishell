@@ -4,7 +4,6 @@ int	builtin_env(t_command *command, t_context *context)
 {
 	t_env_node	*loop;
 
-	context->last_cmd_status = 0;
 	if (!command || !context->envp)
 		return (0);
 	loop = context->envp;

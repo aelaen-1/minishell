@@ -2,7 +2,6 @@
 
 int	builtin_unset(t_command *command,  t_context *context)
 {
-	context->last_cmd_status = 0;
 	if (!command->argv[1])
 		return (0);
 	else

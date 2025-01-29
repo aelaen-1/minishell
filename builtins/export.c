@@ -122,22 +122,15 @@ int builtin_export(t_command *command, t_context *context)
 	int ret;
 	int i;
 
-	context->last_cmd_status = 0;
 	if (!command->argv[1])
-	{
 		declare_x(context->envp, command);
-		return (0);
-	}
 	i = 1;
 	while (command->argv[i])
 	{
 		ret = export_arg(command->argv[i], context);
 		if (ret)
-		{
-			context->last_cmd_status = 1;
-			break ;
-		}
+			return (1);
 		i++;
 	}
-	return (ret);
+	return (0);
 }
