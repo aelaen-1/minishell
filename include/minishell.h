@@ -127,6 +127,8 @@ int				handle_builtin_commands(t_command *cmd, t_context *context);
 t_env_node		*create_env_node(char *env_var, t_env_node *bottom);
 char			**lst_to_char(t_env_node *top); // used to pass env to execve
 int				*malloc_pids(t_pipeline *pipeline);
+int				exec_builtin(t_command *cmd, t_context *context);
+int				do_fork(t_command *cmd, int *pid, char *path, t_context *context);
 
 /*      utils/     */
 void			free_split(char **s);

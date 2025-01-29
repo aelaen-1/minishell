@@ -46,52 +46,6 @@ static char	*get_path(t_command *cmd, t_env_node *envp)
 	return (free(path_env_value), free_split(full_path), NULL);
 }
 
-static	int	fork_error(char **env, char *path)
-{
-	ft_putstr_fd("Fork error\n", 2);
-	free_split(env);
-	free(path);
-	return (-1);
-}
-
-static	int	exec_builtin(t_command *cmd, t_context *context)
-{
-	close_command_fds(cmd);
-	context->last_cmd_status = handle_builtin_commands(cmd, context);
-	return (1);
-}
-
-int	child_process(t_command *cmd, char *path, char **env)
-{
-	int	res;
-
-	res = 0;
-	dup2(cmd->fds[0], 0);
-	dup2(cmd->fds[1], 1);
-	close_command_fds(cmd);
-	res = execve(path, cmd->argv, env);
-	return (res);
-
-}
-
-static int do_fork(t_command *cmd, int *pid, char *path, t_context *context)
-{
-	char **env;
-	int	res;
-
-	res = 0;
-	env = lst_to_char(context->envp);
-	*pid = fork();
-	if (*pid == -1)
-		return (fork_error(env, path));
-    if (*pid == 0)
-		res = child_process(cmd, path, env);
-	else
-		close_command_fds(cmd);
-	free_split(env);
-	return (res);
-}
-
 static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 {
 	char *path;

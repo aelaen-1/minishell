@@ -34,6 +34,13 @@ int is_builtin(t_command *cmd)
     return (0);
 }
 
+int	exec_builtin(t_command *cmd, t_context *context)
+{
+	close_command_fds(cmd);
+	context->last_cmd_status = handle_builtin_commands(cmd, context);
+	return (1);
+}
+
 int	*malloc_pids(t_pipeline *pipeline)
 {
 	int	*pids;
