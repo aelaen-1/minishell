@@ -57,6 +57,8 @@ int	builtin_cd(t_command *command, t_context *context)
 	}
 	if (change_directory(alternate_path) != 0)
 	{
+		if (!command->argv[1])
+			free(alternate_path);
 		free(former_path);
 		return (1);
 	}

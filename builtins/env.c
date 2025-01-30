@@ -20,4 +20,3 @@ int	builtin_env(t_command *command, t_context *context)
 	}
 	return (0);
 }
- 

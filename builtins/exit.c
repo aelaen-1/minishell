@@ -8,7 +8,7 @@ int	validate_exit_argument(char *arg)
 	i = 0;
 	while (arg[i])
 	{
-		if (!ft_isdigit(arg[i]) || arg[i] == '-' || arg[i] == '+') 
+		if (!ft_isdigit(arg[i]) || arg[i] == '-' || arg[i] == '+')
 		{
 			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 			ft_putstr_fd(arg, STDERR_FILENO);
