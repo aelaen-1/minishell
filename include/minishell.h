@@ -207,7 +207,7 @@ int				builtin_unset(t_command *command, t_context *context);
 void			free_program( t_program *program);
 void			free_pipeline(t_pipeline *pipeline);
 void			signal_handler();
-
+int				builtin_exit(t_command *command, t_context *context);
 /*		free/		*/
 void			free_command_argv(char **cmd_arg);
 void			free_env_node(t_env_node *node);

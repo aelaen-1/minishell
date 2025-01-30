@@ -50,12 +50,12 @@ static	void	shell_repl_loop(t_context *context)
 		add_history(input);
 		tokens = tokenize_input(input);
 		program = parse_program(tokens);
+		destroy_tokens_array(&tokens);
 		if(program)
 		{
 			execute_program(program, context);
 			free_program(program);
 		}
-		destroy_tokens_array(&tokens);
 		free(input);
 	}
 }

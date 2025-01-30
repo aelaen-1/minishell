@@ -68,22 +68,35 @@ static int  exec_cmd(t_command *cmd, int *pid, t_context *context)
 	res = do_fork(cmd, pid, path, context);
 	return (free(path), res);
 }
-
+int return_exec(int ret_exec, t_program *program, t_context *context, int *pids)
+{
+	if(ret_exec == 421)
+	{
+		free(pids);
+		free_program(program);
+		free_env_node(context->envp);
+		exit(context->last_cmd_status);
+	}
+	return (free(pids), -1);
+}
 int	execute_program(t_program *program, t_context *context)
 {
 	size_t	i;
 	int *pids;
 	int status;
+	int ret_exec;
 
 	i = 0;
 	status = 0;
+	ret_exec = 0;
 	pids = malloc_pids(program->pipeline);
 	link_pipeline(program->pipeline);
 	g_sig = 2;
 	while (i < program->pipeline->cmd_count)
 	{
-		if (exec_cmd(program->pipeline->commands[i], &pids[i], context))
-			return (free(pids), -1);
+		ret_exec = exec_cmd(program->pipeline->commands[i], &pids[i], context);
+		if (ret_exec)
+			return (return_exec(ret_exec, program, context, pids));
 		else
 			i++;
 	}

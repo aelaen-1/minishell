@@ -14,6 +14,8 @@ int handle_builtin_commands(t_command *cmd, t_context *context)
 		return (builtin_export(cmd, context));
 	else if (!ft_strcmp(cmd->argv[0], "unset"))
 		return (builtin_unset(cmd, context));
+	else if (!ft_strcmp(cmd->argv[0], "exit"))
+		return (builtin_exit(cmd, context));
 	return (1);
 }
 
@@ -31,14 +33,23 @@ int is_builtin(t_command *cmd)
         return (1);
     else if (!ft_strcmp(cmd->argv[0], "unset"))
         return (1);
+	else if (!ft_strcmp(cmd->argv[0], "exit"))
+        return (1);
     return (0);
 }
 
 int	exec_builtin(t_command *cmd, t_context *context)
 {
+	int buffer;
+
 	close_command_fds(cmd);
-	context->last_cmd_status = handle_builtin_commands(cmd, context);
-	return (1);
+	buffer = handle_builtin_commands(cmd, context);
+	if(buffer != 421)
+	{
+		context->last_cmd_status = buffer;
+		return (1);
+	}
+	return (421);
 }
 
 int	*malloc_pids(t_pipeline *pipeline)

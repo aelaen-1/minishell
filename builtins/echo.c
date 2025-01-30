@@ -1,13 +1,14 @@
 #include "../include/minishell.h"
 
-
 static void	skip_n(t_command *command, size_t *i, int *n_option)
 {
+	size_t	j;
+
 	while (command->argv[*i])
 	{
 		if (command->argv[*i][0] == '-' && command->argv[*i][1] == 'n')
 		{
-			size_t j = 2;
+			j = 2;
 			while (command->argv[*i][j] == 'n')
 				j++;
 			if (command->argv[*i][j] == '\0')
@@ -26,7 +27,7 @@ static void	skip_n(t_command *command, size_t *i, int *n_option)
 int	builtin_echo(t_command *command)
 {
 	size_t	i;
-	int	n_option;
+	int		n_option;
 
 	i = 1;
 	n_option = 0;
