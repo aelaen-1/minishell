@@ -2,12 +2,12 @@
 
 static char	*get_var_end(char *start)
 {
-	char *iter;
+	char	*iter;
 
 	if (!start)
 		return (NULL);
 	iter = start;
-	while (ft_isalnum(*iter)|| *iter == '_')
+	while (ft_isalnum(*iter) || *iter == '_')
 		iter++;
 	if (iter == start)
 		return (NULL);
@@ -29,19 +29,17 @@ static size_t	get_expanded_var_length(char *var, t_context *context)
 	return (len);
 }
 
-
-static char *handle_dollar(char *dollar, t_context *context, size_t *size_out)
+static char	*handle_dollar(char *dollar, t_context *context, size_t *size_out)
 {
-	char *end;
-	char *start;
-			
+	char	*end;
+	char	*start;
+	char	*var_name;
+	size_t	len;
+
 	start = dollar + 1;
 	end = get_var_end(start);
 	if (end)
-	{	
-		char	*var_name;
-		size_t	len;
-
+	{
 		len = end - start;
 		var_name = ft_substr(start, 0, len);
 		*size_out += get_expanded_var_length(var_name, context) - len - 1;
@@ -51,7 +49,8 @@ static char *handle_dollar(char *dollar, t_context *context, size_t *size_out)
 	return (start);
 }
 
-size_t	get_expanded_arg_size(char **command_arg, t_context *context, t_quote_type *quoting)
+size_t	get_expanded_arg_size(char **command_arg, t_context *context,
+		t_quote_type *quoting)
 {
 	size_t			size;
 	char			*iter;

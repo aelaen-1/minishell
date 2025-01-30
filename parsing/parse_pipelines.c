@@ -26,7 +26,7 @@ static t_token	**find_token(t_token **start, t_token **end,
 	return (end);
 }
 
-static int	check_if_pipeline_error(t_token **start, t_token **end,
+int	check_if_pipeline_error(t_token **start, t_token **end,
 		size_t cmd_count)
 {
 	t_token	**command_end;
@@ -50,13 +50,21 @@ static int	check_if_pipeline_error(t_token **start, t_token **end,
 	return (0);
 }
 
-static t_pipeline	*free_pipeline_on_pipe_failure(t_pipeline *pipeline,
-		size_t *i)
+static t_pipeline	*create_pipeline(size_t count)
 {
-	while (*i > 0)
-		free(pipeline->commands[*i--]);
-	free(pipeline->commands);
-	return (free(pipeline), NULL);
+	t_pipeline	*pipeline;
+
+	pipeline = malloc(sizeof(t_pipeline));
+	if (!pipeline)
+		return (NULL);
+	pipeline->cmd_count = count;
+	pipeline->commands = malloc(sizeof(t_command *) * count);
+	if (!pipeline->commands)
+	{
+		free (pipeline);
+		return (NULL);
+	}
+	return (pipeline);
 }
 
 t_pipeline	*parse_pipeline(t_token **start, t_token **end)
@@ -66,13 +74,9 @@ t_pipeline	*parse_pipeline(t_token **start, t_token **end)
 	t_token		**command_end;
 
 	i = 0;
-	pipeline = malloc(sizeof(t_pipeline));
+	pipeline = create_pipeline(count_pipes(start, end) + 1);
 	if (!pipeline)
 		return (NULL);
-	pipeline->cmd_count = count_pipes(start, end) + 1;
-	pipeline->commands = malloc(sizeof(t_command *) * pipeline->cmd_count);
-	if (!pipeline->commands)
-		return (free(pipeline), NULL);
 	if (check_if_pipeline_error(start, end, pipeline->cmd_count))
 		return (free(pipeline->commands), free(pipeline), NULL);
 	while (start < end && i < pipeline->cmd_count)

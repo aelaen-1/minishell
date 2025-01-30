@@ -183,10 +183,10 @@ void			expand_last_cmd_status(char *var_value, char *res,
 void			remove_null_commands(t_command *command);
 int				redirect_command(t_command *command);
 
-// outil pour print le prgram
-void			print_pipeline_to_dot(t_pipeline *pipeline);
-void			print_command_to_dot(t_command *command);
-void			print_program_to_dot(t_program *program);
+t_pipeline  *free_pipeline_on_pipe_failure(t_pipeline *pipeline,
+		size_t *i);
+int check_if_pipeline_error(t_token **start, t_token **end,
+		size_t cmd_count);
 
 /*		builtins/		*/
 t_env_node		*init_env(char **env);

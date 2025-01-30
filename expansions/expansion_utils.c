@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-int is_expandable_dollar(char c, char d, char quoting)
+int	is_expandable_dollar(char c, char d, char quoting)
 {
 	if (d == '\0')
 		return (0);
@@ -25,11 +25,11 @@ char	*get_env_value(char *to_find, t_env_node *envp)
 	char		*value;
 
 	if (!to_find || !envp)
-        return (NULL);
+		return (NULL);
 	i = ft_strlen(to_find);
 	while (envp)
 	{
-		if (!ft_strncmp(envp->env_var, to_find, i ) && envp->env_var[i] == '=')
+		if (!ft_strncmp(envp->env_var, to_find, i) && envp->env_var[i] == '=')
 		{
 			value = ft_strdup(envp->env_var + i + 1);
 			return (value);
