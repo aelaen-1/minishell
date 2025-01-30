@@ -118,6 +118,16 @@ typedef struct s_program
 	int			last_cmd_status;
 }	t_program;
 
+typedef struct s_arg_expansion_state
+{
+	char *res;
+	size_t	size;
+	size_t	i;
+	size_t	j;
+	size_t	len;
+	t_quote_type *quoting;
+}	t_arg_expansion_state;
+
 /*      exec      */
 int				execute_program(t_program *program, t_context *context);
 

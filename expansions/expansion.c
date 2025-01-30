@@ -32,42 +32,94 @@ bool	try_expand_status(char c, t_context *context, char *res,
 	return (false);
 }
 
-char	*expand_command_arg(char *command_arg, t_context *context)
+static bool init_arg_expansion_state(t_arg_expansion_state *vars, t_context *context, char *arg)
 {
-	char			*res;
-	size_t			size;
-	size_t			i;
-	size_t			j;
-	size_t			len;
-	t_quote_type	*quoting;
-
-	i = 0;
-	j = 0;
-	quoting = get_quote_state(command_arg);
-	if (!quoting)
-		return (NULL);
-	size = get_expanded_arg_size(&command_arg, context, quoting);
-	if (!size)
-		return (free(quoting), ft_strdup(" \0"));
-	res = malloc(size + 1);
-	if (!res)
-		return (free(quoting), NULL);
-	while (size && command_arg[i])
+	vars->i = 0;
+	vars->j = 0;
+	vars->len = 0;
+	vars->quoting = get_quote_state(arg);
+	if (!vars->quoting)
+		return (false);
+	vars->size = get_expanded_arg_size(&arg, context, vars->quoting);
+	if (!vars->size)
 	{
-		if (is_expandable_dollar(command_arg[i], command_arg[i + 1], quoting[i]))
-		{
-			i++;
-			len = 0;
-			if (try_expand_status(command_arg[i], context, res, &j, &i))
+		free(vars->quoting);
+		vars->res = ft_strdup(" \0");
+		return (false);
+	}
+	vars->res = malloc(vars->size + 1);
+	if (!vars->res)
+	{
+		free(vars->quoting);
+		return (false);
+	}
+	return (true);
+}
+
+
+char *expand_command_arg(char *command_arg, t_context *context)
+{
+	t_arg_expansion_state vars;
+
+	if (!init_arg_expansion_state(&vars, context, command_arg))
+		return (vars.res);
+	while (command_arg[vars.i])
+	{
+		if (is_expandable_dollar(command_arg[vars.i], command_arg[vars.i + 1], vars.quoting[vars.i]))
+			{
+			vars.i++;
+			vars.len++;
+			if (try_expand_status(command_arg[vars.i], context, vars.res, &vars.j, &vars.i))
 				continue ;
-			len += get_var_len(command_arg + i);
-			add_expanded_var(&command_arg, &res, &i, &j, &len, context);
+			vars.len += get_var_len(command_arg + vars.i);
+			add_expanded_var(&command_arg, &vars.res, &vars.i, &vars.j, &vars.len, context);
 		}
 		else
-			res[j++] = command_arg[i++];
+		{
+			vars.res[vars.j] = command_arg[vars.i];
+			vars.i++;
+			vars.j++;
+		}
 	}
-	return (res[j] = '\0', free(quoting), res);
+	return (vars.res[vars.j] = '\0', free(vars.quoting), vars.res);
 }
+
+// char	*expand_command_arg(char *command_arg, t_context *context)
+// {
+// 	char			*res;
+// 	size_t			size;
+// 	size_t			i;
+// 	size_t			j;
+// 	size_t			len;
+// 	t_quote_type	*quoting;
+
+// 	i = 0;
+// 	j = 0;
+// 	quoting = get_quote_state(command_arg);
+// 	if (!quoting)
+// 		return (NULL);
+// 	size = get_expanded_arg_size(&command_arg, context, quoting);
+// 	if (!size)
+// 		return (free(quoting), ft_strdup(" \0"));
+// 	res = malloc(size + 1);
+// 	if (!res)
+// 		return (free(quoting), NULL);
+// 	while (size && command_arg[i])
+// 	{
+// 		if (is_expandable_dollar(command_arg[i], command_arg[i + 1], quoting[i]))
+// 		{
+// 			i++;
+// 			len = 0;
+// 			if (try_expand_status(command_arg[i], context, res, &j, &i))
+// 				continue ;
+// 			len += get_var_len(command_arg + i);
+// 			add_expanded_var(&command_arg, &res, &i, &j, &len, context);
+// 		}
+// 		else
+// 			res[j++] = command_arg[i++];
+// 	}
+// 	return (res[j] = '\0', free(quoting), res);
+// }
 
 void	expand_redir(t_command *command, t_context *context)
 {
@@ -122,3 +174,43 @@ void	expand_command(t_command *command, t_context *context)
 	remove_null_commands(command);
 	remove_quotes(command);
 }
+
+
+
+
+// char	*expand_command_arg(char *command_arg, t_context *context)
+// {
+// 	char			*res;
+// 	size_t			size;
+// 	size_t			i;
+// 	size_t			j;
+// 	size_t			len;
+// 	t_quote_type	*quoting;
+
+// 	i = 0;
+// 	j = 0;
+// 	quoting = get_quote_state(command_arg);
+// 	if (!quoting)
+// 		return (NULL);
+// 	size = get_expanded_arg_size(&command_arg, context, quoting);
+// 	if (!size)
+// 		return (free(quoting), ft_strdup(" \0"));
+// 	res = malloc(size + 1);
+// 	if (!res)
+// 		return (free(quoting), NULL);
+// 	while (size && command_arg[i])
+// 	{
+// 		if (is_expandable_dollar(command_arg[i], command_arg[i + 1], quoting[i]))
+// 		{
+// 			i++;
+// 			len = 0;
+// 			if (try_expand_status(command_arg[i], context, res, &j, &i))
+// 				continue ;
+// 			len += get_var_len(command_arg + i);
+// 			add_expanded_var(&command_arg, &res, &i, &j, &len, context);
+// 		}
+// 		else
+// 			res[j++] = command_arg[i++];
+// 	}
+// 	return (res[j] = '\0', free(quoting), res);
+// }
