@@ -86,7 +86,7 @@ typedef struct s_redir
 typedef struct s_env_node
 {
 	char				*env_var;
-	bool			is_exported;
+	bool				is_exported;
 	struct s_env_node	*next;
 	struct s_env_node	*previous;
 }	t_env_node;
@@ -108,7 +108,7 @@ typedef struct s_pipeline
 
 typedef struct s_context
 {
-	int	last_cmd_status;
+	int			last_cmd_status;
 	t_env_node	*envp;	
 }	t_context;
 
@@ -128,7 +128,8 @@ t_env_node		*create_env_node(char *env_var, t_env_node *bottom);
 char			**lst_to_char(t_env_node *top); // used to pass env to execve
 int				*malloc_pids(t_pipeline *pipeline);
 int				exec_builtin(t_command *cmd, t_context *context);
-int				do_fork(t_command *cmd, int *pid, char *path, t_context *context);
+int				do_fork(t_command *cmd, int *pid, char *path,
+					t_context *context);
 
 /*      utils/     */
 void			free_split(char **s);
@@ -139,11 +140,6 @@ size_t			get_number_length(int n);
 
 t_quote_type	*get_quote_state(char *s);
 void			remove_quotes(t_command *cmd);
-
-
-/*		lexing/	*/
-// bool    		check_input(char *input);
-
 
 void			init_lex_context(t_lex_context *context, char *input);
 int				init_token_array(t_token_array *array);
@@ -174,16 +170,19 @@ void			close_command_fds(t_command *command);
 void			destroy_command(t_command *command);
 t_pipeline		*parse_pipeline(t_token **start, t_token **end);
 t_program		*parse_program(t_token_array array);
-int				parse_redir(t_command *cmd, t_token **current, t_token **last_token);
+int				parse_redir(t_command *cmd, t_token **current,
+					t_token **last_token);
 
-size_t			get_expanded_arg_size(char **command_arg, t_context *context, t_quote_type *quoting);
+size_t			get_expanded_arg_size(char **command_arg,
+					t_context *context, t_quote_type *quoting);
 int				is_expandable_dollar(char c, char d, char quoting);
 size_t			get_var_len(char *arg);
 void			expand_command(t_command *command, t_context *context);
-void			expand_last_cmd_status(char *var_value, char *res, size_t *j, size_t *i);
+void			expand_last_cmd_status(char *var_value, char *res,
+					size_t *j, size_t *i);
 void			remove_null_commands(t_command *command);
 int				redirect_command(t_command *command);
-		
+
 // outil pour print le prgram
 void			print_pipeline_to_dot(t_pipeline *pipeline);
 void			print_command_to_dot(t_command *command);
@@ -196,6 +195,10 @@ int				unset_env(t_env_node **env, char *key);
 char			*get_env_value(char *to_find, t_env_node *envp);
 char			*key_value_join(char *key, char *value);
 int				is_valid_identifier(char *arg);
+void			*create_export_node(t_env_node *env, char *key, char *value);
+int				check_if_exported(char *arg, t_context *context);
+void			export_key_without_value(char *key, t_context *context);
+int				exec_permission(char *cmd, t_context *context, struct stat path_stat);
 
 int				builtin_echo(t_command *command);
 int				builtin_env(t_command *command, t_context *context);
@@ -206,8 +209,8 @@ int				builtin_unset(t_command *command, t_context *context);
 
 void			free_program( t_program *program);
 void			free_pipeline(t_pipeline *pipeline);
-void			signal_handler();
-
+void			signal_handler(void);
+int				builtin_exit(t_command *command, t_context *context);
 /*		free/		*/
 void			free_command_argv(char **cmd_arg);
 void			free_env_node(t_env_node *node);

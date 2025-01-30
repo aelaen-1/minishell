@@ -20,16 +20,75 @@ void	add_expanded_var(char **command_arg, char **res, size_t *i, size_t *j, size
 			*i += *len;
 		}
 }
+// typedef	struct	s_arg_expansion_state
+// {
+// 	char *res;
+// 	size_t	size;
+// 	size_t	i;
+// 	size_t	j;
+// 	size_t	len;
+// 	t_quote_type *quoting;
+// }	t_arg_expansion_state;
 
-bool try_expand_status(t_context *context, char *res, int* i_ptr, int *j_ptr)
-{
-  if (command_arg[*i_ptr] == '?')
-  {
-    expand_last_cmd_status(ft_itoa(context->last_cmd_status), res, j_ptr, i_ptr);
-    return true;
-  }
-  return false;
-}
+
+// static bool	init_arg_expansion_state(t_arg_expansion_state *vars, t_context *context, char *arg)
+// {
+// 	vars->i = 0;
+// 	vars->j = 0;
+// 	vars->res = NULL;
+// 	vars->quoting = get_quote_state(arg);
+// 	if (!vars->quoting)
+// 		return (false);
+// 	vars->size = get_expanded_arg_size(&arg, context, vars->quoting);
+// 	if (!vars->size)
+// 	{
+// 		free(vars->quoting);
+// 		vars->res = ft_strdup(" ");
+// 		return (false);
+// 	}
+// 	vars->res = malloc(vars->size + 1);
+// 	if (!vars->res)
+// 	{
+// 		free(vars->quoting);
+// 		return (false);
+// 	}
+// 	return (true);
+// }
+
+
+
+// bool try_expand_status(t_context *context, char *res, size_t* i_ptr, size_t *j_ptr , char *c)
+// {
+//   if (c[*i_ptr] == '?')
+//   {
+//     expand_last_cmd_status(ft_itoa(context->last_cmd_status), res, j_ptr, i_ptr);
+//     return true;
+//   }
+//   return false;
+// }
+
+// char *expand_command_arg(char *command_arg, t_context *context)
+// {
+// 	t_arg_expansion_state vars;
+
+// 	if (!init_arg_expansion_state(&vars, context, command_arg))
+// 		return (vars.res);
+// 	while (command_arg[vars.i])
+// 	{
+// 		if (is_expandable_dollar(command_arg[vars.i], command_arg[vars.i + 1], vars.quoting[vars.i]))
+// 		{
+// 			vars.i++;
+// 			vars.len++;
+// 			if (try_expand_status(context, vars.res, &vars.j, &vars.i, command_arg))
+// 				continue ;
+// 			vars.len += get_var_len(command_arg + vars.i);
+// 			add_expanded_var(&command_arg, &vars.res, &vars.i, &vars.j, &vars.len, context);
+// 		}
+// 		else
+// 			vars.res[vars.j++] = command_arg[vars.i++];
+// 	}
+// 	return (vars.res[vars.j] = '\0', free(vars.quoting), vars.res);
+// }
 
 char	*expand_command_arg(char *command_arg, t_context *context)
 {
@@ -46,8 +105,8 @@ char	*expand_command_arg(char *command_arg, t_context *context)
 	if (!quoting)
 		return (NULL);
 	size = get_expanded_arg_size(&command_arg, context, quoting);
-	// if (!size)
-	// 	return (free(quoting), NULL);
+	if (!size)
+		return (free(quoting), ft_strdup(" \0"));
 	res = malloc(size + 1);
 	if (!res)
 		return (free(quoting), NULL);
@@ -57,8 +116,8 @@ char	*expand_command_arg(char *command_arg, t_context *context)
 		{
 			i++;
 			len = 0;
-			if (try_expand_status(context, res, &j, &i))
-				continue ;
+			// if (try_expand_status(context, res, &j, &i))
+			// 	continue ;
 			if (command_arg[i] == '?')
 			{
 				expand_last_cmd_status(ft_itoa(context->last_cmd_status), res, &j, &i);
@@ -128,5 +187,4 @@ void	expand_command(t_command *command, t_context *context)
 	expand_redir(command, context);
 	remove_null_commands(command);
 	remove_quotes(command);
-	printf("expanded : %s\n", command->argv[0]);
 }
