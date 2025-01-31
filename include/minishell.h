@@ -192,6 +192,8 @@ void			expand_last_cmd_status(char *var_value, char *res,
 					size_t *j, size_t *i);
 void			remove_null_commands(t_command *command);
 int				redirect_command(t_command *command);
+bool			init_arg_expansion_state(t_arg_expansion_state *vars, t_context *context, char *arg);
+bool			try_expand_status(char c, t_context *context, t_arg_expansion_state *vars);
 
 t_pipeline  *free_pipeline_on_pipe_failure(t_pipeline *pipeline,
 		size_t *i);

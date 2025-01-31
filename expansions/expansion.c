@@ -1,78 +1,43 @@
 #include "../include/minishell.h"
 
-void	add_expanded_var(char **command_arg, char **res, size_t *i, size_t *j,
-		size_t *len, t_context *context)
+void	add_expanded_var(char **command_arg, t_arg_expansion_state *vars,
+		t_context *context)
 {
 	char	*var_name;
 	char	*var_value;
 
-	if (*len != 0)
+	if (vars->len != 0)
 	{
-		var_name = ft_substr(*command_arg, *i, *len);
+		var_name = ft_substr(*command_arg, vars->i, vars->len);
 		var_value = get_env_value(var_name, context->envp);
 		if (var_value)
 		{
-			ft_strlcpy(*res + *j, var_value, ft_strlen(var_value) + 1);
-			*j += ft_strlen(var_value);
+			ft_strlcpy(vars->res + vars->j,
+				var_value, ft_strlen(var_value) + 1);
+			vars->j += ft_strlen(var_value);
 			free(var_value);
 		}
 		free(var_name);
-		*i += *len;
+		vars->i += vars->len;
 	}
 }
 
-bool	try_expand_status(char c, t_context *context, char *res,
-		size_t *j, size_t *i)
+char	*expand_command_arg(char *command_arg, t_context *context)
 {
-	if (c == '?')
-	{
-		expand_last_cmd_status(ft_itoa(context->last_cmd_status), res, j, i);
-		return (true);
-	}
-	return (false);
-}
-
-static bool init_arg_expansion_state(t_arg_expansion_state *vars, t_context *context, char *arg)
-{
-	vars->i = 0;
-	vars->j = 0;
-	vars->len = 0;
-	vars->quoting = get_quote_state(arg);
-	if (!vars->quoting)
-		return (false);
-	vars->size = get_expanded_arg_size(&arg, context, vars->quoting);
-	if (!vars->size)
-	{
-		free(vars->quoting);
-		vars->res = ft_strdup(" \0");
-		return (false);
-	}
-	vars->res = malloc(vars->size + 1);
-	if (!vars->res)
-	{
-		free(vars->quoting);
-		return (false);
-	}
-	return (true);
-}
-
-
-char *expand_command_arg(char *command_arg, t_context *context)
-{
-	t_arg_expansion_state vars;
+	t_arg_expansion_state	vars;
 
 	if (!init_arg_expansion_state(&vars, context, command_arg))
 		return (vars.res);
 	while (command_arg[vars.i])
 	{
-		if (is_expandable_dollar(command_arg[vars.i], command_arg[vars.i + 1], vars.quoting[vars.i]))
-			{
+		if (is_expandable_dollar(command_arg[vars.i],
+				command_arg[vars.i + 1], vars.quoting[vars.i]))
+		{
 			vars.i++;
-			vars.len++;
-			if (try_expand_status(command_arg[vars.i], context, vars.res, &vars.j, &vars.i))
+			if (try_expand_status(command_arg[vars.i], context, &vars))
 				continue ;
 			vars.len += get_var_len(command_arg + vars.i);
-			add_expanded_var(&command_arg, &vars.res, &vars.i, &vars.j, &vars.len, context);
+			add_expanded_var(&command_arg, &vars, context);
 		}
 		else
 		{
@@ -83,43 +48,6 @@ char *expand_command_arg(char *command_arg, t_context *context)
 	}
 	return (vars.res[vars.j] = '\0', free(vars.quoting), vars.res);
 }
-
-// char	*expand_command_arg(char *command_arg, t_context *context)
-// {
-// 	char			*res;
-// 	size_t			size;
-// 	size_t			i;
-// 	size_t			j;
-// 	size_t			len;
-// 	t_quote_type	*quoting;
-
-// 	i = 0;
-// 	j = 0;
-// 	quoting = get_quote_state(command_arg);
-// 	if (!quoting)
-// 		return (NULL);
-// 	size = get_expanded_arg_size(&command_arg, context, quoting);
-// 	if (!size)
-// 		return (free(quoting), ft_strdup(" \0"));
-// 	res = malloc(size + 1);
-// 	if (!res)
-// 		return (free(quoting), NULL);
-// 	while (size && command_arg[i])
-// 	{
-// 		if (is_expandable_dollar(command_arg[i], command_arg[i + 1], quoting[i]))
-// 		{
-// 			i++;
-// 			len = 0;
-// 			if (try_expand_status(command_arg[i], context, res, &j, &i))
-// 				continue ;
-// 			len += get_var_len(command_arg + i);
-// 			add_expanded_var(&command_arg, &res, &i, &j, &len, context);
-// 		}
-// 		else
-// 			res[j++] = command_arg[i++];
-// 	}
-// 	return (res[j] = '\0', free(quoting), res);
-// }
 
 void	expand_redir(t_command *command, t_context *context)
 {
@@ -174,43 +102,3 @@ void	expand_command(t_command *command, t_context *context)
 	remove_null_commands(command);
 	remove_quotes(command);
 }
-
-
-
-
-// char	*expand_command_arg(char *command_arg, t_context *context)
-// {
-// 	char			*res;
-// 	size_t			size;
-// 	size_t			i;
-// 	size_t			j;
-// 	size_t			len;
-// 	t_quote_type	*quoting;
-
-// 	i = 0;
-// 	j = 0;
-// 	quoting = get_quote_state(command_arg);
-// 	if (!quoting)
-// 		return (NULL);
-// 	size = get_expanded_arg_size(&command_arg, context, quoting);
-// 	if (!size)
-// 		return (free(quoting), ft_strdup(" \0"));
-// 	res = malloc(size + 1);
-// 	if (!res)
-// 		return (free(quoting), NULL);
-// 	while (size && command_arg[i])
-// 	{
-// 		if (is_expandable_dollar(command_arg[i], command_arg[i + 1], quoting[i]))
-// 		{
-// 			i++;
-// 			len = 0;
-// 			if (try_expand_status(command_arg[i], context, res, &j, &i))
-// 				continue ;
-// 			len += get_var_len(command_arg + i);
-// 			add_expanded_var(&command_arg, &res, &i, &j, &len, context);
-// 		}
-// 		else
-// 			res[j++] = command_arg[i++];
-// 	}
-// 	return (res[j] = '\0', free(quoting), res);
-// }

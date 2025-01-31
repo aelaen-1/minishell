@@ -7,6 +7,8 @@ static char	*get_var_end(char *start)
 	if (!start)
 		return (NULL);
 	iter = start;
+	if (*iter == '?')
+		return (iter + 1);
 	while (ft_isalnum(*iter) || *iter == '_')
 		iter++;
 	if (iter == start)
