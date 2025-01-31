@@ -54,12 +54,12 @@ int	exec_builtin(t_command *cmd, t_context *context)
 {
 	int	buffer;
 
-	close_command_fds(cmd);
 	buffer = handle_builtin_commands(cmd, context);
+	close_command_fds(cmd);
 	if (buffer != 421)
 	{
 		context->last_cmd_status = buffer;
-		return (1);
+		return (0);
 	}
 	return (421);
 }
