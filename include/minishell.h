@@ -237,6 +237,7 @@ int				builtin_unset(t_command *command, t_context *context);
 void			free_program( t_program *program);
 void			free_pipeline(t_pipeline *pipeline);
 void			signal_handler(void);
+void			ctrlc_exit_status(t_context *context);
 int				builtin_exit(t_command *command, t_context *context);
 /*		free/		*/
 void			free_command_argv(char **cmd_arg);
