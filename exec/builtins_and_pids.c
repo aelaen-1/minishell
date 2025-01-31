@@ -59,7 +59,7 @@ int	exec_builtin(t_command *cmd, t_context *context)
 	if (buffer != 421)
 	{
 		context->last_cmd_status = buffer;
-		return (0);
+		return (buffer);
 	}
 	return (421);
 }
@@ -73,7 +73,7 @@ int	*malloc_pids(t_pipeline *pipeline)
 	pids = malloc(sizeof(int) * (pipeline->cmd_count + 1));
 	if (!pids)
 	{
-		fprintf(stderr, "pids malloc error\n");
+		ft_putstr_fd("pids malloc error\n", 2);
 		return (0);
 	}
 	while (i < pipeline->cmd_count)

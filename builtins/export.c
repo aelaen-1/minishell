@@ -16,7 +16,7 @@ int	is_valid_identifier(char *arg)
 {
 	if (!arg || !(*arg) || (!ft_isalpha(*arg) && *arg != '_'))
 		return (0);
-	while (*arg)
+	while (*arg && *arg != '=')
 	{
 		if (!ft_isalnum(*arg) && *arg != '_' && *arg != '=')
 			return (0);

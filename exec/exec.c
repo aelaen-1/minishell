@@ -71,7 +71,7 @@ static int	exec_cmd(t_command *cmd, int *pid, t_context *context)
 	if (!cmd->argv[0])
 		return (0);
 	if (!redirect_command(cmd))
-		return (0);
+		return (1);
 	if (is_builtin(cmd))
 		return (exec_builtin(cmd, context));
 	path = get_path(cmd, context->envp);
@@ -111,10 +111,9 @@ int	execute_program(t_program *program, t_context *context)
 	while (i < program->pipeline->cmd_count)
 	{
 		ret_exec = exec_cmd(program->pipeline->commands[i], &pids[i], context);
-		if (ret_exec)
+		if (ret_exec == 421)
 			return (return_exec(ret_exec, program, context, pids));
-		else
-			i++;
+		update_command_status(&i, ret_exec, context);
 	}
 	i = 0;
 	while (i++ < program->pipeline->cmd_count)
@@ -123,5 +122,6 @@ int	execute_program(t_program *program, t_context *context)
 		if (WIFEXITED(status))
 			context->last_cmd_status = WEXITSTATUS(status);
 	}
-	return (g_sig = 0, free(pids), 0);
+	update_status_out(ret_exec, context);
+	return (free(pids), 0);
 }

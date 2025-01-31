@@ -245,5 +245,7 @@ void			free_env_node(t_env_node *node);
 
 // nouvelles fonctions
 int				handle_exec_error(char *cmd, t_context *context);
+void			update_command_status(size_t *i, int ret, t_context *context);
+void			update_status_out(int ret, t_context *context);
 
 #endif

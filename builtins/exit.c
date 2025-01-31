@@ -20,7 +20,7 @@ int	validate_exit_argument(char *arg)
 	i = 0;
 	while (arg[i])
 	{
-		if (!ft_isdigit(arg[i]) || arg[i] == '-' || arg[i] == '+')
+		if (!ft_isdigit(arg[i]) && arg[i] != '-' && arg[i] != '+')
 		{
 			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 			ft_putstr_fd(arg, STDERR_FILENO);
@@ -38,9 +38,18 @@ int	builtin_exit(t_command *command, t_context *context)
 	int	status;
 
 	status = 0;
+	if (!command->argv[1])
+		return (ft_putstr_fd("exit\n", command->fds[1]), 421);
+	if (command->argv[2])
+	{
+		ft_putstr_fd("exit\n", command->fds[1]);
+		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+		ft_putstr_fd(": too many arguments\n", STDERR_FILENO);
+		return (1);
+	}
 	if (command->argv[1])
 		status = validate_exit_argument(command->argv[1]);
 	context->last_cmd_status = status;
-	ft_putstr_fd("exit\n", STDOUT_FILENO);
+	ft_putstr_fd("exit\n", command->fds[1]);
 	return (421);
 }

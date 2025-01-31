@@ -26,3 +26,15 @@ int	exec_permission(char *cmd, t_context *context, struct stat path_stat)
 	}
 	return (0);
 }
+
+void	update_command_status(size_t *i, int ret, t_context *context)
+{
+	*i += 1;
+	context->last_cmd_status = ret;
+}
+
+void	update_status_out(int ret, t_context *context)
+{
+	if (!context->last_cmd_status)
+		context->last_cmd_status = ret;
+}
