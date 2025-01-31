@@ -25,6 +25,12 @@ void	handle_ctrlc(int sig)
 	g_sig = 1;
 }
 
+void	ctrlc_exit_status(t_context *context)
+{
+	context->last_cmd_status = 130;
+	g_sig = 0;
+}
+
 void	handle_ctrlslash(int sig)
 {
 	(void)sig;
