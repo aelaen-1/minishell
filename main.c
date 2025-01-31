@@ -33,10 +33,10 @@ static bool	is_empty_line(char *input)
 	return (true);
 }
 
-static	void	ctrlc_exit_status(t_context *context)
+static	void	execute_and_free_program(t_program *program, t_context *context)
 {
-	context->last_cmd_status = 130;
-	g_sig = 0;
+	execute_program(program, context);
+	free_program(program);
 }
 
 static	void	shell_repl_loop(t_context *context)
@@ -63,10 +63,7 @@ static	void	shell_repl_loop(t_context *context)
 		program = parse_program(tokens);
 		destroy_tokens_array(&tokens);
 		if (program)
-		{
-			execute_program(program, context);
-			free_program(program);
-		}
+			execute_and_free_program(program, context);
 		free(input);
 	}
 }
