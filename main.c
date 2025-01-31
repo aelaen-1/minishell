@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glabaden <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/31 09:49:44 by glabaden          #+#    #+#             */
+/*   Updated: 2025/01/31 09:49:51 by glabaden         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "include/minishell.h"
 
 extern int		g_sig;
-
 
 static void	init_program_context(t_context *context, t_env_node *envp)
 {
@@ -30,9 +41,9 @@ static	void	ctrlc_exit_status(t_context *context)
 
 static	void	shell_repl_loop(t_context *context)
 {
-	char	*input;
+	char			*input;
 	t_token_array	tokens;
-	t_program	*program;
+	t_program		*program;
 
 	g_sig = 0;
 	while (1)
@@ -51,7 +62,7 @@ static	void	shell_repl_loop(t_context *context)
 		tokens = tokenize_input(input);
 		program = parse_program(tokens);
 		destroy_tokens_array(&tokens);
-		if(program)
+		if (program)
 		{
 			execute_program(program, context);
 			free_program(program);
@@ -63,7 +74,7 @@ static	void	shell_repl_loop(t_context *context)
 int	main(int ac, char **av, char **env)
 {
 	t_env_node		*shell_env;
-	t_context	context;
+	t_context		context;
 
 	(void)ac;
 	(void)av;

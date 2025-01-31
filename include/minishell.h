@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glabaden <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/31 10:06:11 by glabaden          #+#    #+#             */
+/*   Updated: 2025/01/31 10:06:13 by glabaden         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "libft/libft.h"
@@ -120,12 +132,12 @@ typedef struct s_program
 
 typedef struct s_arg_expansion_state
 {
-	char *res;
-	size_t	size;
-	size_t	i;
-	size_t	j;
-	size_t	len;
-	t_quote_type *quoting;
+	char			*res;
+	size_t			size;
+	size_t			i;
+	size_t			j;
+	size_t			len;
+	t_quote_type	*quoting;
 }	t_arg_expansion_state;
 
 /*      exec      */
@@ -192,13 +204,15 @@ void			expand_last_cmd_status(char *var_value, char *res,
 					size_t *j, size_t *i);
 void			remove_null_commands(t_command *command);
 int				redirect_command(t_command *command);
-bool			init_arg_expansion_state(t_arg_expansion_state *vars, t_context *context, char *arg);
-bool			try_expand_status(char c, t_context *context, t_arg_expansion_state *vars);
+bool			init_arg_expansion_state(t_arg_expansion_state *vars,
+					t_context *context, char *arg);
+bool			try_expand_status(char c, t_context *context,
+					t_arg_expansion_state *vars);
 
-t_pipeline  *free_pipeline_on_pipe_failure(t_pipeline *pipeline,
-		size_t *i);
-int check_if_pipeline_error(t_token **start, t_token **end,
-		size_t cmd_count);
+t_pipeline		*free_pipeline_on_pipe_failure(t_pipeline *pipeline,
+					size_t *i);
+int				check_if_pipeline_error(t_token **start, t_token **end,
+					size_t cmd_count);
 
 /*		builtins/		*/
 t_env_node		*init_env(char **env);
@@ -210,7 +224,8 @@ int				is_valid_identifier(char *arg);
 void			*create_export_node(t_env_node *env, char *key, char *value);
 int				check_if_exported(char *arg, t_context *context);
 void			export_key_without_value(char *key, t_context *context);
-int				exec_permission(char *cmd, t_context *context, struct stat path_stat);
+int				exec_permission(char *cmd, t_context *context,
+					struct stat path_stat);
 
 int				builtin_echo(t_command *command);
 int				builtin_env(t_command *command, t_context *context);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expansion.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glabaden <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/31 12:46:39 by glabaden          #+#    #+#             */
+/*   Updated: 2025/01/31 12:46:40 by glabaden         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 void	add_expanded_var(char **command_arg, t_arg_expansion_state *vars,
@@ -34,6 +46,7 @@ char	*expand_command_arg(char *command_arg, t_context *context)
 				command_arg[vars.i + 1], vars.quoting[vars.i]))
 		{
 			vars.i++;
+			vars.len = 0;
 			if (try_expand_status(command_arg[vars.i], context, &vars))
 				continue ;
 			vars.len += get_var_len(command_arg + vars.i);

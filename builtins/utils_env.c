@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_env.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glabaden <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/31 09:52:25 by glabaden          #+#    #+#             */
+/*   Updated: 2025/01/31 09:52:26 by glabaden         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 t_env_node	*create_env_node(char *env_var, t_env_node *bottom)
@@ -51,7 +63,7 @@ int	update_existing_env(t_env_node *env, char *key, char *value)
 	loop = env;
 	while (loop)
 	{
-		if (ft_strncmp(loop->env_var, key, strlen(key)) == 0)
+		if (ft_strncmp(loop->env_var, key, ft_strlen(key)) == 0)
 		{
 			free(loop->env_var);
 			loop->env_var = key_value_join(key, value);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glabaden <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/31 09:51:32 by glabaden          #+#    #+#             */
+/*   Updated: 2025/01/31 09:51:34 by glabaden         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 int	validate_exit_argument(char *arg)
@@ -18,13 +30,6 @@ int	validate_exit_argument(char *arg)
 		i++;
 	}
 	status = ft_atoi(arg);
-	if (status > 255 || status < 0)
-	{
-		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-		ft_putstr_fd(arg, STDERR_FILENO);
-		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-		return (2);
-	}
 	return (status);
 }
 

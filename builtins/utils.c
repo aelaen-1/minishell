@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glabaden <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/31 09:52:15 by glabaden          #+#    #+#             */
+/*   Updated: 2025/01/31 09:52:18 by glabaden         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 char	*key_value_join(char *key, char *value)
@@ -20,7 +32,7 @@ int	unset_env(t_env_node **env, char *key)
 	loop = *env;
 	while (loop)
 	{
-		if (ft_strncmp(loop->env_var, key, strlen(key)) == 0)
+		if (ft_strncmp(loop->env_var, key, ft_strlen(key)) == 0)
 		{
 			if (loop->previous)
 				loop->previous->next = loop->next;
