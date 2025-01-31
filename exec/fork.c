@@ -20,7 +20,7 @@ static	int	fork_error(char **env, char *path)
 	return (-1);
 }
 
-static int	child_process(t_command *cmd, char *path, char **env)
+static int	child_process(t_command *cmd, char *path, char **env, t_context *context)
 {
 	int	res;
 
@@ -28,6 +28,8 @@ static int	child_process(t_command *cmd, char *path, char **env)
 	dup2(cmd->fds[0], 0);
 	dup2(cmd->fds[1], 1);
 	close_command_fds(cmd);
+	if (is_builtin(cmd))
+		return (exec_builtin(cmd, context));
 	res = execve(path, cmd->argv, env);
 	return (res);
 }
@@ -43,7 +45,7 @@ int	do_fork(t_command *cmd, int *pid, char *path, t_context *context)
 	if (*pid == -1)
 		return (fork_error(env, path));
 	if (*pid == 0)
-		res = child_process(cmd, path, env);
+		res = child_process(cmd, path, env,context);
 	else
 		close_command_fds(cmd);
 	free_split(env);

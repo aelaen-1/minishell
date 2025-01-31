@@ -72,8 +72,6 @@ static int	exec_cmd(t_command *cmd, int *pid, t_context *context)
 		return (0);
 	if (!redirect_command(cmd))
 		return (0);
-	if (is_builtin(cmd))
-		return (exec_builtin(cmd, context));
 	path = get_path(cmd, context->envp);
 	if (!path)
 		context->last_cmd_status = handle_exec_error(cmd->argv[0], context);
@@ -102,7 +100,7 @@ int	execute_program(t_program *program, t_context *context)
 	size_t	i;
 	int		*pids;
 	int		status;
-	int		ret_exec;
+	// int		ret_exec;
 
 	i = 0;
 	status = 0;
@@ -110,11 +108,11 @@ int	execute_program(t_program *program, t_context *context)
 	link_pipeline(program->pipeline);
 	while (i < program->pipeline->cmd_count)
 	{
-		ret_exec = exec_cmd(program->pipeline->commands[i], &pids[i], context);
-		if (ret_exec)
-			return (return_exec(ret_exec, program, context, pids));
-		else
-			i++;
+		exec_cmd(program->pipeline->commands[i], &pids[i], context);
+		// if (ret_exec)
+		// 	return (return_exec(ret_exec, program, context, pids));
+		// else
+		i++;
 	}
 	i = 0;
 	while (i++ < program->pipeline->cmd_count)
