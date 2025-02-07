@@ -98,15 +98,29 @@ int	return_exec(int ret_exec, t_program *program, t_context *context, int *pids)
 	return (free(pids), -1);
 }
 
+static void	wait_children(int *pids, t_context *context, t_program *p)
+{
+	int		status;
+	int		i;
+
+	status = 0;
+	i = 0;
+	while (i < p->pipeline->cmd_count)
+	{
+		waitpid(pids[i], &status, 0);
+		if (WIFEXITED(status))
+			context->last_cmd_status = WEXITSTATUS(status);
+		i++;
+	}
+}
+
 int	execute_program(t_program *program, t_context *context)
 {
 	size_t	i;
 	int		*pids;
-	int		status;
 	int		ret_exec;
 
 	i = 0;
-	status = 0;
 	pids = malloc_pids(program->pipeline);
 	link_pipeline(program->pipeline);
 	while (i < program->pipeline->cmd_count)
@@ -121,13 +135,7 @@ int	execute_program(t_program *program, t_context *context)
 		}
 		update_command_status(&i, ret_exec, context);
 	}
-	i = 0;
-	while (i++ < program->pipeline->cmd_count)
-	{
-		waitpid(pids[i], &status, 0);
-		if (WIFEXITED(status))
-			context->last_cmd_status = WEXITSTATUS(status);
-	}
+	wait_children(pids, context, program);
 	update_status_out(ret_exec, context);
 	return (free(pids), 0);
 }
