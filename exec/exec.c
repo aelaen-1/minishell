@@ -114,6 +114,11 @@ int	execute_program(t_program *program, t_context *context)
 		ret_exec = exec_cmd(program->pipeline->commands[i], &pids[i], context);
 		if (ret_exec == 421)
 			return (return_exec(ret_exec, program, context, pids));
+		else if (ret_exec)
+		{
+			context->last_cmd_status = ret_exec;
+			break ;
+		}
 		update_command_status(&i, ret_exec, context);
 	}
 	i = 0;
