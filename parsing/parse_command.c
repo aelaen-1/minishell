@@ -44,6 +44,8 @@ t_command	*create_command(size_t argc)
 	command->redir_out.type = REDIR_NONE;
 	command->redir_in.file = NULL;
 	command->redir_out.file = NULL;
+	command->index = 0;
+	command->pipeline = NULL;
 	command->fds[0] = 0;
 	command->fds[1] = 1;
 	return (command);

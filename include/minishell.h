@@ -108,6 +108,8 @@ typedef struct s_command
 	char		**argv;
 	t_env_node	*envp;
 	int			fds[2];
+	size_t		index;
+	struct s_pipeline	*pipeline;
 	t_redir		redir_in;
 	t_redir		redir_out;
 }	t_command;
