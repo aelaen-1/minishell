@@ -37,6 +37,11 @@ void	handle_ctrlc_exec(int sig)
 	g_sig = sig + 128;
 }
 
+void	handle_ctrlc_heredoc(int sig)
+{
+	write(1, "\n", 1);
+	g_sig = sig + 128;
+}
 void	handle_sig_quit(int sig)
 {
 	write(2, "Quit (core dumped)\n", 19);

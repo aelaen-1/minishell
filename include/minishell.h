@@ -250,5 +250,5 @@ void			update_status_out(int ret, t_context *context);
 void			handle_ctrlc_exec(int sig);
 void			handle_ctrlc(int sig);
 void			handle_sig_quit(int sig);
-
+void			handle_ctrlc_heredoc(int sig);
 #endif
