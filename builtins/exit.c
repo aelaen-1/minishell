@@ -36,9 +36,11 @@ int	validate_exit_argument(char *arg)
 int	builtin_exit(t_command *command, t_context *context)
 {
 	int	status;
+	size_t	flag;
 
+	flag = command->pipeline->cmd_count;
 	status = 0;
-	if (!command->argv[1])
+	if (!command->argv[1] && flag == 1)
 		return (ft_putstr_fd("exit\n", command->fds[1]), 421);
 	if (command->argv[2])
 	{
@@ -50,6 +52,10 @@ int	builtin_exit(t_command *command, t_context *context)
 	if (command->argv[1])
 		status = validate_exit_argument(command->argv[1]);
 	context->last_cmd_status = status;
-	ft_putstr_fd("exit\n", command->fds[1]);
-	return (421);
+	if (flag == 1)
+	{
+		ft_putstr_fd("exit\n", command->fds[1]);
+		return (421);
+	}
+	return (status);
 }
