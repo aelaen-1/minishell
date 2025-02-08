@@ -76,6 +76,8 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
+	if (isatty(STDIN_FILENO) == 0)
+		return (0);
 	shell_env = init_env(env);
 	if (!shell_env)
 	{

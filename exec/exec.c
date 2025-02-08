@@ -101,7 +101,7 @@ int	return_exec(int ret_exec, t_program *program, t_context *context, int *pids)
 static void	wait_children(int *pids, t_context *context, t_program *p)
 {
 	int		status;
-	int		i;
+	size_t		i;
 
 	status = 0;
 	i = 0;

@@ -12,6 +12,8 @@
 
 #include "../include/minishell.h"
 
+extern int	g_sig;
+
 static int	redir_in_message(t_command *command)
 {
 	ft_putstr_fd("minishell: ", 2);
@@ -34,11 +36,10 @@ static void	handle_heredoc(t_command *command)
 	char	*line;
 
 	pipe(pipe_fds);
-	command->fds[0] = pipe_fds[0];
 	while (1)
 	{
 		line = readline("heredoc> ");
-		if (!line || !ft_strcmp(line, command->redir_in.file))
+		if(g_sig == 130 || !line || !ft_strcmp(line, command->redir_in.file))
 		{
 			free(line);
 			break ;
