@@ -42,7 +42,7 @@ int	builtin_exit(t_command *command, t_context *context)
 	status = 0;
 	if (!command->argv[1] && flag == 1)
 		return (ft_putstr_fd("exit\n", command->fds[1]), 421);
-	if (command->argv[2])
+	if (command->argv[1] && command->argv[2])
 	{
 		ft_putstr_fd("exit\n", command->fds[1]);
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
