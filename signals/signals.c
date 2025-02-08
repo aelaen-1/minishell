@@ -48,3 +48,4 @@ void	signal_handler(void)
 	signal(SIGINT, handle_ctrlc);
 	signal(SIGQUIT, SIG_IGN);
 }
+
