@@ -39,10 +39,8 @@ int	redirect_command(t_command *command)
 			return (redir_in_message(command));
 	}
 	if (command->redir_in.file && command->redir_in.type == REDIR_HEREDOC)
-	{
 		if (handle_heredoc(command))
 			return (0);
-	}
 	if (command->redir_out.file && command->redir_out.type == REDIR_OUT)
 	{
 		command->fds[1] = open(command->redir_out.file, O_RDWR | O_CREAT
