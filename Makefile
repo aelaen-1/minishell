@@ -23,6 +23,7 @@ SOURCES =      main.c \
                 parsing/parser.c \
                 parsing/pipeline_utils.c \
                 parsing/redirection.c \
+                parsing/heredoc.c \
                 exec/builtins_and_pids.c \
                 exec/exec.c \
                 exec/exec_error.c \
