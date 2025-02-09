@@ -105,13 +105,13 @@ typedef struct s_env_node
 
 typedef struct s_command
 {
-	char		**argv;
-	t_env_node	*envp;
-	int			fds[2];
-	size_t		index;
+	char				**argv;
+	t_env_node			*envp;
+	int					fds[2];
+	size_t				index;
+	t_redir				redir_in;
+	t_redir				redir_out;
 	struct s_pipeline	*pipeline;
-	t_redir		redir_in;
-	t_redir		redir_out;
 }	t_command;
 
 typedef struct s_pipeline
