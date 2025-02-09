@@ -35,7 +35,7 @@ int	validate_exit_argument(char *arg)
 
 int	builtin_exit(t_command *command, t_context *context)
 {
-	int	status;
+	int		status;
 	size_t	flag;
 
 	flag = command->pipeline->cmd_count;
