@@ -150,6 +150,7 @@ int				handle_builtin_commands(t_command *cmd, t_context *context);
 
 t_env_node		*create_env_node(char *env_var, t_env_node *bottom);
 char			**lst_to_char(t_env_node *top); // used to pass env to execve
+char			*get_path(t_command *cmd, t_env_node *envp);
 int				*malloc_pids(t_pipeline *pipeline);
 int				exec_builtin(t_command *cmd, t_context *context);
 int				do_fork(t_command *cmd, int *pid, char *path,
@@ -252,6 +253,9 @@ void			update_status_out(int ret, t_context *context);
 void			handle_ctrlc_exec(int sig);
 void			handle_ctrlc(int sig);
 void			handle_sig_quit(int sig);
+void			wait_children(int *pids, t_context *context, t_program *p);
 int				handle_heredoc(t_command *command);
+int				return_exec(int ret_exec, t_program *program,
+					t_context *context, int *pids);
 
 #endif

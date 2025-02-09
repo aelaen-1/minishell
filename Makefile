@@ -26,6 +26,7 @@ SOURCES =      main.c \
                 parsing/heredoc.c \
                 exec/builtins_and_pids.c \
                 exec/exec.c \
+                exec/exec_utils.c \
                 exec/exec_error.c \
                 exec/exec_error_2.c \
                 exec/fork.c \

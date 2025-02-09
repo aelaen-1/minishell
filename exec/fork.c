@@ -25,7 +25,6 @@ static int	child_process(t_command *cmd, char *path, char **env)
 	int	res;
 
 	res = 0;
-	// close_pipe_fds(cmd);
 	dup2(cmd->fds[0], 0);
 	dup2(cmd->fds[1], 1);
 	close_command_fds(cmd);
