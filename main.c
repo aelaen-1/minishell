@@ -6,7 +6,7 @@
 /*   By: aelaen <aelaen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 09:49:44 by glabaden          #+#    #+#             */
-/*   Updated: 2025/02/10 14:16:49 by aelaen           ###   ########.fr       */
+/*   Updated: 2025/02/10 18:23:45 by glabaden         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,27 @@ static bool	is_empty_line(char *input)
 	return (true);
 }
 
-static	void	execute_and_free_program(t_program *program, t_context *context)
+static void	handle_input(char *input, t_context *context)
 {
-	execute_program(program, context);
-	free_program(program);
-}
-
-static	void	shell_repl_loop(t_context *context)
-{
-	char			*input;
 	t_token_array	tokens;
 	t_program		*program;
+
+	if (is_empty_line(input))
+		return ;
+	add_history(input);
+	tokens = tokenize_input(input);
+	program = parse_program(tokens);
+	destroy_tokens_array(&tokens);
+	if (program)
+	{
+		execute_program(program, context);
+		free_program(program);
+	}
+}
+
+static	int	shell_repl_loop(t_context *context)
+{
+	char			*input;
 
 	while (1)
 	{
@@ -53,20 +63,11 @@ static	void	shell_repl_loop(t_context *context)
 		if (g_sig == 130)
 			ctrlc_exit_status(context);
 		if (!input)
-			break ;
-		if (is_empty_line(input))
-		{
-			free(input);
-			continue ;
-		}
-		add_history(input);
-		tokens = tokenize_input(input);
-		program = parse_program(tokens);
-		destroy_tokens_array(&tokens);
-		if (program)
-			execute_and_free_program(program, context);
+			return (write(1, "exit\n", 5), 0);
+		handle_input(input, context);
 		free(input);
 	}
+	return (0);
 }
 
 int	main(int ac, char **av, char **env)
