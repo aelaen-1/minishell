@@ -15,9 +15,15 @@
 t_pipeline	*free_pipeline_on_pipe_failure(t_pipeline *pipeline,
 		size_t *i, t_context *context)
 {
+	size_t	j;
+
+	j = 0;
 	context->last_cmd_status = 2;
-	while (*i > 0)
-		free(pipeline->commands[*i--]);
+	while (j <= *i)
+	{
+		destroy_command(pipeline->commands[j]);
+		j++;
+	}
 	free(pipeline->commands);
 	return (free(pipeline), NULL);
 }
