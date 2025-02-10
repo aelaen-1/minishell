@@ -81,7 +81,7 @@ static t_pipeline	*create_pipeline(size_t count)
 	return (pipeline);
 }
 
-t_pipeline	*parse_pipeline(t_token **start, t_token **end)
+t_pipeline	*parse_pipeline(t_token **start, t_token **end, t_context *context)
 {
 	t_pipeline	*pipeline;
 	size_t		i;
@@ -91,7 +91,7 @@ t_pipeline	*parse_pipeline(t_token **start, t_token **end)
 	pipeline = create_pipeline(count_pipes(start, end) + 1);
 	if (!pipeline)
 		return (NULL);
-	if (check_if_pipeline_error(start, end, pipeline->cmd_count))
+	if (check_if_pipeline_error(start, end, pipeline->cmd_count, context))
 		return (free(pipeline->commands), free(pipeline), NULL);
 	while (start < end && i < pipeline->cmd_count)
 	{

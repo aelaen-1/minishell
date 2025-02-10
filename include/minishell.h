@@ -193,8 +193,8 @@ t_command		*parse_command(t_token **start, t_token **end);
 t_command		*create_command(size_t argc);
 void			close_command_fds(t_command *command);
 void			destroy_command(t_command *command);
-t_pipeline		*parse_pipeline(t_token **start, t_token **end);
-t_program		*parse_program(t_token_array array);
+t_pipeline		*parse_pipeline(t_token **start, t_token **end, t_context *context);
+t_program		*parse_program(t_token_array array, t_context *context);
 int				parse_redir(t_command *cmd, t_token **current,
 					t_token **last_token, t_token **cmd_start);
 
@@ -215,7 +215,7 @@ bool			try_expand_status(char c, t_context *context,
 t_pipeline		*free_pipeline_on_pipe_failure(t_pipeline *pipeline,
 					size_t *i);
 int				check_if_pipeline_error(t_token **start, t_token **end,
-					size_t cmd_count);
+					size_t cmd_count, t_context *context);
 
 /*		builtins/		*/
 t_env_node		*init_env(char **env);
