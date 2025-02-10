@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glabaden <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/10 08:18:40 by glabaden          #+#    #+#             */
+/*   Updated: 2025/02/10 08:18:44 by glabaden         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 extern int	g_sig;
@@ -26,6 +38,7 @@ int	handle_heredoc(t_command *command)
 	command->fds[0] = pipe_fds[0];
 	stdin_dup = dup(STDIN_FILENO);
 	signal(SIGINT, handle_ctrlc_heredoc);
+	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		line = readline("heredoc> ");
