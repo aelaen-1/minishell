@@ -196,7 +196,7 @@ void			destroy_command(t_command *command);
 t_pipeline		*parse_pipeline(t_token **start, t_token **end, t_context *context);
 t_program		*parse_program(t_token_array array, t_context *context);
 int				parse_redir(t_command *cmd, t_token **current,
-					t_token **last_token, t_token **cmd_start);
+					t_token **last_token);
 
 size_t			get_expanded_arg_size(char **command_arg,
 					t_context *context, t_quote_type *quoting);

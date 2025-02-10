@@ -38,13 +38,11 @@ t_command	*create_command(size_t argc)
 }
 
 static int	handle_redirections(t_command *command, t_token ***iter,
-		t_token **end, t_token **cmd_start)
+		t_token **end)
 {
 	int	redir;
 
-	redir = parse_redir(command, *iter, end, cmd_start);
-	if (redir == 2)
-		return (2);
+	redir = parse_redir(command, *iter, end);
 	if (redir == 1)
 	{
 		*iter += 2;
@@ -57,15 +55,6 @@ static int	handle_redirections(t_command *command, t_token ***iter,
 		return (-1);
 	}
 	return (0);
-}
-
-static void	add_token_to_argv(t_token ***iter, t_command *command, size_t *i)
-{
-	if (!*iter || !**iter || !(**iter)->value)
-		return ;
-	command->argv[*i] = ft_strdup((**iter)->value);
-	(*i)++;
-	(*iter)++;
 }
 
 t_command	*parse_command(t_token **start, t_token **end)
@@ -83,17 +72,16 @@ t_command	*parse_command(t_token **start, t_token **end)
 	redir = 0;
 	while (iter < end)
 	{
-		redir = handle_redirections(command, &iter, end, start);
+		redir = handle_redirections(command, &iter, end);
 		if (redir == 1)
 			continue ;
 		if (redir == -1)
 			return (destroy_command(command), NULL);
-		if (redir == 2)
-			add_token_to_argv(&iter, command, &i);
 		command->argv[i++] = ft_strdup((*iter)->value);
 		iter++;
 	}
-	return (command->argv[i] = NULL, command);
+	command->argv[i] = NULL;
+	return (command);
 }
 
 void	destroy_command(t_command *command)

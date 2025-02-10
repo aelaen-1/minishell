@@ -97,10 +97,10 @@ t_pipeline	*parse_pipeline(t_token **start, t_token **end, t_context *context)
 	{
 		command_end = find_token(start, end, TOKEN_PIPE);
 		if (command_end == start)
-			return (free_pipeline_on_pipe_failure(pipeline, &i));
+			return (free_pipeline_on_pipe_failure(pipeline, &i, context));
 		pipeline->commands[i] = parse_command(start, command_end);
 		if (!pipeline->commands[i])
-			return (free_pipeline_on_pipe_failure(pipeline, &i));
+			return (free_pipeline_on_pipe_failure(pipeline, &i, context));
 		pipeline->commands[i]->index = i;
 		pipeline->commands[i]->pipeline = pipeline;
 		start = command_end + 1;
