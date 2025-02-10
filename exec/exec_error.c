@@ -90,7 +90,7 @@ static int	exec_error_otherwise(char *cmd, t_context *context)
 		else
 		{
 			ft_putstr_fd(": command not found\n", 2);
-			context->last_cmd_status = 1;
+			context->last_cmd_status = 127;
 		}
 		g_sig = 1;
 		return (context->last_cmd_status);
