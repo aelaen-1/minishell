@@ -20,11 +20,32 @@ static	int	fork_error(char **env, char *path)
 	return (-1);
 }
 
+static void	close_pipe_fds(t_command *cmd)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < cmd->pipeline->cmd_count)
+	{
+		if (i != cmd->index)
+		{
+			if (cmd->pipeline->commands[i]->fds[0] != -1
+				&& cmd->pipeline->commands[i]->fds[0] != 0)
+				close(cmd->pipeline->commands[i]->fds[0]);
+			if (cmd->pipeline->commands[i]->fds[1] != -1
+				&& cmd->pipeline->commands[i]->fds[1] != 1)
+				close(cmd->pipeline->commands[i]->fds[1]);
+		}
+		i++;
+	}
+}
+
 static int	child_process(t_command *cmd, char *path, char **env)
 {
 	int	res;
 
 	res = 0;
+	close_pipe_fds(cmd);
 	dup2(cmd->fds[0], 0);
 	dup2(cmd->fds[1], 1);
 	close_command_fds(cmd);

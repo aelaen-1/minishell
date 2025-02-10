@@ -62,7 +62,7 @@ static int	handle_redirections(t_command *command, t_token ***iter,
 static void	add_token_to_argv(t_token ***iter, t_command *command, size_t *i)
 {
 	if (!*iter || !**iter || !(**iter)->value)
-        return;
+		return ;
 	command->argv[*i] = ft_strdup((**iter)->value);
 	(*i)++;
 	(*iter)++;

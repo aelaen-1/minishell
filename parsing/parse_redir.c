@@ -46,7 +46,8 @@ static int	redir_in(t_command *cmd, t_token **current, t_token **last_token)
 	return (1);
 }
 
-static int	redir_heredoc(t_command *cmd, t_token **current, t_token **last_token, t_token **cmd_start)
+static int	redir_heredoc(t_command *cmd, t_token **current,
+	t_token **last_token, t_token **cmd_start)
 {
 	int		flag;
 
@@ -66,7 +67,8 @@ static int	redir_heredoc(t_command *cmd, t_token **current, t_token **last_token
 	return (flag);
 }
 
-int	parse_redir(t_command *cmd, t_token **current, t_token **last_token, t_token **cmd_start)
+int	parse_redir(t_command *cmd, t_token **current,
+	t_token **last_token, t_token **cmd_start)
 {
 	if ((*current)->type == TOKEN_REDIR_OUT)
 		return (redir_out(cmd, current, last_token, TOKEN_REDIR_OUT));

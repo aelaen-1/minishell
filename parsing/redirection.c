@@ -12,8 +12,6 @@
 
 #include "../include/minishell.h"
 
-extern int	g_sig;
-
 static int	redir_in_message(t_command *command)
 {
 	ft_putstr_fd("minishell: ", 2);
