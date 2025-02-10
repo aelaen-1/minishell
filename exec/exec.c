@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glabaden <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aelaen <aelaen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 09:53:11 by glabaden          #+#    #+#             */
-/*   Updated: 2025/01/31 09:53:12 by glabaden         ###   ########.fr       */
+/*   Updated: 2025/02/10 13:53:29 by aelaen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ static int	exec_cmd(t_command *cmd, int *pid, t_context *context)
 		return (0);
 	if (!redirect_command(cmd))
 		return (1);
+	if (!ft_strcmp(cmd->argv[0], "<<"))
+		return (0);
 	if (is_builtin(cmd))
 		return (exec_builtin(cmd, context));
 	path = get_path(cmd, context->envp);
