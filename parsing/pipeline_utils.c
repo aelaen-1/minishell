@@ -13,8 +13,9 @@
 #include "../include/minishell.h"
 
 t_pipeline	*free_pipeline_on_pipe_failure(t_pipeline *pipeline,
-		size_t *i)
+		size_t *i, t_context *context)
 {
+	context->last_cmd_status = 2;
 	while (*i > 0)
 		free(pipeline->commands[*i--]);
 	free(pipeline->commands);
