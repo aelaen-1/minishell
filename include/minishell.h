@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glabaden <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aelaen <aelaen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 10:06:11 by glabaden          #+#    #+#             */
-/*   Updated: 2025/01/31 10:06:13 by glabaden         ###   ########.fr       */
+/*   Updated: 2025/02/10 13:48:00 by aelaen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ void			destroy_command(t_command *command);
 t_pipeline		*parse_pipeline(t_token **start, t_token **end);
 t_program		*parse_program(t_token_array array);
 int				parse_redir(t_command *cmd, t_token **current,
-					t_token **last_token);
+					t_token **last_token, t_token **cmd_start);
 
 size_t			get_expanded_arg_size(char **command_arg,
 					t_context *context, t_quote_type *quoting);
