@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glabaden <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aelaen <aelaen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 10:16:20 by glabaden          #+#    #+#             */
-/*   Updated: 2025/01/31 10:16:21 by glabaden         ###   ########.fr       */
+/*   Updated: 2025/02/10 13:55:43 by aelaen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,4 +19,18 @@ t_pipeline	*free_pipeline_on_pipe_failure(t_pipeline *pipeline,
 		free(pipeline->commands[*i--]);
 	free(pipeline->commands);
 	return (free(pipeline), NULL);
+}
+
+void	close_command_fds(t_command *command)
+{
+	if (command->fds[0] != 0 && command->fds[0] != -1)
+	{
+		close(command->fds[0]);
+		command->fds[0] = -1;
+	}
+	if (command->fds[1] != 1 && command->fds[1] != -1)
+	{
+		close(command->fds[1]);
+		command->fds[1] = -1;
+	}
 }
