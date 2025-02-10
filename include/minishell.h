@@ -213,7 +213,7 @@ bool			try_expand_status(char c, t_context *context,
 					t_arg_expansion_state *vars);
 
 t_pipeline		*free_pipeline_on_pipe_failure(t_pipeline *pipeline,
-					size_t *i);
+					size_t *i, t_context *context);
 int				check_if_pipeline_error(t_token **start, t_token **end,
 					size_t cmd_count, t_context *context);
 
