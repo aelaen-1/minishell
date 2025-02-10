@@ -39,7 +39,7 @@ static t_token	**find_token(t_token **start, t_token **end,
 }
 
 int	check_if_pipeline_error(t_token **start, t_token **end,
-		size_t cmd_count)
+		size_t cmd_count, t_context *context)
 {
 	t_token	**command_end;
 
@@ -50,6 +50,7 @@ int	check_if_pipeline_error(t_token **start, t_token **end,
 		{
 			ft_putstr_fd("minishell: syntax error near unexpected token ", 2);
 			ft_putstr_fd("`|'\n", 2);
+			context->last_cmd_status = 2;
 			return (1);
 		}
 		start = command_end + 1;
@@ -57,6 +58,7 @@ int	check_if_pipeline_error(t_token **start, t_token **end,
 	if (start == end)
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+		context->last_cmd_status = 2;
 		return (1);
 	}
 	return (0);

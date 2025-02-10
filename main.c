@@ -6,7 +6,7 @@
 /*   By: aelaen <aelaen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 09:49:44 by glabaden          #+#    #+#             */
-/*   Updated: 2025/02/10 18:23:45 by glabaden         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:21:57 by glabaden         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	handle_input(char *input, t_context *context)
 		return ;
 	add_history(input);
 	tokens = tokenize_input(input);
-	program = parse_program(tokens);
+	program = parse_program(tokens, context);
 	destroy_tokens_array(&tokens);
 	if (program)
 	{
@@ -51,6 +51,7 @@ static void	handle_input(char *input, t_context *context)
 		free_program(program);
 	}
 }
+
 
 static	int	shell_repl_loop(t_context *context)
 {

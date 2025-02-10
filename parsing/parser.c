@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-t_program	*parse_program(t_token_array array)
+t_program	*parse_program(t_token_array array, t_context *context)
 {
 	t_program	*program;
 
@@ -22,7 +22,7 @@ t_program	*parse_program(t_token_array array)
 	if (!program)
 		return (NULL);
 	program->pipeline = parse_pipeline(array.tokens,
-			array.tokens + array.count);
+			array.tokens + array.count, context);
 	if (!program->pipeline)
 		return (free(program), NULL);
 	return (program);
